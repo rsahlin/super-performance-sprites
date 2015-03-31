@@ -19,11 +19,47 @@ import com.nucleus.shader.ShaderVariable.VariableType;
  */
 public class TiledSpriteProgram extends ShaderProgram {
 
+	/**
+	 * Index into uniform sprite data data where the texture fraction s (width) is
+	 */
+	public final static int UNIFORM_TEX_FRACTION_S_INDEX = 0;
+	/**
+	 * Index into uniform sprite data data where the texture fraction t (height) is
+	 */
+	public final static int UNIFORM_TEX_FRACTION_T_INDEX = 1;
+	
+	/**
+	 * Index into uniform sprite data where 1 / texture fraction w - this is used to calculate y pos from frame index
+	 */
+	public final static int UNIFORM_TEX_ONEBY_S_INDEX = 2;
+	
+	/**
+	 * Index into aTileSprite for x position
+	 */
+	public final static int ATTRIBUTE_SPRITE_X_INDEX = 0;
+	/**
+	 * Index into aTileSprite for y position
+	 */
+	public final static int ATTRIBUTE_SPRITE_Y_INDEX = 1;
+	/**
+	 * Index into aTileSprite texture u coordinate - this is used to calculate texture coordinate with frame.
+	 */
+	public final static int ATTRIBUTE_SPRITE_U_INDEX = 2;
+	/**
+	 * Index into aTileSprite texture v coordinate - this is used to calculate texture coordinate with frame.
+	 */
+	public final static int ATTRIBUTE_SPRITE_V_INDEX = 3;
+	/**
+	 * Index into aTileSprite texture v coordinate - this is used to calculate texture coordinate with frame.
+	 */
+	public final static int ATTRIBUTE_SPRITE_FRAME_INDEX = 4;
+	
     public enum VARIABLES {
         uMVPMatrix(0, ShaderVariable.VariableType.UNIFORM),
-        uRenderVec(1, ShaderVariable.VariableType.UNIFORM),
+        uSpriteData(1, ShaderVariable.VariableType.UNIFORM),
         aPosition(2, ShaderVariable.VariableType.ATTRIBUTE),
-        aTileSprite(3, ShaderVariable.VariableType.ATTRIBUTE);
+        aTileSprite(3, ShaderVariable.VariableType.ATTRIBUTE),
+        aTileSprite2(4, ShaderVariable.VariableType.ATTRIBUTE);
 
         public final int index;
         private final VariableType type;
@@ -57,15 +93,25 @@ public class TiledSpriteProgram extends ShaderProgram {
         VertexBuffer buffer = mesh.getVerticeBuffer(0);
         ShaderVariable attrib = getShaderVariable(VARIABLES.aPosition.index);
         gles.glEnableVertexAttribArray(attrib.getLocation());
-        GLUtils.handleError(gles, "glEnableVertexAttribArray ");
+        GLUtils.handleError(gles, "glEnableVertexAttribArray1 ");
         gles.glVertexAttribPointer(attrib.getLocation(), buffer.getComponentCount(), buffer.getDataType(), false,
                 buffer.getByteStride(), buffer.getBuffer().position(0));
+        GLUtils.handleError(gles, "glVertexAttribPointer1 ");
         ShaderVariable attrib2 = getShaderVariable(VARIABLES.aTileSprite.index);
         gles.glEnableVertexAttribArray(attrib2.getLocation());
-        GLUtils.handleError(gles, "glEnableVertexAttribArray ");
+        GLUtils.handleError(gles, "glEnableVertexAttribArray2 ");
         VertexBuffer buffer2 = mesh.getVerticeBuffer(1);
         gles.glVertexAttribPointer(attrib2.getLocation(), buffer2.getComponentCount(), buffer2.getDataType(), false,
-                buffer2.getByteStride(), buffer2.getBuffer().position(0));
+                buffer2.getByteStride(), buffer2.getBuffer().position(ATTRIBUTE_SPRITE_X_INDEX));
+        ShaderVariable attrib3 = getShaderVariable(VARIABLES.aTileSprite2.index);
+        if (attrib3 != null) {
+            gles.glEnableVertexAttribArray(attrib3.getLocation());
+            GLUtils.handleError(gles, "glEnableVertexAttribArray3 ");
+            VertexBuffer buffer3 = mesh.getVerticeBuffer(1);
+            gles.glVertexAttribPointer(attrib3.getLocation(), buffer3.getComponentCount(), buffer3.getDataType(), false,
+            		buffer3.getByteStride(), buffer3.getBuffer().position(ATTRIBUTE_SPRITE_FRAME_INDEX));
+        }
+        GLUtils.handleError(gles, "glVertexAttribPointer3 ");
 
     }
 
@@ -73,10 +119,12 @@ public class TiledSpriteProgram extends ShaderProgram {
         ViewFrustum viewFrustum = renderer.getViewFrustum();
         System.arraycopy(viewFrustum.getProjectionMatrix(), 0, uniformMatrices, 0, 16);
         System.arraycopy(viewFrustum.getProjectionMatrix(), 0, uniformMatrices, 16, 16);
-        gles.glUniformMatrix4fv(getShaderVariable(VARIABLES.uMVPMatrix.index).getLocation(), 2, false, uniformMatrices,
-                0);
+        gles.glUniformMatrix4fv(getShaderVariable(VARIABLES.uMVPMatrix.index).getLocation(), 2, false, uniformMatrices, 0);
         GLUtils.handleError(gles, "glUniformMatrix4fv ");
-        // gles.glUniform4fv(getShaderVariable(VARIABLES.uRenderVec.index).getLocation(), 2, uniformVectors, 0);
+        ShaderVariable v = getShaderVariable(VARIABLES.uSpriteData.index);
+        if (v != null) {
+            gles.glUniform4fv(v.getLocation(), 2, mesh.getUniformVectors(), 0);
+        }
     }
 
 }

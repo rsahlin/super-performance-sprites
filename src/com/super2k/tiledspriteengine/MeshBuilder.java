@@ -56,7 +56,7 @@ public class MeshBuilder {
     public static Mesh buildTileSpriteMesh(ShaderProgram tiledSpriteProgram, int spriteCount, float width,
             float height, float z, int type) {
 
-        int vertexStride = DEFAULT_COMPONENTS + 2;
+        int vertexStride = DEFAULT_COMPONENTS;
         float[] quadPositions = new float[vertexStride * VERTICES_PER_SPRITE];
 
         float halfWidth = width / 2;
@@ -80,8 +80,7 @@ public class MeshBuilder {
      * @param tiledSpriteProgram The program that the vertice/attribute buffers will be appended to - this must be a
      * program that can use the attribute data.
      * @param spriteCount Number of sprites to build, this is NOT the vertex count.
-     * @param quadPositions Array with x,y,z + UV vertice data - this is set for each tile. Must contain data for 4
-     * vertices.
+     * @param quadPositions Array with x,y,z - this is set for each tile. Must contain data for 4 vertices.
      * @param type The datatype for attribute data - GLES20.GL_FLOAT
      * 
      * @return The mesh that can be rendered.
@@ -96,21 +95,20 @@ public class MeshBuilder {
         /**
          * Create the buffer for vertex position and UV
          */
-        attributes[0] = new VertexBuffer(spriteCount * VERTICES_PER_SPRITE, DEFAULT_COMPONENTS, DEFAULT_COMPONENTS + 2,
+        attributes[0] = new VertexBuffer(spriteCount * VERTICES_PER_SPRITE, DEFAULT_COMPONENTS, DEFAULT_COMPONENTS,
                 type);
-        attributes[1] = new VertexBuffer(spriteCount * VERTICES_PER_SPRITE, TiledSprite.PER_VERTEX_DATA,
-                TiledSprite.PER_VERTEX_DATA, GLES20.GL_FLOAT);
+        attributes[1] = new VertexBuffer(spriteCount * VERTICES_PER_SPRITE, 4, TiledSprite.PER_VERTEX_DATA, GLES20.GL_FLOAT);
         ElementBuffer indices = new ElementBuffer(Mode.TRIANGLES, INDICES_PER_SPRITE * spriteCount, Type.SHORT);
         ElementBuilder.buildQuadBuffer(indices, indices.getCount() / INDICES_PER_SPRITE, 0);
 
-        float[] vertices = new float[spriteCount * VERTICES_PER_SPRITE * 5];
+        float[] vertices = new float[spriteCount * VERTICES_PER_SPRITE * DEFAULT_COMPONENTS];
         int destPos = 0;
         for (int i = 0; i < spriteCount; i++) {
             System.arraycopy(quadPositions, 0, vertices, destPos, quadPositions.length);
             destPos += quadPositions.length;
         }
 
-        attributes[0].setPositionAndUV(vertices, 0, 0, spriteCount * VERTICES_PER_SPRITE);
+        attributes[0].setPosition(vertices, 0, 0, spriteCount * VERTICES_PER_SPRITE);
         Material material = new Material(tiledSpriteProgram);
         Mesh mesh = new Mesh(indices, attributes, material, null);
         return mesh;

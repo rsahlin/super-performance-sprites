@@ -57,7 +57,7 @@ public abstract class Sprite {
     }
 
     /**
-     * Sets the x and y position of this sprite.
+     * Sets the x, y position and frame of this sprite.
      * 
      * @param x
      * @param y
@@ -68,6 +68,10 @@ public abstract class Sprite {
         prepare();
     }
 
+    public void setFrame(int frame) {
+    	floatData[FRAME] = frame;
+    }
+    
     /**
      * Updates the gravity vector according to the specified gravity and time
      * 

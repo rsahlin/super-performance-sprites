@@ -21,6 +21,7 @@ import com.nucleus.opengl.GLException;
 import com.nucleus.opengl.GLUtils;
 import com.nucleus.shader.ShaderProgram;
 import com.nucleus.texturing.Image;
+import com.nucleus.texturing.Texture2D;
 import com.nucleus.transform.Vector2D;
 import com.super2k.tiledspriteengine.sprite.Sprite;
 import com.super2k.tiledspriteengine.sprite.TiledSprite;
@@ -33,12 +34,11 @@ public class TiledSpriteRenderer extends AndroidRenderer implements MMIEventList
 
     private PointerInputProcessor inputProcessor;
     private ShaderProgram tiledSpriteProgram;
-    private Mesh mesh;
-    private Image texture;
+    private Image textureImg;
+    private Texture2D texture;
     private int textureID;
-    private TiledSpriteController spriteController = new TiledSpriteController(SPRITECOUNT);
+    private TiledSpriteController spriteController;
 
-    private float[] uniformVector = new float[] { 0, 0, 0, 0, 0, 0, 0, 0 };
     private int currentSprite = 0;
     private TimeKeeper timeKeeper = new TimeKeeper(30);
     private Random random = new Random();
@@ -89,7 +89,7 @@ public class TiledSpriteRenderer extends AndroidRenderer implements MMIEventList
             Log.d(TILED_SPRITE_RENDERER_TAG, "Average FPS: " + timeKeeper.sampleFPS());
         }
         for (TiledSprite sprite : spriteController.getSprites()) {
-            sprite.updateGravity(0, 10, deltaTime);
+            sprite.updateGravity(0, 8, deltaTime);
             sprite.move(deltaTime);
             if (sprite.floatData[Sprite.Y_POS] > 1.0f) {
                 sprite.floatData[Sprite.GRAVITY_Y] = -sprite.floatData[Sprite.GRAVITY_Y]
@@ -107,18 +107,17 @@ public class TiledSpriteRenderer extends AndroidRenderer implements MMIEventList
         super.render();
         try {
             GLUtils.handleError(gles, "Error");
-            gles.glClearColor(0, 0f, 0f, 1.0f);
+            gles.glClearColor(0, 0f, 0.4f, 1.0f);
             gles.glClear(GLES20.GL_COLOR_BUFFER_BIT);
             gles.glDisable(GLES20.GL_DEPTH_TEST);
             gles.glDisable(GLES20.GL_CULL_FACE);
             gles.glUseProgram(tiledSpriteProgram.getProgram());
             AndroidGLUtils.handleError("Program error");
 
-            VertexBuffer positions = mesh.getVerticeBuffer(1);
-            positions
-                    .setArray(spriteController.getData(), 0, SPRITECOUNT * TiledSpriteController.SPRITE_ATTRIBUTE_DATA);
+            VertexBuffer positions = spriteController.getMesh().getVerticeBuffer(1);
+            positions.setArray(spriteController.getData(), 0, 0, SPRITECOUNT * TiledSpriteController.SPRITE_ATTRIBUTE_DATA);
 
-            renderMesh(mesh);
+            renderMesh(spriteController.getMesh());
             GLUtils.handleError(gles, "Error");
 
         } catch (GLException e) {
@@ -133,29 +132,33 @@ public class TiledSpriteRenderer extends AndroidRenderer implements MMIEventList
 
         switch (event.getAction()) {
         case MOVE:
-            int index = 0;
+        case INACTIVE:
+        case ACTIVE:
             float[] pos = event.getPointerData().getCurrentPosition();
-            // Normalize position
-            pos[0] = pos[0] / width;
-            pos[1] = pos[1] / height;
-            Sprite s = spriteController.getSprites()[currentSprite];
-            s.setPosition(pos[0], pos[1]);
-            s.floatData[Sprite.GRAVITY_Y] = 0;
-            s.floatData[Sprite.ELASTICITY] = 0.95f - (random.nextFloat() / 10);
-            currentSprite++;
-            if (currentSprite > SPRITECOUNT - 1) {
-                currentSprite = 0;
-            }
+             releaseSprite(pos);
             break;
         case ZOOM:
             Vector2D zoom = event.getZoom();
             float z = ((zoom.vector[Vector2D.MAGNITUDE] * zoom.vector[Vector2D.X_AXIS]) / 1000);
             break;
         default:
-            break;
+            
         }
     }
 
+    private void releaseSprite(float[] pos) {
+        pos[0] = pos[0] / width;
+        pos[1] = pos[1] / height;
+        Sprite s = spriteController.getSprites()[currentSprite];
+        s.setPosition(pos[0], pos[1]);
+        s.floatData[Sprite.GRAVITY_Y] = 0;
+        s.floatData[Sprite.ELASTICITY] = 0.95f - (random.nextFloat() / 10);
+        currentSprite++;
+        if (currentSprite > SPRITECOUNT - 1) {
+            currentSprite = 0;
+        }
+    }
+    
     @Override
     public void GLContextCreated() {
         createPrograms();
@@ -168,15 +171,25 @@ public class TiledSpriteRenderer extends AndroidRenderer implements MMIEventList
         gles.glActiveTexture(GLES20.GL_TEXTURE0);
         gles.glBindTexture(GLES20.GL_TEXTURE_2D, textureID);
         try {
-            texture = createImage("assets/texture.png");
+        	textureImg = createImage("assets/spritesheet.png");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        gles.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, texture.getFormat().getFormat(), texture.getWidth(), texture
-                .getHeight(), 0, texture.getFormat().getFormat(), GLES20.GL_UNSIGNED_BYTE, texture.getBuffer()
+        gles.glTexImage2D(GLES20.GL_TEXTURE_2D, 0, textureImg.getFormat().getFormat(), textureImg.getWidth(), textureImg
+                .getHeight(), 0, textureImg.getFormat().getFormat(), GLES20.GL_UNSIGNED_BYTE, textureImg.getBuffer()
                 .position(0));
-        mesh = MeshBuilder.buildTileSpriteMesh(tiledSpriteProgram, spriteController.getCount(), 0.03f, 0.03f, 0,
-                GLES20.GL_FLOAT);
-        mesh.setUniformVectors(uniformVector);
+        
+        texture = new Texture2D(textureID, textureImg.getWidth(), textureImg.getHeight());
+        spriteController = new TiledSpriteController(SPRITECOUNT);
+        spriteController.createMesh(tiledSpriteProgram, texture, 0.05f, 0.05f, 1f / 8, 0.5f);
+     
+        int frame = 0;
+        for (TiledSprite sprite : spriteController.getSprites()) {
+        	sprite.setFrame(frame++);
+        	if (frame > 17) {
+        		frame = 0;
+        	}
+        }
+        
     }
 }

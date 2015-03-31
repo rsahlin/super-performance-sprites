@@ -17,8 +17,16 @@
  */
 precision mediump float;
 uniform mat4 uMVPMatrix[2];
+uniform vec4 uSpriteData[2]; //tex width, tex height, frames per line
 attribute vec4 aPosition;
-attribute vec2 aTileSprite;
+attribute vec4 aTileSprite; //sprite x, sprite y, texture u, texture v
+attribute vec4 aTileSprite2;//frame
+
+varying vec2 vTexCoord;
+
 void main() {
     gl_Position = (uMVPMatrix[0] * ( aPosition + vec4(aTileSprite.x, aTileSprite.y,0.0, 0.0)));
+    float y = floor(aTileSprite2.x / uSpriteData[0].z);
+    vTexCoord = vec2(aTileSprite.z * uSpriteData[0].x + mod(aTileSprite2.x * uSpriteData[0].x, 1.0),
+    				 aTileSprite.w * uSpriteData[0].y + y * uSpriteData[0].y);
 }
