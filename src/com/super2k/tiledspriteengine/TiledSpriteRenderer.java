@@ -30,7 +30,8 @@ import com.super2k.tiledspriteengine.sprite.TiledSpriteController;
 public class TiledSpriteRenderer extends AndroidRenderer implements MMIEventListener {
 
     protected final static String TILED_SPRITE_RENDERER_TAG = "TiledSpiteRenderer";
-    public final static int SPRITECOUNT = 1000;
+    public final static int SPRITECOUNT = 16;
+    public final static float GRAVITY = 0;
 
     private PointerInputProcessor inputProcessor;
     private ShaderProgram tiledSpriteProgram;
@@ -89,7 +90,11 @@ public class TiledSpriteRenderer extends AndroidRenderer implements MMIEventList
             Log.d(TILED_SPRITE_RENDERER_TAG, "Average FPS: " + timeKeeper.sampleFPS());
         }
         for (TiledSprite sprite : spriteController.getSprites()) {
-            sprite.updateGravity(0, 8, deltaTime);
+        	sprite.floatData[Sprite.ROTATION] += deltaTime * 1f;
+        	if (sprite.floatData[Sprite.ROTATION] > (3.14159f * 2)) {
+        		sprite.floatData[Sprite.ROTATION] -= (3.14159f * 2);
+        	}
+            sprite.updateGravity(0, GRAVITY, deltaTime);
             sprite.move(deltaTime);
             if (sprite.floatData[Sprite.Y_POS] > 1.0f) {
                 sprite.floatData[Sprite.GRAVITY_Y] = -sprite.floatData[Sprite.GRAVITY_Y]
@@ -131,8 +136,9 @@ public class TiledSpriteRenderer extends AndroidRenderer implements MMIEventList
         float[] delta = event.getPointerData().getDelta(1);
 
         switch (event.getAction()) {
-        case MOVE:
         case INACTIVE:
+        	break;
+        case MOVE:
         case ACTIVE:
             float[] pos = event.getPointerData().getCurrentPosition();
              releaseSprite(pos);
@@ -171,7 +177,7 @@ public class TiledSpriteRenderer extends AndroidRenderer implements MMIEventList
         gles.glActiveTexture(GLES20.GL_TEXTURE0);
         gles.glBindTexture(GLES20.GL_TEXTURE_2D, textureID);
         try {
-        	textureImg = createImage("assets/spritesheet.png");
+        	textureImg = createImage("assets/texture3.png");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -181,12 +187,12 @@ public class TiledSpriteRenderer extends AndroidRenderer implements MMIEventList
         
         texture = new Texture2D(textureID, textureImg.getWidth(), textureImg.getHeight());
         spriteController = new TiledSpriteController(SPRITECOUNT);
-        spriteController.createMesh(tiledSpriteProgram, texture, 0.05f, 0.05f, 1f / 8, 0.5f);
+        spriteController.createMesh(tiledSpriteProgram, texture, 0.1f, 0.1f, 1f / 4, 0.5f);
      
         int frame = 0;
         for (TiledSprite sprite : spriteController.getSprites()) {
         	sprite.setFrame(frame++);
-        	if (frame > 17) {
+        	if (frame > 7) {
         		frame = 0;
         	}
         }

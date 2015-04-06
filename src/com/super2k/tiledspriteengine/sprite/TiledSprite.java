@@ -16,7 +16,7 @@ public class TiledSprite extends Sprite {
     /**
      * Number of float data per vertex
      */
-    public final static int PER_VERTEX_DATA = 5;
+    public final static int PER_VERTEX_DATA = 8;
 
     /**
      * Ref to sprite data, use with offset.
@@ -71,11 +71,13 @@ public class TiledSprite extends Sprite {
         float ypos = floatData[Y_POS];
         int index = offset;
         int frameIndex = (int) floatData[FRAME];
+        float rotation = floatData[ROTATION];
         
         for (int i = 0; i < VERTICES_PER_SPRITE; i++) {
             data[index + TiledSpriteProgram.ATTRIBUTE_SPRITE_X_INDEX] = xpos;
             data[index + TiledSpriteProgram.ATTRIBUTE_SPRITE_Y_INDEX] = ypos;
             data[index + TiledSpriteProgram.ATTRIBUTE_SPRITE_FRAME_INDEX] = frameIndex;
+            data[index + TiledSpriteProgram.ATTRIBUTE_SPRITE_ROTATION_INDEX] = rotation;
             index += PER_VERTEX_DATA;
         }
         

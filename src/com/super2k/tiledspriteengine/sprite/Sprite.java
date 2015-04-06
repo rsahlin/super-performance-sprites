@@ -72,6 +72,10 @@ public abstract class Sprite {
     	floatData[FRAME] = frame;
     }
     
+    public void setRotation(float rotation) {
+    	floatData[ROTATION] = rotation;
+    }
+    
     /**
      * Updates the gravity vector according to the specified gravity and time
      * 

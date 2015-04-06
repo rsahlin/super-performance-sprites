@@ -32,6 +32,9 @@ public class TiledSpriteProgram extends ShaderProgram {
 	 * Index into uniform sprite data where 1 / texture fraction w - this is used to calculate y pos from frame index
 	 */
 	public final static int UNIFORM_TEX_ONEBY_S_INDEX = 2;
+
+	public final static int ATTRIBUTE_1_OFFSET = 0;
+	public final static int ATTRIBUTE_2_OFFSET = 4;
 	
 	/**
 	 * Index into aTileSprite for x position
@@ -50,9 +53,13 @@ public class TiledSpriteProgram extends ShaderProgram {
 	 */
 	public final static int ATTRIBUTE_SPRITE_V_INDEX = 3;
 	/**
-	 * Index into aTileSprite texture v coordinate - this is used to calculate texture coordinate with frame.
+	 * Index into aTileSprite frame number, this is the sprite frame number to use.
 	 */
 	public final static int ATTRIBUTE_SPRITE_FRAME_INDEX = 4;
+	/**
+	 * Index into aTileSprite z axis rotation
+	 */
+	public final static int ATTRIBUTE_SPRITE_ROTATION_INDEX = 5;
 	
     public enum VARIABLES {
         uMVPMatrix(0, ShaderVariable.VariableType.UNIFORM),
@@ -102,14 +109,14 @@ public class TiledSpriteProgram extends ShaderProgram {
         GLUtils.handleError(gles, "glEnableVertexAttribArray2 ");
         VertexBuffer buffer2 = mesh.getVerticeBuffer(1);
         gles.glVertexAttribPointer(attrib2.getLocation(), buffer2.getComponentCount(), buffer2.getDataType(), false,
-                buffer2.getByteStride(), buffer2.getBuffer().position(ATTRIBUTE_SPRITE_X_INDEX));
+                buffer2.getByteStride(), buffer2.getBuffer().position(ATTRIBUTE_1_OFFSET));
         ShaderVariable attrib3 = getShaderVariable(VARIABLES.aTileSprite2.index);
         if (attrib3 != null) {
             gles.glEnableVertexAttribArray(attrib3.getLocation());
             GLUtils.handleError(gles, "glEnableVertexAttribArray3 ");
             VertexBuffer buffer3 = mesh.getVerticeBuffer(1);
             gles.glVertexAttribPointer(attrib3.getLocation(), buffer3.getComponentCount(), buffer3.getDataType(), false,
-            		buffer3.getByteStride(), buffer3.getBuffer().position(ATTRIBUTE_SPRITE_FRAME_INDEX));
+            		buffer3.getByteStride(), buffer3.getBuffer().position(ATTRIBUTE_2_OFFSET));
         }
         GLUtils.handleError(gles, "glVertexAttribPointer3 ");
 
