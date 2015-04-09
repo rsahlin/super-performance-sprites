@@ -46,31 +46,34 @@ public class TiledSpriteController {
         for (int i = 0; i < count; i++) {
             sprites[i] = new TiledSprite(data, i * SPRITE_ATTRIBUTE_DATA);
         }
-        
+
     }
 
     /**
      * Creates the Mesh to be rendered.
+     * 
      * @param program
      * @param texture
      * @param width
      * @param height
      * @param texFractionS Texture width of this sprite as a fraction of tile sprite sheet, ie 0.1 for 1/10 of the width
-     * @param texFractionT Texture height of this sprite as a fraction of tile sprite sheet, ie 0.1 for 1/10 of the height
+     * @param texFractionT Texture height of this sprite as a fraction of tile sprite sheet, ie 0.1 for 1/10 of the
+     * height
      * @return
      */
-    public Mesh createMesh(ShaderProgram program, Texture2D texture, float width, float height, float texFractionS, float texFractionT) {
-    	
+    public Mesh createMesh(ShaderProgram program, Texture2D texture, float width, float height, float texFractionS,
+            float texFractionT) {
+
         mesh = MeshBuilder.buildTileSpriteMesh(program, count, width, height, 0, GLES20.GL_FLOAT);
         mesh.setTexture(texture, Texture2D.TEXTURE_0);
         mesh.setUniformVectors(uniformVector);
         mesh.getUniformVectors()[TiledSpriteProgram.UNIFORM_TEX_FRACTION_S_INDEX] = texFractionS;
         mesh.getUniformVectors()[TiledSpriteProgram.UNIFORM_TEX_FRACTION_T_INDEX] = texFractionT;
         mesh.getUniformVectors()[TiledSpriteProgram.UNIFORM_TEX_ONEBY_S_INDEX] = (int) (1 / texFractionS);
-        
+
         return mesh;
     }
-    
+
     public float[] getData() {
         return data;
     }
@@ -82,9 +85,9 @@ public class TiledSpriteController {
     public TiledSprite[] getSprites() {
         return sprites;
     }
-    
+
     public Mesh getMesh() {
-    	return mesh;
+        return mesh;
     }
 
 }

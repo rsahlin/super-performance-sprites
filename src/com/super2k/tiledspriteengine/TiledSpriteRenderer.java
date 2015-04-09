@@ -31,7 +31,7 @@ public class TiledSpriteRenderer extends AndroidRenderer implements MMIEventList
 
     protected final static String TILED_SPRITE_RENDERER_TAG = "TiledSpiteRenderer";
     public final static int SPRITECOUNT = 1000;
-    public final static int SPRITE_FRAMES_X = 1;
+    public final static int SPRITE_FRAMES_X = 5;
     public final static int SPRITE_FRAMES_Y = 1;
     public final static int START_XPOS = -1;
     public final static int START_YPOS = 0;
@@ -174,7 +174,7 @@ public class TiledSpriteRenderer extends AndroidRenderer implements MMIEventList
 
         textureID = textures[0];
 
-        textureImg = loadTextureMIPMAP("assets/af.png", 2180, 3);
+        textureImg = loadTextureMIPMAP("assets/af.png", 1080, 3);
 
         try {
             uploadTextures(GLES20.GL_TEXTURE0, textureID, textureImg);
@@ -182,9 +182,11 @@ public class TiledSpriteRenderer extends AndroidRenderer implements MMIEventList
             throw new IllegalArgumentException(e);
         }
         texture = new Texture2D(textureID, textureImg[0].getWidth(), textureImg[0].getHeight());
+        texture.setValues(GLES20.GL_LINEAR, GLES20.GL_LINEAR, GLES20.GL_CLAMP_TO_EDGE, GLES20.GL_CLAMP_TO_EDGE);
         spriteController = new TiledSpriteController(SPRITECOUNT);
         spriteController
-                .createMesh(tiledSpriteProgram, texture, 0.05f, 0.05f, 1f / SPRITE_FRAMES_X, 1f / SPRITE_FRAMES_Y);
+                .createMesh(tiledSpriteProgram, texture, 0.05f, 0.05f, 1f / SPRITE_FRAMES_X,
+                        1f / SPRITE_FRAMES_Y);
 
         int frame = 0;
         int maxFrames = SPRITE_FRAMES_X * SPRITE_FRAMES_Y - 1;
@@ -214,7 +216,7 @@ public class TiledSpriteRenderer extends AndroidRenderer implements MMIEventList
 
         Image[] images = new Image[levels];
         try {
-            float scale = ResourceBias.getScaleFactorLandscape(width, height, 2180);
+            float scale = ResourceBias.getScaleFactorLandscape(width, height, baseHeight);
             for (int i = 0; i < levels; i++) {
                 images[i] = createImage(imageName, scale, scale);
                 scale = scale * 0.5f;
