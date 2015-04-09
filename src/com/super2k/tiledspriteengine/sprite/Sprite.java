@@ -33,8 +33,9 @@ public abstract class Sprite {
     public final static int GRAVITY_X = 3;
     public final static int GRAVITY_Y = 4;
     public final static int ELASTICITY = 5;
-    public final static int ROTATION = 6; // z axis rotation
-    public final static int FRAME = 7;
+    public final static int ROTATION = 6; // z axis rotation angle
+    public final static int ROTATE_SPEED = 7;
+    public final static int FRAME = 8;
 
     /**
      * All sprites can move using a vector
@@ -69,13 +70,13 @@ public abstract class Sprite {
     }
 
     public void setFrame(int frame) {
-    	floatData[FRAME] = frame;
+        floatData[FRAME] = frame;
     }
-    
+
     public void setRotation(float rotation) {
-    	floatData[ROTATION] = rotation;
+        floatData[ROTATION] = rotation;
     }
-    
+
     /**
      * Updates the gravity vector according to the specified gravity and time
      * 
