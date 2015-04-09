@@ -15,9 +15,12 @@
  * Fragment shader for tiled sprite renderer
  * @author Richard Sahlin
  */
+#version 100
+
 precision mediump float;
 uniform mat4 uMVPMatrix[2];
 uniform vec4 uSpriteData[2]; //tex width, tex height, frames per line
+
 attribute vec4 aPosition;
 attribute vec4 aTileSprite; //sprite x, sprite y, texture u, texture v
 attribute vec4 aTileSprite2;//frame, rotation z, unused, unused
@@ -26,11 +29,10 @@ varying vec2 vTexCoord;
 mat4 spriteTransform();
 
 void main() {
-//    gl_Position = (spriteTransform() * ( aPosition + vec4(aTileSprite.x, aTileSprite.y,0.0, 0.0)));
     gl_Position = spriteTransform() * aPosition + (uMVPMatrix[0] * vec4(aTileSprite.x, aTileSprite.y,0.0, 0.0));
     float y = floor(aTileSprite2.x / uSpriteData[0].z);
     vTexCoord = vec2(aTileSprite.z * uSpriteData[0].x + mod(aTileSprite2.x, uSpriteData[0].z) * uSpriteData[0].x,
-    				 aTileSprite.w * uSpriteData[0].y + y * uSpriteData[0].y);
+                     aTileSprite.w * uSpriteData[0].y + y * uSpriteData[0].y);
 }
 
 
