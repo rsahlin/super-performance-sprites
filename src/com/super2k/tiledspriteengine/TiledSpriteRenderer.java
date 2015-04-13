@@ -3,38 +3,38 @@ package com.super2k.tiledspriteengine;
 import java.io.IOException;
 import java.util.Random;
 
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.opengles.GL10;
-
-import android.util.Log;
-
 import com.nucleus.android.AndroidGLUtils;
-import com.nucleus.android.AndroidRenderer;
 import com.nucleus.common.TimeKeeper;
 import com.nucleus.geometry.VertexBuffer;
+import com.nucleus.matrix.MatrixEngine;
 import com.nucleus.mmi.MMIEventListener;
 import com.nucleus.mmi.MMIPointerEvent;
 import com.nucleus.mmi.PointerInputProcessor;
+import com.nucleus.opengl.GLES20Wrapper;
 import com.nucleus.opengl.GLES20Wrapper.GLES20;
 import com.nucleus.opengl.GLException;
 import com.nucleus.opengl.GLUtils;
+import com.nucleus.renderer.BaseRenderer;
 import com.nucleus.resource.ResourceBias;
 import com.nucleus.shader.ShaderProgram;
 import com.nucleus.texturing.Image;
+import com.nucleus.texturing.ImageFactory;
 import com.nucleus.texturing.Texture2D;
 import com.nucleus.transform.Vector2D;
 import com.super2k.tiledspriteengine.sprite.Sprite;
 import com.super2k.tiledspriteengine.sprite.TiledSprite;
 import com.super2k.tiledspriteengine.sprite.TiledSpriteController;
 
-public class TiledSpriteRenderer extends AndroidRenderer implements MMIEventListener {
+public class TiledSpriteRenderer extends BaseRenderer implements MMIEventListener {
 
     protected final static String TILED_SPRITE_RENDERER_TAG = "TiledSpiteRenderer";
-    public final static int SPRITECOUNT = 1000;
+    public final static int SPRITECOUNT = 1200;
     public final static int SPRITE_FRAMES_X = 5;
     public final static int SPRITE_FRAMES_Y = 1;
     public final static int START_XPOS = -1;
     public final static int START_YPOS = 0;
+    public final static float SPRITE_WIDTH = 0.05f;
+    public final static float SPRITE_HEIGHT = 0.05f;
 
     private PointerInputProcessor inputProcessor;
     private ShaderProgram tiledSpriteProgram;
@@ -47,20 +47,11 @@ public class TiledSpriteRenderer extends AndroidRenderer implements MMIEventList
     private TimeKeeper timeKeeper = new TimeKeeper(30);
     private Random random = new Random();
 
-    public TiledSpriteRenderer(PointerInputProcessor inputProcessor) {
-        super();
+    public TiledSpriteRenderer(GLES20Wrapper gles, ImageFactory imageFactory, MatrixEngine matrixEngine,
+            PointerInputProcessor inputProcessor) {
+        super(gles, imageFactory, matrixEngine);
         this.inputProcessor = inputProcessor;
         inputProcessor.addMMIListener(this);
-    }
-
-    @Override
-    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        super.onSurfaceCreated(gl, config);
-    }
-
-    @Override
-    public void onSurfaceChanged(GL10 gl, int width, int height) {
-        super.onSurfaceChanged(gl, width, height);
     }
 
     /**
@@ -91,7 +82,7 @@ public class TiledSpriteRenderer extends AndroidRenderer implements MMIEventList
 
         float deltaTime = timeKeeper.update();
         if (timeKeeper.getSampleDuration() > 3) {
-            Log.d(TILED_SPRITE_RENDERER_TAG, "Average FPS: " + timeKeeper.sampleFPS());
+            System.out.println(TILED_SPRITE_RENDERER_TAG + ": Average FPS: " + timeKeeper.sampleFPS());
         }
         for (TiledSprite sprite : spriteController.getSprites()) {
             sprite.process(deltaTime);
@@ -166,7 +157,8 @@ public class TiledSpriteRenderer extends AndroidRenderer implements MMIEventList
 
     @Override
     public void GLContextCreated(int width, int height) {
-        Log.d(TILED_SPRITE_RENDERER_TAG, "GLContextCreated: " + width + ", " + height);
+        super.GLContextCreated(width, height);
+        System.out.println(TILED_SPRITE_RENDERER_TAG + ": GLContextCreated: " + width + ", " + height);
         createPrograms();
 
         int[] textures = new int[1];
@@ -185,9 +177,9 @@ public class TiledSpriteRenderer extends AndroidRenderer implements MMIEventList
         texture.setValues(GLES20.GL_LINEAR, GLES20.GL_LINEAR, GLES20.GL_CLAMP_TO_EDGE, GLES20.GL_CLAMP_TO_EDGE);
         spriteController = new TiledSpriteController(SPRITECOUNT);
         spriteController
-                .createMesh(tiledSpriteProgram, texture, 0.05f, 0.05f, 1f / SPRITE_FRAMES_X,
+                .createMesh(tiledSpriteProgram, texture, SPRITE_WIDTH, SPRITE_HEIGHT, 1f / SPRITE_FRAMES_X,
                         1f / SPRITE_FRAMES_Y);
-
+        viewFrustum.setOrthoProjection(0, 1, 1, 0, 0, 10);
         int frame = 0;
         int maxFrames = SPRITE_FRAMES_X * SPRITE_FRAMES_Y - 1;
         for (TiledSprite sprite : spriteController.getSprites()) {
@@ -218,7 +210,7 @@ public class TiledSpriteRenderer extends AndroidRenderer implements MMIEventList
         try {
             float scale = ResourceBias.getScaleFactorLandscape(width, height, baseHeight);
             for (int i = 0; i < levels; i++) {
-                images[i] = createImage(imageName, scale, scale);
+                images[i] = imageFactory.createImage(imageName, scale, scale);
                 scale = scale * 0.5f;
             }
         } catch (IOException e) {
