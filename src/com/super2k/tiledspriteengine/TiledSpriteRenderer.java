@@ -16,10 +16,11 @@ import com.nucleus.opengl.GLException;
 import com.nucleus.opengl.GLUtils;
 import com.nucleus.renderer.BaseRenderer;
 import com.nucleus.resource.ResourceBias;
-import com.nucleus.shader.ShaderProgram;
+import com.nucleus.resource.ResourceBias.RESOLUTION;
 import com.nucleus.texturing.Image;
 import com.nucleus.texturing.ImageFactory;
 import com.nucleus.texturing.Texture2D;
+import com.nucleus.texturing.TextureUtils;
 import com.nucleus.transform.Vector2D;
 import com.super2k.tiledspriteengine.sprite.Sprite;
 import com.super2k.tiledspriteengine.sprite.TiledSprite;
@@ -28,6 +29,7 @@ import com.super2k.tiledspriteengine.sprite.TiledSpriteController;
 public class TiledSpriteRenderer extends BaseRenderer implements MMIEventListener {
 
     protected final static String TILED_SPRITE_RENDERER_TAG = "TiledSpiteRenderer";
+    private final static String TEXTURE_NAME = "assets/af.png";
     public final static int SPRITECOUNT = 1200;
     public final static int SPRITE_FRAMES_X = 5;
     public final static int SPRITE_FRAMES_Y = 1;
@@ -37,7 +39,7 @@ public class TiledSpriteRenderer extends BaseRenderer implements MMIEventListene
     public final static float SPRITE_HEIGHT = 0.05f;
 
     private PointerInputProcessor inputProcessor;
-    private ShaderProgram tiledSpriteProgram;
+    private TiledSpriteProgram tiledSpriteProgram;
     private Image[] textureImg;
     private Texture2D texture;
     private int textureID;
@@ -166,7 +168,8 @@ public class TiledSpriteRenderer extends BaseRenderer implements MMIEventListene
 
         textureID = textures[0];
 
-        textureImg = loadTextureMIPMAP("assets/af.png", 1080, 3);
+        textureImg = TextureUtils.loadTextureMIPMAP(imageFactory, TEXTURE_NAME,
+                ResourceBias.getScaleFactorLandscape(width, height, RESOLUTION.HD.lines), 3);
 
         try {
             uploadTextures(GLES20.GL_TEXTURE0, textureID, textureImg);
@@ -176,9 +179,8 @@ public class TiledSpriteRenderer extends BaseRenderer implements MMIEventListene
         texture = new Texture2D(textureID, textureImg[0].getWidth(), textureImg[0].getHeight());
         texture.setValues(GLES20.GL_LINEAR, GLES20.GL_LINEAR, GLES20.GL_CLAMP_TO_EDGE, GLES20.GL_CLAMP_TO_EDGE);
         spriteController = new TiledSpriteController(SPRITECOUNT);
-        spriteController
-                .createMesh(tiledSpriteProgram, texture, SPRITE_WIDTH, SPRITE_HEIGHT, 1f / SPRITE_FRAMES_X,
-                        1f / SPRITE_FRAMES_Y);
+        spriteController.createMesh(tiledSpriteProgram, texture, SPRITE_WIDTH, SPRITE_HEIGHT, 1f / SPRITE_FRAMES_X,
+                1f / SPRITE_FRAMES_Y);
         viewFrustum.setOrthoProjection(0, 1, 1, 0, 0, 10);
         int frame = 0;
         int maxFrames = SPRITE_FRAMES_X * SPRITE_FRAMES_Y - 1;
@@ -190,33 +192,6 @@ public class TiledSpriteRenderer extends BaseRenderer implements MMIEventListene
             sprite.setPosition(START_XPOS, START_YPOS);
         }
 
-    }
-
-    /**
-     * Loads an image into several mip-map levels, the same image will be scaled to produce the
-     * different mip-map levels.
-     * TODO: Add method to ImageFactory to scale existing image - currently re-loads image and scales.
-     * 
-     * @param imageName Name of image to load
-     * @param baseHeight Base height of assets, image will be scaled compared to
-     * screen height. ie If base is 1080 and display height is 540 then the first mip-map level
-     * will be 1/2 original size.
-     * @param levels Number of mip-map levels
-     * @return Array with an image for each mip-map level.
-     */
-    private Image[] loadTextureMIPMAP(String imageName, int baseHeight, int levels) {
-
-        Image[] images = new Image[levels];
-        try {
-            float scale = ResourceBias.getScaleFactorLandscape(width, height, baseHeight);
-            for (int i = 0; i < levels; i++) {
-                images[i] = imageFactory.createImage(imageName, scale, scale);
-                scale = scale * 0.5f;
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        return images;
     }
 
     /**
