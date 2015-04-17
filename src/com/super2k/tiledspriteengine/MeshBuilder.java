@@ -8,7 +8,8 @@ import com.nucleus.geometry.Material;
 import com.nucleus.geometry.Mesh;
 import com.nucleus.geometry.VertexBuffer;
 import com.nucleus.opengl.GLES20Wrapper.GLES20;
-import com.nucleus.shader.ShaderProgram;
+import com.nucleus.shader.ShaderVariable;
+import com.super2k.tiledspriteengine.TiledSpriteProgram.VARIABLES;
 import com.super2k.tiledspriteengine.sprite.TiledSprite;
 
 /**
@@ -53,7 +54,7 @@ public class MeshBuilder {
      * @return The mesh that can be rendered.
      * @throws IllegalArgumentException if type is not GLES20.GL_FLOAT
      */
-    public static Mesh buildTileSpriteMesh(ShaderProgram tiledSpriteProgram, int spriteCount, float width,
+    public static Mesh buildTileSpriteMesh(TiledSpriteProgram tiledSpriteProgram, int spriteCount, float width,
             float height, float z, int type) {
 
         int vertexStride = DEFAULT_COMPONENTS;
@@ -86,7 +87,8 @@ public class MeshBuilder {
      * @return The mesh that can be rendered.
      * @throws IllegalArgumentException if type is not GLES20.GL_FLOAT
      */
-    public static Mesh buildTileSpriteMesh(ShaderProgram tiledSpriteProgram, int spriteCount, float[] quadPositions,
+    public static Mesh buildTileSpriteMesh(TiledSpriteProgram tiledSpriteProgram, int spriteCount,
+            float[] quadPositions,
             int type) {
         if (type != GLES20.GL_FLOAT) {
             throw new IllegalArgumentException(ILLEGAL_DATATYPE_STR + type);
@@ -97,7 +99,8 @@ public class MeshBuilder {
          */
         attributes[0] = new VertexBuffer(spriteCount * VERTICES_PER_SPRITE, DEFAULT_COMPONENTS, DEFAULT_COMPONENTS,
                 type);
-        attributes[1] = new VertexBuffer(spriteCount * VERTICES_PER_SPRITE, 4, TiledSprite.PER_VERTEX_DATA, GLES20.GL_FLOAT);
+        attributes[1] = new VertexBuffer(spriteCount * VERTICES_PER_SPRITE, 4, TiledSprite.PER_VERTEX_DATA,
+                GLES20.GL_FLOAT);
         ElementBuffer indices = new ElementBuffer(Mode.TRIANGLES, INDICES_PER_SPRITE * spriteCount, Type.SHORT);
         ElementBuilder.buildQuadBuffer(indices, indices.getCount() / INDICES_PER_SPRITE, 0);
 
@@ -111,8 +114,14 @@ public class MeshBuilder {
         attributes[0].setPosition(vertices, 0, 0, spriteCount * VERTICES_PER_SPRITE);
         Material material = new Material(tiledSpriteProgram);
         Mesh mesh = new Mesh(indices, attributes, material, null);
+        // TODO: Move to generic method, pass Variable to use as vector/matrix storage
+        ShaderVariable uVectors = tiledSpriteProgram.getShaderVariable(VARIABLES.uSpriteData.index);
+        float[] uniformVectors = new float[uVectors.getSizeInFloats()];
+        mesh.setUniformVectors(uniformVectors);
+        ShaderVariable uMatrices = tiledSpriteProgram.getShaderVariable(VARIABLES.uMVPMatrix.index);
+        float[] uniformMatrices = new float[uMatrices.getSizeInFloats()];
+        mesh.setUniformMatrices(uniformMatrices);
         return mesh;
 
     }
-
 }

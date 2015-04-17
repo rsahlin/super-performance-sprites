@@ -2,7 +2,6 @@ package com.super2k.tiledspriteengine.sprite;
 
 import com.nucleus.geometry.Mesh;
 import com.nucleus.opengl.GLES20Wrapper.GLES20;
-import com.nucleus.shader.ShaderProgram;
 import com.nucleus.texturing.Texture2D;
 import com.super2k.tiledspriteengine.MeshBuilder;
 import com.super2k.tiledspriteengine.TiledSpriteProgram;
@@ -26,7 +25,7 @@ public class TiledSpriteController {
 
     TiledSprite[] sprites;
     private Mesh mesh;
-    private float[] uniformVector = new float[] { 0, 0, 0, 0, 0, 0, 0, 0 };
+    private float[] uniformVector;
     float[] data;
     int count;
 
@@ -61,12 +60,13 @@ public class TiledSpriteController {
      * height
      * @return
      */
-    public Mesh createMesh(ShaderProgram program, Texture2D texture, float width, float height, float texFractionS,
+    public Mesh createMesh(TiledSpriteProgram program, Texture2D texture, float width, float height,
+            float texFractionS,
             float texFractionT) {
 
         mesh = MeshBuilder.buildTileSpriteMesh(program, count, width, height, 0, GLES20.GL_FLOAT);
         mesh.setTexture(texture, Texture2D.TEXTURE_0);
-        mesh.setUniformVectors(uniformVector);
+        uniformVector = mesh.getUniformVectors();
         mesh.getUniformVectors()[TiledSpriteProgram.UNIFORM_TEX_FRACTION_S_INDEX] = texFractionS;
         mesh.getUniformVectors()[TiledSpriteProgram.UNIFORM_TEX_FRACTION_T_INDEX] = texFractionT;
         mesh.getUniformVectors()[TiledSpriteProgram.UNIFORM_TEX_ONEBY_S_INDEX] = (int) (1 / texFractionS);

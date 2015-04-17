@@ -4,6 +4,7 @@ import com.nucleus.camera.ViewFrustum;
 import com.nucleus.geometry.Mesh;
 import com.nucleus.geometry.VertexBuffer;
 import com.nucleus.opengl.GLES20Wrapper;
+import com.nucleus.opengl.GLES20Wrapper.GLES20;
 import com.nucleus.opengl.GLException;
 import com.nucleus.opengl.GLUtils;
 import com.nucleus.renderer.BaseRenderer;
@@ -83,7 +84,6 @@ public class TiledSpriteProgram extends ShaderProgram {
 
     public TiledSpriteProgram() {
         super();
-        uniformMatrices = new float[16 * 2];
     }
 
     @Override
@@ -128,15 +128,25 @@ public class TiledSpriteProgram extends ShaderProgram {
     @Override
     public void bindUniforms(GLES20Wrapper gles, BaseRenderer renderer, Mesh mesh) throws GLException {
         ViewFrustum viewFrustum = renderer.getViewFrustum();
-        System.arraycopy(viewFrustum.getProjectionMatrix(), 0, uniformMatrices, 0, 16);
-        System.arraycopy(viewFrustum.getProjectionMatrix(), 0, uniformMatrices, 16, 16);
-        gles.glUniformMatrix4fv(getShaderVariable(VARIABLES.uMVPMatrix.index).getLocation(), 2, false, uniformMatrices,
-                0);
+        ShaderVariable v = getShaderVariable(VARIABLES.uMVPMatrix.index);
+        System.arraycopy(viewFrustum.getProjectionMatrix(), 0, mesh.getUniformMatrices(), 0, v.getSizeInFloats());
+        gles.glUniformMatrix4fv(getShaderVariable(VARIABLES.uMVPMatrix.index).getLocation(), v.getSize(), false,
+                mesh.getUniformMatrices(), 0);
         GLUtils.handleError(gles, "glUniformMatrix4fv ");
-        ShaderVariable v = getShaderVariable(VARIABLES.uSpriteData.index);
+        v = getShaderVariable(VARIABLES.uSpriteData.index);
         if (v != null) {
-            gles.glUniform4fv(v.getLocation(), 2, mesh.getUniformVectors(), 0);
+            switch (v.getDataType()) {
+            case GLES20.GL_FLOAT_VEC2:
+                gles.glUniform2fv(v.getLocation(), v.getSize(), mesh.getUniformVectors(), 0);
+                break;
+            case GLES20.GL_FLOAT_VEC3:
+                gles.glUniform3fv(v.getLocation(), v.getSize(), mesh.getUniformVectors(), 0);
+                break;
+            case GLES20.GL_FLOAT_VEC4:
+                gles.glUniform4fv(v.getLocation(), v.getSize(), mesh.getUniformVectors(), 0);
+                break;
+            }
         }
+        GLUtils.handleError(gles, "glUniform4fv ");
     }
-
 }
