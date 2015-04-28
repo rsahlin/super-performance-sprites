@@ -34,7 +34,10 @@ void main() {
                      mod(aTileSprite2.x, uSpriteData.z) * uSpriteData.x,
                      aTileSprite.w * uSpriteData.y + y * uSpriteData.y);
 }
-
+/**
+ * Returns a matrix with z axis rotation set from attribute aTileSprite2.y.
+ * @return Matrix with z axis rotation set from aTileSprite2.y
+ */
 mat4 calculateTransformMatrix(){
 
     mat4 modelview = mat4(1);
