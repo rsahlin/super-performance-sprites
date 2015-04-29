@@ -14,8 +14,8 @@ import com.nucleus.vecmath.Vector2D;
  */
 public class AFSprite implements Logic {
 
-    public final static int ELASTICITY = 10;
-    public final static int ROTATE_SPEED = 11;
+    public final static int ELASTICITY = Sprite.SPRITE_FLOAT_COUNT;
+    public final static int ROTATE_SPEED = Sprite.SPRITE_FLOAT_COUNT + 1;
 
     private final static float TWOPI = 3.1415926f * 2;
     public final static float GRAVITY = 5;
@@ -30,10 +30,10 @@ public class AFSprite implements Logic {
         if (floatData[Sprite.ROTATION] > TWOPI) {
             floatData[Sprite.ROTATION] -= TWOPI;
         }
-        sprite.updateGravity(0, GRAVITY, deltaTime);
+        sprite.accelerate(0, GRAVITY, deltaTime);
         sprite.move(deltaTime);
         if (floatData[Sprite.Y_POS] > SuperSprites.worldLimit[3]) {
-            floatData[Sprite.GRAVITY_Y] = -floatData[Sprite.GRAVITY_Y]
+            floatData[Sprite.MOVE_VECTOR_Y] = -floatData[Sprite.MOVE_VECTOR_Y]
                     * floatData[ELASTICITY];
             floatData[Sprite.Y_POS] = SuperSprites.worldLimit[3]
                     - (floatData[Sprite.Y_POS] - SuperSprites.worldLimit[3]);
@@ -50,4 +50,5 @@ public class AFSprite implements Logic {
         }
 
     }
+
 }

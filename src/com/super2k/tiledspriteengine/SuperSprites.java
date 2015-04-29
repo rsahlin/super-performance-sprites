@@ -12,9 +12,9 @@ import com.nucleus.renderer.BaseRenderer.FrameListener;
 import com.nucleus.renderer.BaseRenderer.RenderContextListener;
 import com.nucleus.resource.ResourceBias.RESOLUTION;
 import com.nucleus.scene.Node;
+import com.nucleus.sprite.Sprite;
 import com.nucleus.texturing.Image;
 import com.nucleus.texturing.Texture2D;
-import com.nucleus.tiledsprite.TiledSprite;
 import com.nucleus.tiledsprite.TiledSpriteController;
 import com.nucleus.tiledsprite.TiledSpriteProgram;
 import com.nucleus.vecmath.VecMath;
@@ -104,9 +104,9 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
         float[] scale = scene.getTransform().getScale();
         float x = ((pos[0] / baseRenderer.getWidth() + ORTHO_LEFT) / scale[VecMath.X]);
         float y = ((pos[1] / baseRenderer.getHeight() + ORTHO_TOP) / scale[VecMath.Y]);
-        TiledSprite s = spriteController.getSprites()[currentSprite];
+        Sprite s = spriteController.getSprites()[currentSprite];
         s.setPosition(x, y);
-        s.setGravityMovement(0, 0, 0);
+        s.setMoveVector(0, 0, 0);
         s.floatData[AFSprite.ELASTICITY] = 0.95f - (random.nextFloat() / 10);
         // s.moveVector.setNormalized(x - start[0], 0);
         // s.floatData[AFSprite.ROTATE_SPEED] = s.moveVector.vector[VecMath.X];
@@ -132,7 +132,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
         int frame = 0;
         AFSprite logic = new AFSprite();
         int maxFrames = SPRITE_FRAMES_X * SPRITE_FRAMES_Y - 1;
-        for (TiledSprite sprite : spriteController.getSprites()) {
+        for (Sprite sprite : spriteController.getSprites()) {
             sprite.setFrame(frame++);
             sprite.logic = logic;
             if (frame > maxFrames) {
@@ -150,11 +150,10 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
     @Override
     public void processFrame(float deltaTime) {
         baseRenderer.render();
-        for (TiledSprite sprite : spriteController.getSprites()) {
+        for (Sprite sprite : spriteController.getSprites()) {
             sprite.logic.process(sprite, deltaTime);
         }
         try {
-            spriteController.prepareToRender();
             baseRenderer.render(scene);
         } catch (GLException e) {
             throw new RuntimeException(e);
