@@ -7,7 +7,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry exported="true" kind="src" path="/vecmath"/>
-	<classpathentry exported="true" kind="src" path="/sprite-engine"/>
-	<classpathentry exported="true" kind="src" path="/logic-engine"/>
+	<classpathentry exported="true" kind="src" path="/graphics-engine"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
