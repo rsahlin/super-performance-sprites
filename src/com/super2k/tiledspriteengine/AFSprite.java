@@ -44,7 +44,8 @@ public class AFSprite implements Logic {
             moveVector.vector[VecMath.X] = -moveVector.vector[VecMath.X] * floatData[ELASTICITY];
             floatData[ROTATE_SPEED] = -floatData[ROTATE_SPEED] * floatData[ELASTICITY];
         } else if (floatData[Sprite.X_POS] < SuperSprites.worldLimit[0]) {
-            floatData[Sprite.X_POS] = -floatData[Sprite.X_POS];
+            floatData[Sprite.X_POS] = SuperSprites.worldLimit[0]
+                    - (floatData[Sprite.X_POS] - SuperSprites.worldLimit[0]);
             moveVector.vector[VecMath.X] = -moveVector.vector[VecMath.X] * floatData[ELASTICITY];
             floatData[ROTATE_SPEED] = -floatData[ROTATE_SPEED] * floatData[ELASTICITY];
         }

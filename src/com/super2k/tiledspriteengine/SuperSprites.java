@@ -108,8 +108,8 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
         s.setPosition(x, y);
         s.setMoveVector(0, 0, 0);
         s.floatData[AFSprite.ELASTICITY] = 0.95f - (random.nextFloat() / 10);
-        // s.moveVector.setNormalized(x - start[0], 0);
-        // s.floatData[AFSprite.ROTATE_SPEED] = s.moveVector.vector[VecMath.X];
+        s.moveVector.setNormalized((pos[0] - start[0]) / baseRenderer.getWidth(), 0);
+        s.floatData[AFSprite.ROTATE_SPEED] = s.moveVector.vector[VecMath.X];
         currentSprite++;
         if (currentSprite > SPRITECOUNT - 1) {
             currentSprite = 0;
@@ -123,28 +123,31 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
 
         texture = baseRenderer.createTexture(TEXTURE_NAME, 3, RESOLUTION.HD);
         texture.setValues(GLES20.GL_LINEAR, GLES20.GL_LINEAR, GLES20.GL_CLAMP_TO_EDGE, GLES20.GL_CLAMP_TO_EDGE);
-        spriteController = new TiledSpriteController(SPRITECOUNT);
-        spriteController.createMesh(tiledSpriteProgram, texture, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_FRAMES_X,
-                SPRITE_FRAMES_Y);
+
+        if (spriteController == null) {
+            spriteController = new TiledSpriteController(SPRITECOUNT);
+            spriteController.createMesh(tiledSpriteProgram, texture, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_FRAMES_X,
+                    SPRITE_FRAMES_Y);
+            int frame = 0;
+            AFSprite logic = new AFSprite();
+            int maxFrames = SPRITE_FRAMES_X * SPRITE_FRAMES_Y - 1;
+            for (Sprite sprite : spriteController.getSprites()) {
+                sprite.setFrame(frame++);
+                sprite.logic = logic;
+                if (frame > maxFrames) {
+                    frame = 0;
+                }
+                sprite.setPosition(START_XPOS, START_YPOS);
+            }
+            scene = new Node(spriteController.getMesh());
+        } else {
+            spriteController.createMesh(tiledSpriteProgram, texture, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_FRAMES_X,
+                    SPRITE_FRAMES_Y);
+            scene.setMesh(spriteController.getMesh());
+        }
         baseRenderer.getViewFrustum().setOrthoProjection(ORTHO_LEFT, ORTHO_RIGHT, ORTHO_BOTTOM, ORTHO_TOP, ORTHO_NEAR,
                 ORTHO_FAR);
 
-        int frame = 0;
-        AFSprite logic = new AFSprite();
-        int maxFrames = SPRITE_FRAMES_X * SPRITE_FRAMES_Y - 1;
-        for (Sprite sprite : spriteController.getSprites()) {
-            sprite.setFrame(frame++);
-            sprite.logic = logic;
-            if (frame > maxFrames) {
-                frame = 0;
-            }
-            sprite.setPosition(START_XPOS, START_YPOS);
-        }
-
-        scene = new Node(spriteController.getMesh());
-        float[] translate = scene.getTransform().getTranslate();
-        // translate[VecMath.X] = ORTHO_LEFT;
-        // translate[VecMath.Y] = ORTHO_TOP;
     }
 
     @Override
