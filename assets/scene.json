@@ -1,0 +1,11 @@
+{
+  "scene":
+    [
+    {"tiledsprites": {"type": "tiledspritesheet","data":"sprite-data,1000,0.05,0.05,sprite-texture,10,10"}}, 
+    {"playfield-data": {"type":"playfield","arrayinput":{"size":"1,5,3,INT","data":"65,66,67,68,69,70,71,72,73,74,75,76,77,78,79"}}},
+    {"charmap-texture":{"type":"texture2d","data": "assets/charset.png,HD,3","texparameter":"LINEAR,LINEAR,CLAMP,CLAMP"}},
+    {"playfield": {"type": "charmap","data": "playfield-data,40,40,-0.5,-0.5,0,0.05,0.05,charmap-texture,32,8"}},
+    {"background":{"type": "charmap","data": "background-data,20,20,0.5,0.5,0,0.05,0.01,charmap-texture,5,5"}},
+    {"instance-node":{"id": "main", "charmap": "playfield","tiledspritesheet": "tiledsprites"}},
+    ]
+}

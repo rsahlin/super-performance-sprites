@@ -1,7 +1,14 @@
 package com.super2k.tiledspriteengine;
 
+import java.io.IOException;
 import java.util.Random;
 
+import com.graphicsengine.charset.PlayfieldProgram;
+import com.graphicsengine.json.JSONSceneFactory;
+import com.graphicsengine.sprite.Sprite;
+import com.graphicsengine.tiledsprite.TiledSpriteProgram;
+import com.graphicsengine.tiledsprite.TiledSpriteSheet;
+import com.nucleus.geometry.Mesh;
 import com.nucleus.mmi.MMIEventListener;
 import com.nucleus.mmi.MMIPointerEvent;
 import com.nucleus.mmi.PointerInputProcessor;
@@ -10,13 +17,12 @@ import com.nucleus.opengl.GLException;
 import com.nucleus.renderer.BaseRenderer;
 import com.nucleus.renderer.BaseRenderer.FrameListener;
 import com.nucleus.renderer.BaseRenderer.RenderContextListener;
+import com.nucleus.renderer.Window;
 import com.nucleus.resource.ResourceBias.RESOLUTION;
 import com.nucleus.scene.Node;
-import com.nucleus.sprite.Sprite;
-import com.nucleus.texturing.Image;
 import com.nucleus.texturing.Texture2D;
-import com.nucleus.tiledsprite.TiledSpriteController;
-import com.nucleus.tiledsprite.TiledSpriteProgram;
+import com.nucleus.texturing.TextureFactory;
+import com.nucleus.texturing.TextureSetup;
 import com.nucleus.vecmath.VecMath;
 import com.nucleus.vecmath.Vector2D;
 
@@ -24,35 +30,47 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
 
     protected final static String TILED_SPRITE_RENDERER_TAG = "TiledSpiteRenderer";
     private final static String TEXTURE_NAME = "assets/af.png";
-    public final static int SPRITECOUNT = 1200;
-    public final static int SPRITE_FRAMES_X = 5;
-    public final static int SPRITE_FRAMES_Y = 1;
-    public final static int START_XPOS = -1;
-    public final static int START_YPOS = 0;
-    public final static float SPRITE_WIDTH = 0.05f;
-    public final static float SPRITE_HEIGHT = 0.05f;
-    public final static float ORTHO_LEFT = -0.5f;
-    public final static float ORTHO_RIGHT = 0.5f;
-    public final static float ORTHO_BOTTOM = 0.5f;
-    public final static float ORTHO_TOP = -0.5f;
-    public final static float ORTHO_NEAR = 0;
-    public final static float ORTHO_FAR = 10;
-    public final static float MIN_SCALE = 0.02f;
-    public final static float MAX_SCALE = 4f;
-    public final static float ZOOM_FACTOR = 0.5f;
+    private final static String CHARMAP_TEXTURE_NAME = "assets/charset.png";
+    private final static int SPRITECOUNT = 1200;
+    private final static int SPRITE_FRAMES_X = 5;
+    private final static int SPRITE_FRAMES_Y = 1;
+    private final static int START_XPOS = -1;
+    private final static int START_YPOS = 0;
+    private final static float SPRITE_ZPOS = 0;
+    private final static float SPRITE_WIDTH = 0.05f;
+    private final static float SPRITE_HEIGHT = 0.05f;
+    private final static float ORTHO_LEFT = -0.5f;
+    private final static float ORTHO_RIGHT = 0.5f;
+    private final static float ORTHO_BOTTOM = 0.5f;
+    private final static float ORTHO_TOP = -0.5f;
+    private final static float ORTHO_NEAR = 0;
+    private final static float ORTHO_FAR = 10;
+    private final static float MIN_SCALE = 0.2f;
+    private final static float MAX_SCALE = 2f;
+    private final static float ZOOM_FACTOR = 0.5f;
+
+    private final static float CHAR_WIDTH = 0.05f;
+    private final static float CHAR_HEIGHT = 0.05f;
+    private final static float CHAR_ZPOS = 0;
+    private final static int CHAR_FRAMES_X = 32;
+    private final static int CHAR_FRAMES_Y = 8;
+
+    private final static int CHARMAP_WIDTH = 40;
+    private final static int CHARMAP_HEIGHT = 40;
+    private final static int CHARCOUNT = CHARMAP_WIDTH * CHARMAP_HEIGHT;
 
     BaseRenderer baseRenderer;
-    private TiledSpriteController spriteController;
+    Window window;
+    private TiledSpriteSheet tiledSprites;
 
     private int currentSprite = 0;
     private Random random = new Random();
 
     private TiledSpriteProgram tiledSpriteProgram = new TiledSpriteProgram();
-    private Image[] textureImg;
+    private PlayfieldProgram charmapProgram = new PlayfieldProgram();
     private Texture2D texture;
-    private int textureID;
     /**
-     * The node containing sprites is the only node in the scene.
+     * The node containing sprites and chars, is root node of the scene.
      */
     private Node scene;
 
@@ -82,7 +100,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
             break;
         case ZOOM:
             Vector2D zoom = event.getZoom();
-            float z = ((zoom.vector[Vector2D.MAGNITUDE] * zoom.vector[VecMath.X]) / baseRenderer.getWidth())
+            float z = ((zoom.vector[Vector2D.MAGNITUDE] * zoom.vector[VecMath.X]) / window.getWidth())
                     * ZOOM_FACTOR;
             float[] scale = scene.getTransform().getScale();
             scale[VecMath.X] += (z * scale[VecMath.X]);
@@ -102,13 +120,13 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
 
     private void releaseSprite(float[] start, float[] pos) {
         float[] scale = scene.getTransform().getScale();
-        float x = ((pos[0] / baseRenderer.getWidth() + ORTHO_LEFT) / scale[VecMath.X]);
-        float y = ((pos[1] / baseRenderer.getHeight() + ORTHO_TOP) / scale[VecMath.Y]);
-        Sprite s = spriteController.getSprites()[currentSprite];
+        float x = ((pos[0] / window.getWidth() + ORTHO_LEFT) / scale[VecMath.X]);
+        float y = ((pos[1] / window.getHeight() + ORTHO_TOP) / scale[VecMath.Y]);
+        Sprite s = tiledSprites.getSpriteController().getSprites()[currentSprite];
         s.setPosition(x, y);
         s.setMoveVector(0, 0, 0);
         s.floatData[AFSprite.ELASTICITY] = 0.95f - (random.nextFloat() / 10);
-        s.moveVector.setNormalized((pos[0] - start[0]) / baseRenderer.getWidth(), 0);
+        s.moveVector.setNormalized((pos[0] - start[0]) / window.getWidth(), 0);
         s.floatData[AFSprite.ROTATE_SPEED] = s.moveVector.vector[VecMath.X];
         currentSprite++;
         if (currentSprite > SPRITECOUNT - 1) {
@@ -118,42 +136,59 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
 
     @Override
     public void contextCreated(int width, int height) {
-
+        window = Window.getInstance();
         baseRenderer.createProgram(tiledSpriteProgram);
+        baseRenderer.createProgram(charmapProgram);
+        TextureSetup source = new TextureSetup(TEXTURE_NAME, RESOLUTION.HD, 3);
+        texture = TextureFactory.createTexture(baseRenderer.getGLES(), baseRenderer.getImageFactory(), source);
+        texture.getTexParams().setValues(GLES20.GL_LINEAR, GLES20.GL_LINEAR, GLES20.GL_CLAMP_TO_EDGE,
+                GLES20.GL_CLAMP_TO_EDGE);
 
-        texture = baseRenderer.createTexture(TEXTURE_NAME, 3, RESOLUTION.HD);
-        texture.setValues(GLES20.GL_LINEAR, GLES20.GL_LINEAR, GLES20.GL_CLAMP_TO_EDGE, GLES20.GL_CLAMP_TO_EDGE);
-
-        if (spriteController == null) {
-            spriteController = new TiledSpriteController(SPRITECOUNT);
-            spriteController.createMesh(tiledSpriteProgram, texture, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_FRAMES_X,
-                    SPRITE_FRAMES_Y);
-            int frame = 0;
-            AFSprite logic = new AFSprite();
-            int maxFrames = SPRITE_FRAMES_X * SPRITE_FRAMES_Y - 1;
-            for (Sprite sprite : spriteController.getSprites()) {
-                sprite.setFrame(frame++);
-                sprite.logic = logic;
-                if (frame > maxFrames) {
-                    frame = 0;
+        if (tiledSprites == null) {
+            try {
+                JSONSceneFactory sf = new JSONSceneFactory(baseRenderer);
+                scene = sf.importScene("assets/scene.json", "scene");
+                Node main = scene.getNodeById("main");
+                main.addMesh(createSpriteController());
+                try {
+                    sf.exportScene(null, scene);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
                 }
-                sprite.setPosition(START_XPOS, START_YPOS);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
             }
-            scene = new Node(spriteController.getMesh());
         } else {
-            spriteController.createMesh(tiledSpriteProgram, texture, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_FRAMES_X,
-                    SPRITE_FRAMES_Y);
-            scene.setMesh(spriteController.getMesh());
+            tiledSprites.createMesh(tiledSpriteProgram, texture, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_ZPOS,
+                    SPRITE_FRAMES_X, SPRITE_FRAMES_Y);
+            scene.addMesh(tiledSprites);
         }
         baseRenderer.getViewFrustum().setOrthoProjection(ORTHO_LEFT, ORTHO_RIGHT, ORTHO_BOTTOM, ORTHO_TOP, ORTHO_NEAR,
                 ORTHO_FAR);
 
     }
 
+    private Mesh createSpriteController() {
+        tiledSprites = new TiledSpriteSheet(SPRITECOUNT);
+        tiledSprites.createMesh(tiledSpriteProgram, texture, SPRITE_WIDTH, SPRITE_HEIGHT, SPRITE_ZPOS,
+                SPRITE_FRAMES_X, SPRITE_FRAMES_Y);
+        int frame = 0;
+        AFSprite logic = new AFSprite();
+        int maxFrames = SPRITE_FRAMES_X * SPRITE_FRAMES_Y - 1;
+        for (Sprite sprite : tiledSprites.getSpriteController().getSprites()) {
+            sprite.setFrame(frame++);
+            sprite.logic = logic;
+            if (frame > maxFrames) {
+                frame = 0;
+            }
+            sprite.setPosition(START_XPOS, START_YPOS);
+        }
+        return tiledSprites;
+    }
+
     @Override
     public void processFrame(float deltaTime) {
-        baseRenderer.render();
-        for (Sprite sprite : spriteController.getSprites()) {
+        for (Sprite sprite : tiledSprites.getSpriteController().getSprites()) {
             sprite.logic.process(sprite, deltaTime);
         }
         try {

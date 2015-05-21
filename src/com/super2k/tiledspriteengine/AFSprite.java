@@ -1,7 +1,7 @@
 package com.super2k.tiledspriteengine;
 
-import com.nucleus.sprite.Sprite;
-import com.nucleus.sprite.Sprite.Logic;
+import com.graphicsengine.sprite.Sprite;
+import com.graphicsengine.sprite.Sprite.Logic;
 import com.nucleus.vecmath.VecMath;
 import com.nucleus.vecmath.Vector2D;
 
