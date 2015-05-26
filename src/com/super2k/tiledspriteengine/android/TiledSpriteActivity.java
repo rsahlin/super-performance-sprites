@@ -12,7 +12,7 @@ public class TiledSpriteActivity extends BaseActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        superSprites = new SuperSprites(baseRenderer, inputProcessor);
-        baseRenderer.addFrameListener(superSprites);
+        superSprites = new SuperSprites(renderer, inputProcessor);
+        renderer.addFrameListener(superSprites);
     }
 }

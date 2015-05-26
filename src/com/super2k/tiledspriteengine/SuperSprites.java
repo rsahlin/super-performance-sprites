@@ -13,9 +13,9 @@ import com.nucleus.mmi.MMIEventListener;
 import com.nucleus.mmi.MMIPointerEvent;
 import com.nucleus.mmi.PointerInputProcessor;
 import com.nucleus.opengl.GLException;
-import com.nucleus.renderer.BaseRenderer;
-import com.nucleus.renderer.BaseRenderer.FrameListener;
-import com.nucleus.renderer.BaseRenderer.RenderContextListener;
+import com.nucleus.renderer.NucleusRenderer;
+import com.nucleus.renderer.NucleusRenderer.FrameListener;
+import com.nucleus.renderer.NucleusRenderer.RenderContextListener;
 import com.nucleus.renderer.Window;
 import com.nucleus.scene.Node;
 import com.nucleus.vecmath.VecMath;
@@ -35,10 +35,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
     private final static float MAX_SCALE = 2f;
     private final static float ZOOM_FACTOR = 0.5f;
 
-    private final static int CHARMAP_WIDTH = 40;
-    private final static int CHARMAP_HEIGHT = 40;
-
-    BaseRenderer baseRenderer;
+    NucleusRenderer baseRenderer;
     Window window;
     private TiledSpriteController spriteController;
 
@@ -57,7 +54,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
     public final static float[] worldLimit = new float[] { ORTHO_LEFT, ORTHO_TOP, DEFAULT_MAX_X + ORTHO_LEFT,
             DEFAULT_MAX_Y + ORTHO_TOP };
 
-    public SuperSprites(BaseRenderer baseRenderer, PointerInputProcessor inputProcessor) {
+    public SuperSprites(NucleusRenderer baseRenderer, PointerInputProcessor inputProcessor) {
         // TODO remove constructor and use dependency injection.
         inputProcessor.addMMIListener(this);
         this.baseRenderer = baseRenderer;
@@ -127,7 +124,6 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
             try {
                 JSONSceneFactory sf = new JSONSceneFactory(baseRenderer);
                 scene = sf.importScene("assets/scene.json", "scene");
-                Node main = scene.getNodeById("main");
                 Node sprites = scene.getNodeById("tiledsprites");
                 if (sprites != null && sprites instanceof TiledSpriteController) {
                     spriteController = (TiledSpriteController) sprites;
