@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.util.Random;
 
 import com.graphicsengine.charset.PlayfieldProgram;
-import com.graphicsengine.json.JSONSceneFactory;
+import com.graphicsengine.scene.SceneSerializer;
+import com.graphicsengine.scene.SceneSerializerFactory;
 import com.graphicsengine.sprite.Sprite;
 import com.graphicsengine.sprite.SpriteControllerFactory;
 import com.graphicsengine.tiledsprite.TiledSpriteController;
@@ -35,7 +36,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
     private final static float MAX_SCALE = 2f;
     private final static float ZOOM_FACTOR = 0.5f;
 
-    NucleusRenderer baseRenderer;
+    NucleusRenderer renderer;
     Window window;
     private TiledSpriteController spriteController;
 
@@ -54,11 +55,11 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
     public final static float[] worldLimit = new float[] { ORTHO_LEFT, ORTHO_TOP, DEFAULT_MAX_X + ORTHO_LEFT,
             DEFAULT_MAX_Y + ORTHO_TOP };
 
-    public SuperSprites(NucleusRenderer baseRenderer, PointerInputProcessor inputProcessor) {
+    public SuperSprites(NucleusRenderer renderer, PointerInputProcessor inputProcessor) {
         // TODO remove constructor and use dependency injection.
         inputProcessor.addMMIListener(this);
-        this.baseRenderer = baseRenderer;
-        baseRenderer.addContextListener(this);
+        this.renderer = renderer;
+        renderer.addContextListener(this);
         SpriteControllerFactory.setLogicResolver(new SuperSpriteResolver());
     }
 
@@ -117,12 +118,13 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
     @Override
     public void contextCreated(int width, int height) {
         window = Window.getInstance();
-        baseRenderer.createProgram(tiledSpriteProgram);
-        baseRenderer.createProgram(charmapProgram);
+        renderer.createProgram(tiledSpriteProgram);
+        renderer.createProgram(charmapProgram);
 
         if (spriteController == null) {
             try {
-                JSONSceneFactory sf = new JSONSceneFactory(baseRenderer);
+                SceneSerializer sf = SceneSerializerFactory.getSerializer(null);
+                sf.setRenderer(renderer);
                 scene = sf.importScene("assets/scene.json", "scene");
                 Node sprites = scene.getNodeById("tiledsprites");
                 if (sprites != null && sprites instanceof TiledSpriteController) {
@@ -135,11 +137,18 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
                 }
             } catch (IOException e) {
                 throw new RuntimeException(e);
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (InstantiationException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException(e);
             }
+
         } else {
             System.err.println("NOT IMPLEMENTED");
         }
-        baseRenderer.getViewFrustum().setOrthoProjection(ORTHO_LEFT, ORTHO_RIGHT, ORTHO_BOTTOM, ORTHO_TOP, ORTHO_NEAR,
+        renderer.getViewFrustum().setOrthoProjection(ORTHO_LEFT, ORTHO_RIGHT, ORTHO_BOTTOM, ORTHO_TOP, ORTHO_NEAR,
                 ORTHO_FAR);
 
     }
@@ -150,7 +159,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
             sprite.logic.process(sprite, deltaTime);
         }
         try {
-            baseRenderer.render(scene);
+            renderer.render(scene);
         } catch (GLException e) {
             throw new RuntimeException(e);
         }
