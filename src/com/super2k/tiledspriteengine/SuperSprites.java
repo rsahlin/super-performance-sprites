@@ -3,6 +3,7 @@ package com.super2k.tiledspriteengine;
 import java.io.IOException;
 import java.util.Random;
 
+import com.gameengine.jsongameserializer.JSONSceneFactory;
 import com.graphicsengine.charset.PlayfieldProgram;
 import com.graphicsengine.scene.SceneSerializer;
 import com.graphicsengine.scene.SceneSerializerFactory;
@@ -123,7 +124,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
 
         if (spriteController == null) {
             try {
-                SceneSerializer sf = SceneSerializerFactory.getSerializer(null);
+                SceneSerializer sf = SceneSerializerFactory.getSerializer(JSONSceneFactory.class.getName());
                 sf.setRenderer(renderer);
                 scene = sf.importScene("assets/scene.json", "scene");
                 Node sprites = scene.getNodeById("tiledsprites");
