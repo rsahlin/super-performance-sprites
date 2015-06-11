@@ -132,7 +132,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
                     spriteController = (TiledSpriteController) sprites;
                 }
                 try {
-                    sf.exportScene(null, scene);
+                    sf.exportScene(System.out, scene);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
