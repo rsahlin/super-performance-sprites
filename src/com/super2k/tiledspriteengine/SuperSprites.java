@@ -4,13 +4,11 @@ import java.io.IOException;
 import java.util.Random;
 
 import com.gameengine.jsongameserializer.JSONSceneFactory;
-import com.graphicsengine.charset.PlayfieldProgram;
 import com.graphicsengine.scene.SceneSerializer;
 import com.graphicsengine.scene.SceneSerializerFactory;
 import com.graphicsengine.sprite.Sprite;
 import com.graphicsengine.sprite.SpriteControllerFactory;
 import com.graphicsengine.tiledsprite.TiledSpriteController;
-import com.graphicsengine.tiledsprite.TiledSpriteProgram;
 import com.nucleus.mmi.MMIEventListener;
 import com.nucleus.mmi.MMIPointerEvent;
 import com.nucleus.mmi.PointerInputProcessor;
@@ -44,8 +42,6 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
     private int currentSprite = 0;
     private Random random = new Random();
 
-    private TiledSpriteProgram tiledSpriteProgram = new TiledSpriteProgram();
-    private PlayfieldProgram charmapProgram = new PlayfieldProgram();
     /**
      * The node containing sprites and chars, is root node of the scene.
      */
@@ -119,8 +115,6 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
     @Override
     public void contextCreated(int width, int height) {
         window = Window.getInstance();
-        renderer.createProgram(tiledSpriteProgram);
-        renderer.createProgram(charmapProgram);
 
         if (spriteController == null) {
             try {

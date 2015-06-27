@@ -4,6 +4,7 @@ import com.graphicsengine.sprite.Sprite;
 import com.graphicsengine.sprite.Sprite.Logic;
 import com.nucleus.vecmath.VecMath;
 import com.nucleus.vecmath.Vector2D;
+import com.super2k.tiledspriteengine.SuperSpriteResolver.Logics;
 
 /**
  * Logic for the ÅF sprite - do not store any local data (fields) in this class, this is to avoid having to instantiate
@@ -50,6 +51,11 @@ public class AFSprite implements Logic {
             floatData[ROTATE_SPEED] = -floatData[ROTATE_SPEED] * floatData[ELASTICITY];
         }
 
+    }
+
+    @Override
+    public String getLogicId() {
+        return Logics.AFSPRITE.name();
     }
 
 }
