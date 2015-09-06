@@ -51,6 +51,10 @@ public class AFSprite implements Logic {
             floatData[ROTATE_SPEED] = -floatData[ROTATE_SPEED] * floatData[ELASTICITY];
         }
 
+        for (int i = 0; i < 300; i++) {
+            sprite.intData[0] = (int) (floatData[Sprite.X_POS] * floatData[Sprite.Y_POS] * floatData[Sprite.FRAME]);
+        }
+
     }
 
     @Override
