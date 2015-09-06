@@ -12,7 +12,6 @@ import com.graphicsengine.tiledsprite.TiledSpriteController;
 import com.nucleus.mmi.MMIEventListener;
 import com.nucleus.mmi.MMIPointerEvent;
 import com.nucleus.mmi.PointerInputProcessor;
-import com.nucleus.opengl.GLException;
 import com.nucleus.renderer.NucleusRenderer;
 import com.nucleus.renderer.NucleusRenderer.FrameListener;
 import com.nucleus.renderer.NucleusRenderer.RenderContextListener;
@@ -41,11 +40,6 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
 
     private int currentSprite = 0;
     private Random random = new Random();
-
-    /**
-     * The node containing sprites and chars, is root node of the scene.
-     */
-    private Node scene;
 
     public final static int DEFAULT_MAX_X = 1;
     public final static int DEFAULT_MAX_Y = 1;
@@ -77,7 +71,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
             Vector2D zoom = event.getZoom();
             float z = ((zoom.vector[Vector2D.MAGNITUDE] * zoom.vector[VecMath.X]) / window.getWidth())
                     * ZOOM_FACTOR;
-            float[] scale = scene.getTransform().getScale();
+            float[] scale = renderer.getScene().getTransform().getScale();
             scale[VecMath.X] += (z * scale[VecMath.X]);
             scale[VecMath.Y] += (z * scale[VecMath.Y]);
             Vector2D.min(scale, MIN_SCALE);
@@ -97,7 +91,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
         if (spriteController == null) {
             return;
         }
-        float[] scale = scene.getTransform().getScale();
+        float[] scale = renderer.getScene().getTransform().getScale();
         float x = ((pos[0] / window.getWidth() + ORTHO_LEFT) / scale[VecMath.X]);
         float y = ((pos[1] / window.getHeight() + ORTHO_TOP) / scale[VecMath.Y]);
         Sprite s = spriteController.getSprites()[currentSprite];
@@ -120,8 +114,9 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
             try {
                 SceneSerializer sf = SceneSerializerFactory.getSerializer(JSONSceneFactory.class.getName());
                 sf.setRenderer(renderer);
-                scene = sf.importScene("assets/scene.json", "scene");
+                Node scene = sf.importScene("assets/scene.json", "scene");
                 Node sprites = scene.getNodeById("tiledsprites");
+                renderer.setScene(scene);
                 if (sprites != null && sprites instanceof TiledSpriteController) {
                     spriteController = (TiledSpriteController) sprites;
                 }
@@ -153,10 +148,13 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
         for (Sprite sprite : spriteController.getSprites()) {
             sprite.logic.process(sprite, deltaTime);
         }
-        try {
-            renderer.render(scene);
-        } catch (GLException e) {
-            throw new RuntimeException(e);
+    }
+
+    @Override
+    public void updateGLData() {
+        for (Sprite sprite : spriteController.getSprites()) {
+            sprite.prepare();
         }
     }
+
 }
