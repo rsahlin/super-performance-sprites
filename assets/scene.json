@@ -2,10 +2,10 @@
   "scene":
     [
     {"tiledsprites": {"type": "tiledspritecontroller","tile-data":"1200,0,0.05,0.05,sprite-texture","logic-data":"1200,1,AFSPRITE,0,1200"}}, 
-    {"playfield-data": {"type":"playfield","arrayinput":{"size":"1,5,3,INT","data":"65,66,67,68,69,70,71,72,73,74,75,76,77,78,79"}}},
-    {"charmap-texture":{"type":"texture2d","data": "assets/charset.png,HD,3,32,8","texparameter":"NEAREST,NEAREST,CLAMP,CLAMP"}},
-    {"sprite-texture":{"type":"texture2d","data": "assets/af.png,HD,3,5,1","texparameter":"LINEAR,LINEAR,CLAMP,CLAMP"}},
-    {"playfield": {"type": "charmap","data": "1600,0,0.1,0.1,charmap-texture,playfield-data,40,40,-2,-2,0"}},
-    {"instance-node":{"id": "main", "charmap": "playfield","instance-node":{"tiledspritecontroller":"tiledsprites"}}},
+    {"playfield-data": {"type":"playfield","arrayinput":{"size":"1,5,3,INT,0,5","data":"65,66,67,68,69,70,71,72,73,74,75,76,77,78,79"}}},
+    {"charmap-texture":{"type":"tiledtexture2d","data": "assets\/charset.png,HD,3,32,8","texparameter":"NEAREST,NEAREST,CLAMP,CLAMP"}},
+    {"sprite-texture":{"type":"tiledtexture2d","data": "assets\/af.png,HD,3,5,1","texparameter":"LINEAR,LINEAR,CLAMP,CLAMP"}},
+    {"playfield123": {"type": "charmap","data": "1600,0,0.1,0.1,charmap-texture,playfield-data,40,40,-2,-2,0"}},
+    {"instance-node":{"id": "main", "charmap": "playfield123","tiledspritecontroller":"tiledsprites"}},
     ]
 }
