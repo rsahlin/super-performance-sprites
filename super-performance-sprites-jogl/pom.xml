@@ -7,8 +7,8 @@
         <artifactId>super-performance-sprites</artifactId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-    <artifactId>jogl-super-performance-sprites</artifactId>
-    <name>jogl-super-performance-sprites</name>
+    <artifactId>super-performance-sprites-jogl</artifactId>
+    <name>super-performance-sprites-jogl</name>
     <url>http://maven.apache.org</url>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
