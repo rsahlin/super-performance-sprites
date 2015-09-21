@@ -9,9 +9,10 @@ import com.graphicsengine.scene.SceneSerializerFactory;
 import com.graphicsengine.sprite.Sprite;
 import com.graphicsengine.sprite.SpriteControllerFactory;
 import com.graphicsengine.tiledsprite.TiledSpriteController;
+import com.nucleus.CoreApp;
+import com.nucleus.CoreApp.ClientApplication;
 import com.nucleus.mmi.MMIEventListener;
 import com.nucleus.mmi.MMIPointerEvent;
-import com.nucleus.mmi.PointerInputProcessor;
 import com.nucleus.renderer.NucleusRenderer;
 import com.nucleus.renderer.NucleusRenderer.FrameListener;
 import com.nucleus.renderer.NucleusRenderer.RenderContextListener;
@@ -20,7 +21,7 @@ import com.nucleus.scene.Node;
 import com.nucleus.vecmath.VecMath;
 import com.nucleus.vecmath.Vector2D;
 
-public class SuperSprites implements MMIEventListener, RenderContextListener, FrameListener {
+public class SuperSprites implements MMIEventListener, RenderContextListener, FrameListener, ClientApplication {
 
     protected final static String TILED_SPRITE_RENDERER_TAG = "TiledSpiteRenderer";
     private final static int SPRITECOUNT = 1200;
@@ -34,8 +35,9 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
     private final static float MAX_SCALE = 2f;
     private final static float ZOOM_FACTOR = 0.5f;
 
-    NucleusRenderer renderer;
     Window window;
+    CoreApp coreApp;
+    NucleusRenderer renderer;
     private TiledSpriteController spriteController;
 
     private int currentSprite = 0;
@@ -46,11 +48,17 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
     public final static float[] worldLimit = new float[] { ORTHO_LEFT, ORTHO_TOP, DEFAULT_MAX_X + ORTHO_LEFT,
             DEFAULT_MAX_Y + ORTHO_TOP };
 
-    public SuperSprites(NucleusRenderer renderer, PointerInputProcessor inputProcessor) {
-        // TODO remove constructor and use dependency injection.
-        inputProcessor.addMMIListener(this);
-        this.renderer = renderer;
-        renderer.addContextListener(this);
+    public SuperSprites() {
+        super();
+    }
+
+    @Override
+    public void init(CoreApp coreApp) {
+        this.coreApp = coreApp;
+        renderer = coreApp.getRenderer();
+        coreApp.getInputProcessor().addMMIListener(this);
+        coreApp.getRenderer().addContextListener(this);
+        coreApp.getRenderer().addFrameListener(this);
         SpriteControllerFactory.setLogicResolver(new SuperSpriteResolver());
     }
 
