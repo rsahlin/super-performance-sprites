@@ -15,6 +15,11 @@
     </properties>
     <dependencies>
         <dependency>
+            <groupId>super-performance-sprites</groupId>
+            <artifactId>super-performance-sprites-j2se</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>com.nucleus</groupId>
             <artifactId>graphics-by-opengl-jogl</artifactId>
             <version>0.0.1-SNAPSHOT</version>
