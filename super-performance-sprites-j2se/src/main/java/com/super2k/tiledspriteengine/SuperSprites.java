@@ -18,6 +18,8 @@ import com.nucleus.renderer.NucleusRenderer.FrameListener;
 import com.nucleus.renderer.NucleusRenderer.RenderContextListener;
 import com.nucleus.renderer.Window;
 import com.nucleus.scene.Node;
+import com.nucleus.texturing.Texture2D;
+import com.nucleus.texturing.TiledTexture2D;
 import com.nucleus.vecmath.VecMath;
 import com.nucleus.vecmath.Vector2D;
 
@@ -39,6 +41,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
     CoreApp coreApp;
     NucleusRenderer renderer;
     private TiledSpriteController spriteController;
+    private int spriteFrames;
 
     private int currentSprite = 0;
     private Random random = new Random();
@@ -108,6 +111,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
         s.floatData[AFSprite.ELASTICITY] = 0.95f - (random.nextFloat() / 10);
         s.moveVector.setNormalized((pos[0] - start[0]) / window.getWidth(), 0);
         s.floatData[AFSprite.ROTATE_SPEED] = s.moveVector.vector[VecMath.X];
+        s.floatData[Sprite.FRAME] = random.nextInt(spriteFrames);
         currentSprite++;
         if (currentSprite > SPRITECOUNT - 1) {
             currentSprite = 0;
@@ -125,8 +129,12 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
                 Node scene = sf.importScene("assets/scene.json", "scene");
                 Node sprites = scene.getNodeById("tiledsprites");
                 renderer.setScene(scene);
+
                 if (sprites != null && sprites instanceof TiledSpriteController) {
                     spriteController = (TiledSpriteController) sprites;
+                    TiledTexture2D tiledTexture = spriteController.getSpriteSheet()
+                            .getTiledTexture(Texture2D.TEXTURE_0);
+                    spriteFrames = tiledTexture.getFramesX() * tiledTexture.getFramesY();
                 }
                 try {
                     sf.exportScene(System.out, scene);
