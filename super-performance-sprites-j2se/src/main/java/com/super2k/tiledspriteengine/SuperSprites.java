@@ -67,7 +67,6 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
 
     @Override
     public void inputEvent(MMIPointerEvent event) {
-        float[] delta = event.getPointerData().getDelta(1);
 
         switch (event.getAction()) {
         case INACTIVE:
