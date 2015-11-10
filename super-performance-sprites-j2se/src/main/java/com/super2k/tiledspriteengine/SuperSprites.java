@@ -13,6 +13,7 @@ import com.nucleus.CoreApp;
 import com.nucleus.CoreApp.ClientApplication;
 import com.nucleus.mmi.MMIEventListener;
 import com.nucleus.mmi.MMIPointerEvent;
+import com.nucleus.opengl.GLESWrapper.GLES20;
 import com.nucleus.renderer.NucleusRenderer;
 import com.nucleus.renderer.NucleusRenderer.FrameListener;
 import com.nucleus.renderer.NucleusRenderer.RenderContextListener;
@@ -26,7 +27,7 @@ import com.nucleus.vecmath.Vector2D;
 public class SuperSprites implements MMIEventListener, RenderContextListener, FrameListener, ClientApplication {
 
     protected final static String TILED_SPRITE_RENDERER_TAG = "TiledSpiteRenderer";
-    private final static int SPRITECOUNT = 1200;
+    private int SPRITECOUNT = 1200;
     private final static float ORTHO_LEFT = -0.5f;
     private final static float ORTHO_RIGHT = 0.5f;
     private final static float ORTHO_BOTTOM = 0.5f;
@@ -63,6 +64,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
         coreApp.getRenderer().addContextListener(this);
         coreApp.getRenderer().addFrameListener(this);
         SpriteControllerFactory.setLogicResolver(new SuperSpriteResolver());
+        Window w = Window.getInstance();
     }
 
     @Override
@@ -128,12 +130,17 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
                 Node scene = sf.importScene("assets/scene.json", "scene");
                 Node sprites = scene.getNodeById("tiledsprites");
                 renderer.setScene(scene);
+                renderer.getRenderSettings().setClearFunction(GLES20.GL_COLOR_BUFFER_BIT);
+                renderer.getRenderSettings().setDepthFunc(GLES20.GL_NONE);
+                renderer.getRenderSettings().setCullFace(GLES20.GL_NONE);
 
                 if (sprites != null && sprites instanceof TiledSpriteController) {
                     spriteController = (TiledSpriteController) sprites;
                     TiledTexture2D tiledTexture = spriteController.getSpriteSheet()
                             .getTiledTexture(Texture2D.TEXTURE_0);
                     spriteFrames = tiledTexture.getFramesX() * tiledTexture.getFramesY();
+                    SPRITECOUNT = spriteController.getCount();
+
                 }
                 try {
                     sf.exportScene(System.out, scene);
@@ -153,8 +160,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
         } else {
             System.err.println("NOT IMPLEMENTED");
         }
-        renderer.getViewFrustum().setOrthoProjection(ORTHO_LEFT, ORTHO_RIGHT, ORTHO_BOTTOM, ORTHO_TOP, ORTHO_NEAR,
-                ORTHO_FAR);
+        renderer.getViewFrustum().setOrthoProjection(ORTHO_LEFT, ORTHO_RIGHT, 0.5f, -0.5f, 0f, 10f);
 
     }
 

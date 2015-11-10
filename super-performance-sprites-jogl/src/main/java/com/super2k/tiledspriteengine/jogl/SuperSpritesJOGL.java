@@ -8,6 +8,7 @@ public class SuperSpritesJOGL extends NucleusApplication {
 
     public static void main(String[] args) {
         SuperSpritesJOGL spritesApp = new SuperSpritesJOGL();
+        spritesApp.setProperties(args);
         spritesApp.create(Renderers.GLES20);
     }
 
@@ -20,6 +21,5 @@ public class SuperSpritesJOGL extends NucleusApplication {
         super.contextCreated(width, height);
         SuperSprites sprites = new SuperSprites();
         sprites.init(coreApp);
-
     }
 }
