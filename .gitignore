@@ -34,3 +34,5 @@ proguard/
 .settings/
 *.properties
 
+# Maven
+*/dependency-reduced-pom.xml
