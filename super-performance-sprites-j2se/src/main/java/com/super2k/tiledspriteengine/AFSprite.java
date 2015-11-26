@@ -7,8 +7,8 @@ import com.nucleus.vecmath.Vector2D;
 import com.super2k.tiledspriteengine.SuperSpriteResolver.Logics;
 
 /**
- * Logic for the ÅF sprite - do not store any local data (fields) in this class, this is to avoid having to instantiate
- * one logic for each visible sprite. Instead the same logic instance will be used for all sprites with the ÅF logic.
+ * Logic for the AF sprite - do not store any local data (fields) in this class, this is to avoid having to instantiate
+ * one logic for each visible sprite. Instead the same logic instance will be used for all sprites with the ï¿½F logic.
  * 
  * @author Richard Sahlin
  *
