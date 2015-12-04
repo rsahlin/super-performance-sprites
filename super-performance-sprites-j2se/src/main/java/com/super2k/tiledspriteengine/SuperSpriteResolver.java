@@ -1,7 +1,7 @@
 package com.super2k.tiledspriteengine;
 
-import com.graphicsengine.sprite.Sprite.Logic;
-import com.graphicsengine.sprite.SpriteController.LogicResolver;
+import com.nucleus.logic.LogicItem;
+import com.nucleus.logic.LogicResolver;
 
 /**
  * Resolves the class to be used for a logic object
@@ -20,14 +20,14 @@ public class SuperSpriteResolver implements LogicResolver {
             this.clazz = clazz;
         }
 
-        public Logic getInstance() throws IllegalAccessException, InstantiationException, ClassNotFoundException {
-            return (Logic) clazz.newInstance();
+        public LogicItem getInstance() throws IllegalAccessException, InstantiationException, ClassNotFoundException {
+            return (LogicItem) clazz.newInstance();
         }
 
     }
 
     @Override
-    public Logic getLogic(String id) {
+    public LogicItem getLogic(String id) {
         try {
             return Logics.valueOf(id).getInstance();
         } catch (ClassNotFoundException e) {

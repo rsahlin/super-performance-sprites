@@ -1,11 +1,12 @@
 {
-  "scene":
-    [
-    {"tiledsprites": {"type": "tiledspritecontroller","tile-data":"1200,0,0.05,0.05,sprite-texture","logic-data":"1200,1,AFSPRITE,0,1200"}}, 
-    {"playfield-data": {"type":"playfield","arrayinput":{"size":"1,5,3,INT,0,5","data":"65,66,67,68,69,70,71,72,73,74,75,76,77,78,79"}}},
-    {"charmap-texture":{"type":"tiledtexture2d","data": "assets\/charset.png,HD,1,32,8","texparameter":"NEAREST,NEAREST,CLAMP,CLAMP"}},
-    {"sprite-texture":{"type":"tiledtexture2d","data": "assets\/af.png,HD,2,5,2","texparameter":"LINEAR_MIPMAP_NEAREST,LINEAR,CLAMP,CLAMP"}},
-    {"playfield123": {"type": "charmap","data": "1600,0,0.1,0.1,charmap-texture,playfield-data,40,40,-2,-2,0"}},
-    {"instance-node":{"id": "main", "charmap": "playfield123","tiledspritecontroller":"tiledsprites"}},
-    ]
+    resources:{
+        tiledSpriteControllerData:[{id:tiledsprites, tiledata:{count:1200,dimension:{data:[0.05,0.05]},transform:{translate:[0,0,0]}, textureref:sprite-texture},logicdata:{count:1200, data:[{instance:AFSPRITE,index:0,count:-1}]}}],
+        playfieldData:[{id:playfield-data,arrayInput:{components:1,dimension:{data:[5,3]},dataType:INT,data:[65,66,67,68,69,70,71,72,73,74,75,76,77,78,79]}}], 
+        texture2DData:[{id:test,externalReference:{source:"assets\/charset.png"},resolution:HD,mipmap:1,texparameter:[NEAREST,NEAREST,CLAMP,CLAMP]}],
+        tiledTexture2DData:[{id:charmap-texture,externalReference:{source:"assets\/charset.png"},resolution:HD,mipmap:1,tile:[32,8],texparameter:[NEAREST,NEAREST,CLAMP,CLAMP]},
+                           {id:sprite-texture,externalReference:{source:"assets\/af.png"},resolution:HD,mipmap:2,tile:[5,2],texparameter:[LINEAR_MIPMAP_NEAREST,LINEAR,CLAMP,CLAMP]}],
+        tiledCharsetData:[{id:playfield123,tiledata:{count:1600,dimension:{data:[0.1,0.1]},textureref:charmap-texture,transform:{translate:[0,0,0]}},source:playfield-data,mapDimension:{data:[40,40]},transform:{translate:[-2,-2,0]}}]
+        
+    },
+    instanceNodes:{id:scene,type:tiledCharset,reference:playfield123,viewFrustum:{projection:ORTHOGONAL,values:[-0.5,0.5,0.5,-0.5,0,10]},children:[{id:sprites,type:tiledSpriteController,reference:tiledsprites}]}
 }

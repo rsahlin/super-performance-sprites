@@ -3,14 +3,15 @@ package com.super2k.tiledspriteengine;
 import java.io.IOException;
 import java.util.Random;
 
-import com.gameengine.jsongameserializer.JSONSceneFactory;
-import com.graphicsengine.scene.SceneSerializer;
+import com.graphicsengine.io.GSONGraphicsEngineFactory;
 import com.graphicsengine.scene.SceneSerializerFactory;
 import com.graphicsengine.sprite.Sprite;
 import com.graphicsengine.sprite.SpriteControllerFactory;
 import com.graphicsengine.tiledsprite.TiledSpriteController;
 import com.nucleus.CoreApp;
 import com.nucleus.CoreApp.ClientApplication;
+import com.nucleus.io.SceneSerializer;
+import com.nucleus.logic.J2SELogicProcessor;
 import com.nucleus.mmi.MMIEventListener;
 import com.nucleus.mmi.MMIPointerEvent;
 import com.nucleus.opengl.GLESWrapper.GLES20;
@@ -28,6 +29,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
 
     protected final static String TILED_SPRITE_RENDERER_TAG = "TiledSpiteRenderer";
     private int SPRITECOUNT = 1200;
+    // TODO How to find these values from the scene
     private final static float ORTHO_LEFT = -0.5f;
     private final static float ORTHO_RIGHT = 0.5f;
     private final static float ORTHO_BOTTOM = 0.5f;
@@ -64,7 +66,6 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
         coreApp.getRenderer().addContextListener(this);
         coreApp.getRenderer().addFrameListener(this);
         SpriteControllerFactory.setLogicResolver(new SuperSpriteResolver());
-        Window w = Window.getInstance();
     }
 
     @Override
@@ -125,7 +126,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
 
         if (spriteController == null) {
             try {
-                SceneSerializer sf = SceneSerializerFactory.getSerializer(JSONSceneFactory.class.getName());
+                SceneSerializer sf = SceneSerializerFactory.getSerializer(GSONGraphicsEngineFactory.class.getName());
                 sf.setRenderer(renderer);
                 Node scene = sf.importScene("assets/scene.json", "scene");
                 Node sprites = scene.getNodeById("tiledsprites");
@@ -142,11 +143,13 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
                     SPRITECOUNT = spriteController.getCount();
 
                 }
+                coreApp.setLogicProcessor(new J2SELogicProcessor());
                 try {
                     sf.exportScene(System.out, scene);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
+
             } catch (IOException e) {
                 throw new RuntimeException(e);
             } catch (ClassNotFoundException e) {
@@ -160,15 +163,13 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
         } else {
             System.err.println("NOT IMPLEMENTED");
         }
-        renderer.getViewFrustum().setOrthoProjection(ORTHO_LEFT, ORTHO_RIGHT, 0.5f, -0.5f, 0f, 10f);
-
     }
 
     @Override
     public void processFrame(float deltaTime) {
-        for (Sprite sprite : spriteController.getSprites()) {
-            sprite.logic.process(sprite, deltaTime);
-        }
+        // for (Sprite sprite : spriteController.getSprites()) {
+        // sprite.logic.process(sprite, deltaTime);
+        // }
     }
 
     @Override
