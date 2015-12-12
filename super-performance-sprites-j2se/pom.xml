@@ -19,11 +19,6 @@
                 <artifactId>graphics-engine</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
-            <dependency>
-                <groupId>com.gameengine</groupId>
-                <artifactId>jsongameserializer</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
-            </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
