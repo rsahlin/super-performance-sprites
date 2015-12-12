@@ -129,7 +129,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
                 SceneSerializer sf = SceneSerializerFactory.getSerializer(GSONGraphicsEngineFactory.class.getName());
                 sf.setRenderer(renderer);
                 Node scene = sf.importScene("assets/scene.json", "scene");
-                Node sprites = scene.getNodeById("tiledsprites");
+                Node sprites = scene.getNodeById("sprites");
                 renderer.setScene(scene);
                 renderer.getRenderSettings().setClearFunction(GLES20.GL_COLOR_BUFFER_BIT);
                 renderer.getRenderSettings().setDepthFunc(GLES20.GL_NONE);
@@ -139,7 +139,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
                     spriteController = (TiledSpriteController) sprites;
                     TiledTexture2D tiledTexture = spriteController.getSpriteSheet()
                             .getTiledTexture(Texture2D.TEXTURE_0);
-                    spriteFrames = tiledTexture.getFramesX() * tiledTexture.getFramesY();
+                    spriteFrames = tiledTexture.getTileWidth() * tiledTexture.getTileHeight();
                     SPRITECOUNT = spriteController.getCount();
 
                 }
