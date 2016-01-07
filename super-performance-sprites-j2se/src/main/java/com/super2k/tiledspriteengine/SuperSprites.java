@@ -84,11 +84,8 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
             Vector2D zoom = event.getZoom();
             float z = ((zoom.vector[Vector2D.MAGNITUDE] * zoom.vector[VecMath.X]) / window.getWidth())
                     * ZOOM_FACTOR;
+            renderer.getScene().getTransform().scale(z);
             float[] scale = renderer.getScene().getTransform().getScale();
-            scale[VecMath.X] += (z * scale[VecMath.X]);
-            scale[VecMath.Y] += (z * scale[VecMath.Y]);
-            Vector2D.min(scale, MIN_SCALE);
-            Vector2D.max(scale, MAX_SCALE);
             System.out.println("scale: " + scale[VecMath.X]);
             worldLimit[0] = (ORTHO_LEFT) / scale[VecMath.X];
             worldLimit[1] = (ORTHO_TOP) / scale[VecMath.Y];
@@ -128,7 +125,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
             try {
                 SceneSerializer sf = SceneSerializerFactory.getSerializer(GSONGraphicsEngineFactory.class.getName());
                 sf.setRenderer(renderer);
-                Node scene = sf.importScene("assets/scene.json", "scene");
+                Node scene = sf.importScene("assets/scene_old.json", "scene");
                 Node sprites = scene.getNodeById("sprites");
                 renderer.setScene(scene);
                 renderer.getRenderSettings().setClearFunction(GLES20.GL_COLOR_BUFFER_BIT);
