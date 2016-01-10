@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Random;
 
 import com.graphicsengine.io.GSONGraphicsEngineFactory;
+import com.graphicsengine.scene.GraphicsEngineNodeType;
 import com.graphicsengine.scene.SceneSerializerFactory;
 import com.graphicsengine.sprite.Sprite;
 import com.graphicsengine.sprite.SpriteControllerFactory;
@@ -20,6 +21,8 @@ import com.nucleus.renderer.NucleusRenderer.FrameListener;
 import com.nucleus.renderer.NucleusRenderer.RenderContextListener;
 import com.nucleus.renderer.Window;
 import com.nucleus.scene.Node;
+import com.nucleus.scene.RootNode;
+import com.nucleus.scene.RootNode.Scenes;
 import com.nucleus.texturing.Texture2D;
 import com.nucleus.texturing.TiledTexture2D;
 import com.nucleus.vecmath.VecMath;
@@ -125,9 +128,11 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
             try {
                 SceneSerializer sf = SceneSerializerFactory.getSerializer(GSONGraphicsEngineFactory.class.getName());
                 sf.setRenderer(renderer);
-                Node scene = sf.importScene("assets/scene_old.json", "scene");
-                Node sprites = scene.getNodeById("sprites");
-                renderer.setScene(scene);
+                RootNode scene = sf.importScene("assets/scene.json");
+                Node credit = scene.getScene(Scenes.credit);
+                Node game = scene.getScene(Scenes.game);
+                Node sprites = game.getNodeByType(GraphicsEngineNodeType.tiledSpriteController.name());
+                renderer.setScene(credit);
                 renderer.getRenderSettings().setClearFunction(GLES20.GL_COLOR_BUFFER_BIT);
                 renderer.getRenderSettings().setDepthFunc(GLES20.GL_NONE);
                 renderer.getRenderSettings().setCullFace(GLES20.GL_NONE);

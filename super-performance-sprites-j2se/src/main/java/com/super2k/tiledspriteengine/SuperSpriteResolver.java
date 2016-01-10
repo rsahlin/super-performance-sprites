@@ -1,7 +1,7 @@
 package com.super2k.tiledspriteengine;
 
-import com.nucleus.logic.LogicItem;
-import com.nucleus.logic.LogicResolver;
+import com.nucleus.logic.ActorItem;
+import com.nucleus.logic.ActorResolver;
 
 /**
  * Resolves the class to be used for a logic object
@@ -9,7 +9,7 @@ import com.nucleus.logic.LogicResolver;
  * @author Richard Sahlin
  *
  */
-public class SuperSpriteResolver implements LogicResolver {
+public class SuperSpriteResolver implements ActorResolver {
 
     public enum Logics {
         AFSPRITE(AFSprite.class);
@@ -20,14 +20,14 @@ public class SuperSpriteResolver implements LogicResolver {
             this.clazz = clazz;
         }
 
-        public LogicItem getInstance() throws IllegalAccessException, InstantiationException, ClassNotFoundException {
-            return (LogicItem) clazz.newInstance();
+        public ActorItem getInstance() throws IllegalAccessException, InstantiationException, ClassNotFoundException {
+            return (ActorItem) clazz.newInstance();
         }
 
     }
 
     @Override
-    public LogicItem getLogic(String id) {
+    public ActorItem getLogic(String id) {
         try {
             return Logics.valueOf(id).getInstance();
         } catch (ClassNotFoundException e) {

@@ -1,8 +1,8 @@
 package com.super2k.tiledspriteengine;
 
 import com.graphicsengine.sprite.Sprite;
-import com.nucleus.logic.LogicContainer;
-import com.nucleus.logic.LogicItem;
+import com.nucleus.logic.ActorContainer;
+import com.nucleus.logic.ActorItem;
 import com.nucleus.vecmath.VecMath;
 import com.nucleus.vecmath.Vector2D;
 import com.super2k.tiledspriteengine.SuperSpriteResolver.Logics;
@@ -14,7 +14,7 @@ import com.super2k.tiledspriteengine.SuperSpriteResolver.Logics;
  * @author Richard Sahlin
  *
  */
-public class AFSprite implements LogicItem {
+public class AFSprite implements ActorItem {
 
     public final static int ELASTICITY = Sprite.SPRITE_FLOAT_COUNT;
     public final static int ROTATE_SPEED = Sprite.SPRITE_FLOAT_COUNT + 1;
@@ -23,7 +23,7 @@ public class AFSprite implements LogicItem {
     public final static float GRAVITY = 5;
 
     @Override
-    public void process(LogicContainer sprite, float deltaTime) {
+    public void process(ActorContainer sprite, float deltaTime) {
 
         float[] floatData = sprite.floatData;
         Vector2D moveVector = sprite.moveVector;
@@ -64,13 +64,13 @@ public class AFSprite implements LogicItem {
     }
 
     @Override
-    public void reset(LogicContainer logic) {
+    public void reset(ActorContainer logic) {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void init(LogicContainer logic) {
+    public void init(ActorContainer logic) {
         logic.floatData[AFSprite.ELASTICITY] = 0.8f;
     }
 }
