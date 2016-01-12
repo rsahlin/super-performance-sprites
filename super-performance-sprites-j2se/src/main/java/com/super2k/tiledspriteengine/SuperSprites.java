@@ -11,8 +11,8 @@ import com.graphicsengine.sprite.SpriteControllerFactory;
 import com.graphicsengine.tiledsprite.TiledSpriteController;
 import com.nucleus.CoreApp;
 import com.nucleus.CoreApp.ClientApplication;
+import com.nucleus.actor.J2SELogicProcessor;
 import com.nucleus.io.SceneSerializer;
-import com.nucleus.logic.J2SELogicProcessor;
 import com.nucleus.mmi.MMIEventListener;
 import com.nucleus.mmi.MMIPointerEvent;
 import com.nucleus.opengl.GLESWrapper.GLES20;
@@ -132,7 +132,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
                 Node credit = scene.getScene(Scenes.credit);
                 Node game = scene.getScene(Scenes.game);
                 Node sprites = game.getNodeByType(GraphicsEngineNodeType.tiledSpriteController.name());
-                renderer.setScene(credit);
+                renderer.setScene(game);
                 renderer.getRenderSettings().setClearFunction(GLES20.GL_COLOR_BUFFER_BIT);
                 renderer.getRenderSettings().setDepthFunc(GLES20.GL_NONE);
                 renderer.getRenderSettings().setCullFace(GLES20.GL_NONE);

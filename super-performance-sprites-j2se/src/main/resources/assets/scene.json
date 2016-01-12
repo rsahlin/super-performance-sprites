@@ -6,19 +6,18 @@
         tiledTexture2D:[{id:charmap-texture,externalReference:{source:"assets\/charset.png"},resolution:HD,mipmap:1,tile:[32,8],texparameter:{values:[NEAREST,NEAREST,CLAMP,CLAMP]}},
                            {id:sprite-texture,externalReference:{source:"assets\/af.png"},resolution:HD,mipmap:2,tile:[5,2],texparameter:{values:[LINEAR_MIPMAP_NEAREST,LINEAR,CLAMP,CLAMP]}}],
         playfieldController:[{id:playfield123,playfield:{count:1600,size:[0.1,0.1],textureref:charmap-texture,anchor:{values:[0.5,0.5,0]},mapSize:[40,40]},mapRef:playfield-data,mapSize:[40,40]}]
-        
     },
     scenes:
       [
-      {id:game,type:node,transform:{scaleLimit:{min:[0.2],max:[2.0]}},
+      {id:game,type:node,transform:{scaleLimit:{min:[0.2],max:[2.0]}},viewFrustum:{projection:ORTHOGONAL,values:[-0.5,0.5,0.5,-0.5,0,10]},
         children:
           [
-            {id:chars,type:tiledCharset,reference:playfield123,viewFrustum:{projection:ORTHOGONAL,values:[-0.5,0.5,0.5,-0.5,0,10]},children:[{id:sprites,type:tiledSpriteController,reference:tiledsprites}]}
+            {id:chars,type:tiledCharset,reference:playfield123,children:[{id:sprites,type:tiledSpriteController,reference:tiledsprites}]}
           ]},
       {id:credit,type:node,transform:{scaleLimit:{min:[1],max:[1]}},
         children:
           [
-            {id:chars,type:tiledCharset,reference:playfield123,viewFrustum:{projection:ORTHOGONAL,values:[-0.5,0.5,0.5,-0.5,0,10]}}
+            {id:chars,type:tiledCharset,reference:playfield123}
           ]}
       ]
 }

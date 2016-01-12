@@ -1,7 +1,7 @@
 package com.super2k.tiledspriteengine;
 
-import com.nucleus.logic.ActorItem;
-import com.nucleus.logic.ActorResolver;
+import com.nucleus.actor.ActorItem;
+import com.nucleus.actor.ActorResolver;
 
 /**
  * Resolves the class to be used for a logic object
