@@ -27,7 +27,7 @@ public class SuperSpriteResolver implements ActorResolver {
     }
 
     @Override
-    public ActorItem getLogic(String id) {
+    public ActorItem getActor(String id) {
         try {
             return Logics.valueOf(id).getInstance();
         } catch (ClassNotFoundException e) {

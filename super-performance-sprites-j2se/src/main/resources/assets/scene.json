@@ -1,6 +1,6 @@
 {
     resources:{
-        tiledSpriteController:[{id:tiledsprites, charset:{count:1200,size:[0.05,0.05],anchor:{values:[0.5,0.5,0]}, textureref:sprite-texture},logicdata:{count:1200, data:[{instance:AFSPRITE,index:0,count:-1}]}}],
+        tiledSpriteController:[{id:tiledsprites, charset:{count:1200,size:[0.05,0.05],anchor:{values:[0.5,0.5,0]}, textureref:sprite-texture},actordata:{count:1200, data:[{instance:AFSPRITE,index:0,count:-1}]}}],
         playfield:[{id:playfield-data,arrayInput:{components:1,size:{data:[5,3]},dataType:INT,data:[65,66,67,68,69,70,71,72,73,74,75,76,77,78,79]}}], 
         texture2D:[{id:test,externalReference:{source:"assets\/charset.png"},resolution:HD,mipmap:1,texparameter:{values:[NEAREST,NEAREST,CLAMP,CLAMP]}}],
         tiledTexture2D:[{id:charmap-texture,externalReference:{source:"assets\/charset.png"},resolution:HD,mipmap:1,tile:[32,8],texparameter:{values:[NEAREST,NEAREST,CLAMP,CLAMP]}},

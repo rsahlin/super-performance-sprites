@@ -68,7 +68,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
         coreApp.getInputProcessor().addMMIListener(this);
         coreApp.getRenderer().addContextListener(this);
         coreApp.getRenderer().addFrameListener(this);
-        SpriteControllerFactory.setLogicResolver(new SuperSpriteResolver());
+        SpriteControllerFactory.setActorResolver(new SuperSpriteResolver());
     }
 
     @Override

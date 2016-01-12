@@ -59,7 +59,7 @@ public class AFSprite implements ActorItem {
     }
 
     @Override
-    public String getLogicId() {
+    public String getActorId() {
         return Logics.AFSPRITE.name();
     }
 
