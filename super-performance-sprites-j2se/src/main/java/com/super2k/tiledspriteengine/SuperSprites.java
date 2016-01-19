@@ -8,7 +8,7 @@ import com.graphicsengine.scene.GraphicsEngineNodeType;
 import com.graphicsengine.scene.SceneSerializerFactory;
 import com.graphicsengine.sprite.Sprite;
 import com.graphicsengine.sprite.SpriteControllerFactory;
-import com.graphicsengine.tiledsprite.MeshSpriteController;
+import com.graphicsengine.spritemesh.SpriteMeshController;
 import com.nucleus.CoreApp;
 import com.nucleus.CoreApp.ClientApplication;
 import com.nucleus.actor.J2SELogicProcessor;
@@ -46,7 +46,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
     Window window;
     CoreApp coreApp;
     NucleusRenderer renderer;
-    private MeshSpriteController spriteController;
+    private SpriteMeshController spriteController;
     private int spriteFrames;
 
     private int currentSprite = 0;
@@ -137,8 +137,8 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
                 renderer.getRenderSettings().setDepthFunc(GLES20.GL_NONE);
                 renderer.getRenderSettings().setCullFace(GLES20.GL_NONE);
 
-                if (sprites != null && sprites instanceof MeshSpriteController) {
-                    spriteController = (MeshSpriteController) sprites;
+                if (sprites != null && sprites instanceof SpriteMeshController) {
+                    spriteController = (SpriteMeshController) sprites;
                     TiledTexture2D tiledTexture = spriteController.getSpriteSheet()
                             .getTiledTexture(Texture2D.TEXTURE_0);
                     spriteFrames = tiledTexture.getTileWidth() * tiledTexture.getTileHeight();
