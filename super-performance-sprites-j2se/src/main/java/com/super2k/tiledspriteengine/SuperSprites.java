@@ -114,6 +114,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
         s.moveVector.setNormalized((pos[0] - start[0]) / window.getWidth(), 0);
         s.floatData[AFSprite.ROTATE_SPEED] = s.moveVector.vector[VecMath.X];
         s.floatData[Sprite.FRAME] = random.nextInt(spriteFrames);
+        s.floatData[Sprite.SCALE] = 1 + random.nextFloat();
         currentSprite++;
         if (currentSprite > SPRITECOUNT - 1) {
             currentSprite = 0;
