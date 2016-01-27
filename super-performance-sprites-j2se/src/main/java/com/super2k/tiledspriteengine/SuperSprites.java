@@ -8,7 +8,7 @@ import com.graphicsengine.scene.GraphicsEngineNodeType;
 import com.graphicsengine.scene.SceneSerializerFactory;
 import com.graphicsengine.sprite.Sprite;
 import com.graphicsengine.sprite.SpriteControllerFactory;
-import com.graphicsengine.spritemesh.SpriteMeshController;
+import com.graphicsengine.spritemesh.SpriteMeshNode;
 import com.nucleus.CoreApp;
 import com.nucleus.CoreApp.ClientApplication;
 import com.nucleus.actor.J2SELogicProcessor;
@@ -46,7 +46,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
     Window window;
     CoreApp coreApp;
     NucleusRenderer renderer;
-    private SpriteMeshController spriteController;
+    private SpriteMeshNode spriteController;
     private int spriteFrames;
 
     private int currentSprite = 0;
@@ -113,8 +113,9 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
         s.floatData[AFSprite.ELASTICITY] = 0.95f - (random.nextFloat() / 10);
         s.moveVector.setNormalized((pos[0] - start[0]) / window.getWidth(), 0);
         s.floatData[AFSprite.ROTATE_SPEED] = s.moveVector.vector[VecMath.X];
-        s.floatData[Sprite.FRAME] = random.nextInt(spriteFrames);
+        s.setFrame(random.nextInt(spriteFrames));
         s.floatData[Sprite.SCALE] = 1 + random.nextFloat();
+
         currentSprite++;
         if (currentSprite > SPRITECOUNT - 1) {
             currentSprite = 0;
@@ -127,19 +128,19 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
 
         if (spriteController == null) {
             try {
-                SceneSerializer sf = SceneSerializerFactory.getSerializer(GSONGraphicsEngineFactory.class.getName());
-                sf.setRenderer(renderer);
+                SceneSerializer sf = SceneSerializerFactory.getSerializer(GSONGraphicsEngineFactory.class.getName(),
+                        renderer, GSONGraphicsEngineFactory.getNodeFactory());
                 RootNode scene = sf.importScene("assets/scene.json");
                 Node credit = scene.getScene(Scenes.credit);
                 Node game = scene.getScene(Scenes.game);
-                Node sprites = game.getNodeByType(GraphicsEngineNodeType.tiledSpriteController.name());
+                Node sprites = game.getNodeByType(GraphicsEngineNodeType.spriteMeshNode.name());
                 renderer.setScene(game);
                 renderer.getRenderSettings().setClearFunction(GLES20.GL_COLOR_BUFFER_BIT);
                 renderer.getRenderSettings().setDepthFunc(GLES20.GL_NONE);
                 renderer.getRenderSettings().setCullFace(GLES20.GL_NONE);
 
-                if (sprites != null && sprites instanceof SpriteMeshController) {
-                    spriteController = (SpriteMeshController) sprites;
+                if (sprites != null && sprites instanceof SpriteMeshNode) {
+                    spriteController = (SpriteMeshNode) sprites;
                     TiledTexture2D tiledTexture = spriteController.getSpriteSheet()
                             .getTiledTexture(Texture2D.TEXTURE_0);
                     spriteFrames = tiledTexture.getTileWidth() * tiledTexture.getTileHeight();

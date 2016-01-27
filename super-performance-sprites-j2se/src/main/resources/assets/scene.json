@@ -1,18 +1,28 @@
 {
     resources:{
-        tiledSpriteController:[{id:tiledsprites, charset:{count:1200,size:[0.05,0.05],anchor:{values:[0.5,0.5,0]}, textureref:sprite-texture},actordata:{count:1200, data:[{instance:AFSPRITE,index:0,count:-1}]}}],
+        uvAtlas:[{id:uiatlas,UVData:[0,1,1,1,0,0,1,0]}],
+        spriteMeshNode:[
+          {id:tiledsprites, charset:{count:1200,size:[0.05,0.05],anchor:{values:[0.5,0.5,0]}, textureref:sprite-texture},actordata:{count:1200, data:[{instance:AFSPRITE,index:0,count:-1}]}},
+          {id:tiledsprites2, charset:{count:1,size:[0.5,0.5],anchor:{values:[0.5,0.5,0]}, textureref:uv-texture},actordata:{count:1, data:[{instance:AFSPRITE,index:0,count:-1}]}}
+          ],
         playfield:[{id:playfield-data,arrayInput:{components:1,size:{data:[5,3]},dataType:INT,data:[65,66,67,68,69,70,71,72,73,74,75,76,77,78,79]}}], 
         texture2D:[{id:test,externalReference:{source:"assets\/charset.png"},resolution:HD,mipmap:1,texparameter:{values:[NEAREST,NEAREST,CLAMP,CLAMP]}}],
-        tiledTexture2D:[{id:charmap-texture,externalReference:{source:"assets\/charset.png"},resolution:HD,mipmap:1,tile:[32,8],texparameter:{values:[NEAREST,NEAREST,CLAMP,CLAMP]}},
-                           {id:sprite-texture,externalReference:{source:"assets\/af.png"},resolution:HD,mipmap:2,tile:[5,2],texparameter:{values:[LINEAR_MIPMAP_NEAREST,LINEAR,CLAMP,CLAMP]}}],
-        playfieldController:[{id:playfield123,playfield:{count:1600,size:[0.1,0.1],textureref:charmap-texture,anchor:{values:[0.5,0.5,0]},mapSize:[40,40]},mapRef:playfield-data,mapSize:[40,40]}]
+        tiledTexture2D:[{id:charmap-texture,externalReference:{source:"assets\/charset.png"},resolution:HD,mipmap:1,tile:[32,8],texparameter:{values:[LINEAR_MIPMAP_NEAREST,LINEAR_MIPMAP_NEAREST,CLAMP,CLAMP]}},
+                           {id:sprite-texture,externalReference:{source:"assets\/af.png"},resolution:HD,mipmap:2,tile:[5,2],texparameter:{values:[LINEAR_MIPMAP_NEAREST,LINEAR_MIPMAP_NEAREST,CLAMP,CLAMP]}}],
+        uvTexture2D:[{id:uv-texture,externalReference:{source:"assets\/af.png"},resolution:HD,mipmap:1,texparameter:{values:[NEAREST,NEAREST,CLAMP,CLAMP]}}],
+        playfieldNode:[{id:playfield123,playfield:{count:1600,size:[0.1,0.1],textureref:charmap-texture,anchor:{values:[0.5,0.5,0]},mapSize:[40,40]},mapRef:playfield-data,mapSize:[40,40]}]
     },
     scenes:
       [
       {id:game,type:node,transform:{scaleLimit:{min:[0.2],max:[2.0]}},viewFrustum:{projection:ORTHOGONAL,values:[-0.5,0.5,0.5,-0.5,0,10]},
         children:
           [
-            {id:chars,type:tiledCharset,reference:playfield123,children:[{id:sprites,type:tiledSpriteController,reference:tiledsprites}]}
+            {id:chars,type:playfieldNode,reference:playfield123,children:
+              [
+              {id:sprites,type:spriteMeshNode,reference:tiledsprites},
+              {id:sprites2,type:spriteMeshNode,reference:tiledsprites2}
+              ]},
+            {id:ui,type:uinode,reference:playfield123}
           ]},
       {id:credit,type:node,transform:{scaleLimit:{min:[1],max:[1]}},
         children:
