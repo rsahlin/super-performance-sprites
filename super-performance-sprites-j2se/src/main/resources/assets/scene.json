@@ -1,6 +1,5 @@
 {
     resources:{
-        uvAtlas:[{id:uiatlas,UVData:[0,1,1,1,0,0,1,0]}],
         spriteMeshNode:[
           {id:tiledsprites, charset:{count:1200,size:[0.05,0.05],anchor:{values:[0.5,0.5,0]}, textureref:sprite-texture},actordata:{count:1200, data:[{instance:AFSPRITE,index:0,count:-1}]}},
           {id:tiledsprites2, charset:{count:1,size:[0.5,0.5],anchor:{values:[0.5,0.5,0]}, textureref:uv-texture},actordata:{count:1, data:[{instance:AFSPRITE,index:0,count:-1}]}}
@@ -9,7 +8,7 @@
         texture2D:[{id:test,externalReference:{source:"assets\/charset.png"},resolution:HD,mipmap:1,texparameter:{values:[NEAREST,NEAREST,CLAMP,CLAMP]}}],
         tiledTexture2D:[{id:charmap-texture,externalReference:{source:"assets\/charset.png"},resolution:HD,mipmap:1,tile:[32,8],texparameter:{values:[LINEAR_MIPMAP_NEAREST,LINEAR_MIPMAP_NEAREST,CLAMP,CLAMP]}},
                            {id:sprite-texture,externalReference:{source:"assets\/af.png"},resolution:HD,mipmap:2,tile:[5,2],texparameter:{values:[LINEAR_MIPMAP_NEAREST,LINEAR_MIPMAP_NEAREST,CLAMP,CLAMP]}}],
-        uvTexture2D:[{id:uv-texture,externalReference:{source:"assets\/af.png"},resolution:HD,mipmap:1,texparameter:{values:[NEAREST,NEAREST,CLAMP,CLAMP]}}],
+        uvTexture2D:[{id:uv-texture,UVAtlas:{UVData:[0,1,1,1]},externalReference:{source:"assets\/af.png"},resolution:HD,mipmap:1,texparameter:{values:[NEAREST,NEAREST,CLAMP,CLAMP]}}],
         playfieldNode:[{id:playfield123,playfield:{count:1600,size:[0.1,0.1],textureref:charmap-texture,anchor:{values:[0.5,0.5,0]},mapSize:[40,40]},mapRef:playfield-data,mapSize:[40,40]}]
     },
     scenes:

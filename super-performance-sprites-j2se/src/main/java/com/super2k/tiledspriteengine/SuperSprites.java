@@ -17,7 +17,6 @@ import com.nucleus.mmi.MMIEventListener;
 import com.nucleus.mmi.MMIPointerEvent;
 import com.nucleus.opengl.GLESWrapper.GLES20;
 import com.nucleus.renderer.NucleusRenderer;
-import com.nucleus.renderer.NucleusRenderer.FrameListener;
 import com.nucleus.renderer.NucleusRenderer.RenderContextListener;
 import com.nucleus.renderer.Window;
 import com.nucleus.scene.Node;
@@ -28,25 +27,19 @@ import com.nucleus.texturing.TiledTexture2D;
 import com.nucleus.vecmath.VecMath;
 import com.nucleus.vecmath.Vector2D;
 
-public class SuperSprites implements MMIEventListener, RenderContextListener, FrameListener, ClientApplication {
+public class SuperSprites implements MMIEventListener, RenderContextListener, ClientApplication {
 
     protected final static String TILED_SPRITE_RENDERER_TAG = "TiledSpiteRenderer";
     private int SPRITECOUNT = 1200;
     // TODO How to find these values from the scene
     private final static float ORTHO_LEFT = -0.5f;
-    private final static float ORTHO_RIGHT = 0.5f;
-    private final static float ORTHO_BOTTOM = 0.5f;
     private final static float ORTHO_TOP = -0.5f;
-    private final static float ORTHO_NEAR = 0;
-    private final static float ORTHO_FAR = 10;
-    private final static float MIN_SCALE = 0.2f;
-    private final static float MAX_SCALE = 2f;
     private final static float ZOOM_FACTOR = 0.5f;
 
     Window window;
     CoreApp coreApp;
     NucleusRenderer renderer;
-    private SpriteMeshNode spriteController;
+    private SpriteMeshNode spriteNode;
     private int spriteFrames;
 
     private int currentSprite = 0;
@@ -67,7 +60,6 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
         renderer = coreApp.getRenderer();
         coreApp.getInputProcessor().addMMIListener(this);
         coreApp.getRenderer().addContextListener(this);
-        coreApp.getRenderer().addFrameListener(this);
         SpriteControllerFactory.setActorResolver(new SuperSpriteResolver());
     }
 
@@ -101,13 +93,13 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
     }
 
     private void releaseSprite(float[] start, float[] pos) {
-        if (spriteController == null) {
+        if (spriteNode == null) {
             return;
         }
         float[] scale = renderer.getScene().getTransform().getScale();
         float x = ((pos[0] / window.getWidth() + ORTHO_LEFT) / scale[VecMath.X]);
         float y = ((pos[1] / window.getHeight() + ORTHO_TOP) / scale[VecMath.Y]);
-        Sprite s = spriteController.getSprites()[currentSprite];
+        Sprite s = spriteNode.getSprites()[currentSprite];
         s.setPosition(x, y);
         s.setMoveVector(0, 0, 0);
         s.floatData[AFSprite.ELASTICITY] = 0.95f - (random.nextFloat() / 10);
@@ -126,7 +118,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
     public void contextCreated(int width, int height) {
         window = Window.getInstance();
 
-        if (spriteController == null) {
+        if (spriteNode == null) {
             try {
                 SceneSerializer sf = SceneSerializerFactory.getSerializer(GSONGraphicsEngineFactory.class.getName(),
                         renderer, GSONGraphicsEngineFactory.getNodeFactory());
@@ -140,11 +132,11 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
                 renderer.getRenderSettings().setCullFace(GLES20.GL_NONE);
 
                 if (sprites != null && sprites instanceof SpriteMeshNode) {
-                    spriteController = (SpriteMeshNode) sprites;
-                    TiledTexture2D tiledTexture = spriteController.getSpriteSheet()
+                    spriteNode = (SpriteMeshNode) sprites;
+                    TiledTexture2D tiledTexture = spriteNode.getSpriteSheet()
                             .getTiledTexture(Texture2D.TEXTURE_0);
                     spriteFrames = tiledTexture.getTileWidth() * tiledTexture.getTileHeight();
-                    SPRITECOUNT = spriteController.getCount();
+                    SPRITECOUNT = spriteNode.getCount();
 
                 }
                 coreApp.setLogicProcessor(new J2SELogicProcessor());
@@ -168,19 +160,4 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Fr
             System.err.println("NOT IMPLEMENTED");
         }
     }
-
-    @Override
-    public void processFrame(float deltaTime) {
-        // for (Sprite sprite : spriteController.getSprites()) {
-        // sprite.logic.process(sprite, deltaTime);
-        // }
-    }
-
-    @Override
-    public void updateGLData() {
-        for (Sprite sprite : spriteController.getSprites()) {
-            sprite.prepare();
-        }
-    }
-
 }
