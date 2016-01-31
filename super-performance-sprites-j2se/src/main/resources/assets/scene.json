@@ -8,7 +8,7 @@
         texture2D:[{id:test,externalReference:{source:"assets\/charset.png"},resolution:HD,mipmap:1,texparameter:{values:[NEAREST,NEAREST,CLAMP,CLAMP]}}],
         tiledTexture2D:[{id:charmap-texture,externalReference:{source:"assets\/charset.png"},resolution:HD,mipmap:1,tile:[32,8],texparameter:{values:[LINEAR_MIPMAP_NEAREST,LINEAR_MIPMAP_NEAREST,CLAMP,CLAMP]}},
                            {id:sprite-texture,externalReference:{source:"assets\/af.png"},resolution:HD,mipmap:2,tile:[5,2],texparameter:{values:[LINEAR_MIPMAP_NEAREST,LINEAR_MIPMAP_NEAREST,CLAMP,CLAMP]}}],
-        uvTexture2D:[{id:uv-texture,UVAtlas:{UVData:[0,1,1,1]},externalReference:{source:"assets\/af.png"},resolution:HD,mipmap:1,texparameter:{values:[NEAREST,NEAREST,CLAMP,CLAMP]}}],
+        uvTexture2D:[{id:uv-texture,UVAtlas:{UVData:[0,0,1,1]},externalReference:{source:"assets\/af.png"},resolution:HD,mipmap:1,texparameter:{values:[NEAREST,NEAREST,CLAMP,CLAMP]}}],
         playfieldNode:[{id:playfield123,playfield:{count:1600,size:[0.1,0.1],textureref:charmap-texture,anchor:{values:[0.5,0.5,0]},mapSize:[40,40]},mapRef:playfield-data,mapSize:[40,40]}]
     },
     scenes:
