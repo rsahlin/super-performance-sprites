@@ -17,8 +17,10 @@ import com.nucleus.mmi.MMIEventListener;
 import com.nucleus.mmi.MMIPointerEvent;
 import com.nucleus.opengl.GLESWrapper.GLES20;
 import com.nucleus.renderer.NucleusRenderer;
+import com.nucleus.renderer.NucleusRenderer.Layer;
 import com.nucleus.renderer.NucleusRenderer.RenderContextListener;
 import com.nucleus.renderer.Window;
+import com.nucleus.scene.LayerNode;
 import com.nucleus.scene.Node;
 import com.nucleus.scene.RootNode;
 import com.nucleus.scene.RootNode.Scenes;
@@ -79,8 +81,8 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
             Vector2D zoom = event.getZoom();
             float z = ((zoom.vector[Vector2D.MAGNITUDE] * zoom.vector[VecMath.X]) / window.getWidth())
                     * ZOOM_FACTOR;
-            renderer.getScene().getTransform().scale(z);
-            float[] scale = renderer.getScene().getTransform().getScale();
+            renderer.getNode(Layer.SCENE).getTransform().scale(z);
+            float[] scale = renderer.getNode(Layer.SCENE).getTransform().getScale();
             System.out.println("scale: " + scale[VecMath.X]);
             worldLimit[0] = (ORTHO_LEFT) / scale[VecMath.X];
             worldLimit[1] = (ORTHO_TOP) / scale[VecMath.Y];
@@ -96,7 +98,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         if (spriteNode == null) {
             return;
         }
-        float[] scale = renderer.getScene().getTransform().getScale();
+        float[] scale = renderer.getNode(Layer.SCENE).getTransform().getScale();
         float x = ((pos[0] / window.getWidth() + ORTHO_LEFT) / scale[VecMath.X]);
         float y = ((pos[1] / window.getHeight() + ORTHO_TOP) / scale[VecMath.Y]);
         Sprite s = spriteNode.getSprites()[currentSprite];
@@ -123,10 +125,10 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                 SceneSerializer sf = SceneSerializerFactory.getSerializer(GSONGraphicsEngineFactory.class.getName(),
                         renderer, GSONGraphicsEngineFactory.getNodeFactory());
                 RootNode scene = sf.importScene("assets/scene.json");
-                Node credit = scene.getScene(Scenes.credit);
-                Node game = scene.getScene(Scenes.game);
+                LayerNode credit = scene.getScene(Scenes.credit);
+                LayerNode game = scene.getScene(Scenes.game);
                 Node sprites = game.getNodeByType(GraphicsEngineNodeType.spriteMeshNode.name());
-                renderer.setScene(game);
+                renderer.setNode(game);
                 renderer.getRenderSettings().setClearFunction(GLES20.GL_COLOR_BUFFER_BIT);
                 renderer.getRenderSettings().setDepthFunc(GLES20.GL_NONE);
                 renderer.getRenderSettings().setCullFace(GLES20.GL_NONE);
