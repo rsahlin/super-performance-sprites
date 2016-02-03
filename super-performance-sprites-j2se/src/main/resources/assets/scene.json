@@ -13,21 +13,21 @@
     },
     scenes:
       [
-      {layer:SCENE,id:game,type:node,transform:{scaleLimit:{min:[0.2],max:[2.0]}},viewFrustum:{projection:ORTHOGONAL,values:[-0.5,0.5,0.5,-0.5,0,10]},
+      {layer:SCENE,id:game,type:layernode,transform:{scaleLimit:{min:[0.2],max:[2.0]}},viewFrustum:{projection:ORTHOGONAL,values:[-0.5,0.5,0.5,-0.5,0,10]},
         children:
           [
             {id:chars,type:playfieldNode,reference:playfield123,children:
               [
               {id:sprites,type:spriteMeshNode,reference:tiledsprites},
               {id:sprites2,type:spriteMeshNode,reference:tiledsprites2},
-              {id:button1,type:button}
+              {id:button1,type:node}
               ]},
             {id:ui,type:uinode,reference:playfield123}
           ]},
-      {layer:SCENE,id:credit,type:node,transform:{scaleLimit:{min:[1],max:[1]}},
+      {layer:SCENE,id:credit,type:layernode,transform:{scaleLimit:{min:[1],max:[1]}},
         children:
           [
-            {id:chars,type:tiledCharset,reference:playfield123}
+            {id:chars,type:playfieldNode,reference:playfield123}
           ]}
       ]
 }
