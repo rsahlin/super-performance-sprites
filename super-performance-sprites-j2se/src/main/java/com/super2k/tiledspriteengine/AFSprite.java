@@ -23,17 +23,17 @@ public class AFSprite implements ActorItem {
     public final static float GRAVITY = 5;
 
     @Override
-    public void process(ActorContainer sprite, float deltaTime) {
+    public void process(ActorContainer spriteActor, float deltaTime) {
 
-        float[] floatData = sprite.floatData;
-        Vector2D moveVector = sprite.moveVector;
+        float[] floatData = spriteActor.floatData;
+        Vector2D moveVector = spriteActor.moveVector;
 
         floatData[Sprite.ROTATION] += deltaTime * floatData[ROTATE_SPEED];
         if (floatData[Sprite.ROTATION] > TWOPI) {
             floatData[Sprite.ROTATION] -= TWOPI;
         }
-        Sprite.accelerate(sprite, 0, GRAVITY, deltaTime);
-        Sprite.move(sprite, deltaTime);
+        spriteActor.accelerate(0, GRAVITY, deltaTime);
+        spriteActor.move(deltaTime);
         if (floatData[Sprite.Y_POS] > SuperSprites.worldLimit[3]) {
             floatData[Sprite.MOVE_VECTOR_Y] = -floatData[Sprite.MOVE_VECTOR_Y]
                     * floatData[ELASTICITY];

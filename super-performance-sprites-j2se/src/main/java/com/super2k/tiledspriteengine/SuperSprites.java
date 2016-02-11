@@ -102,12 +102,16 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         float x = ((pos[0] / window.getWidth() + ORTHO_LEFT) / scale[VecMath.X]);
         float y = ((pos[1] / window.getHeight() + ORTHO_TOP) / scale[VecMath.Y]);
         Sprite s = spriteNode.getSprites()[currentSprite];
-        s.setPosition(x, y);
+        s.setPosition(x, y, 0);
+        s.floatData[Sprite.X_POS] = x;
+        s.floatData[Sprite.Y_POS] = y;
         s.setMoveVector(0, 0, 0);
         s.floatData[AFSprite.ELASTICITY] = 0.95f - (random.nextFloat() / 10);
         s.moveVector.setNormalized((pos[0] - start[0]) / window.getWidth(), 0);
         s.floatData[AFSprite.ROTATE_SPEED] = s.moveVector.vector[VecMath.X];
         s.setFrame(random.nextInt(spriteFrames));
+        s.setScale(0.8f + random.nextFloat() * 0.5f, 0.8f + random.nextFloat() * 0.5f);
+
         s.floatData[Sprite.SCALE] = 1 + random.nextFloat();
 
         currentSprite++;
