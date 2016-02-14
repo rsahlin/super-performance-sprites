@@ -7,7 +7,7 @@ import com.graphicsengine.io.GSONGraphicsEngineFactory;
 import com.graphicsengine.scene.GraphicsEngineNodeType;
 import com.graphicsengine.scene.SceneSerializerFactory;
 import com.graphicsengine.sprite.Sprite;
-import com.graphicsengine.sprite.SpriteControllerFactory;
+import com.graphicsengine.sprite.SpriteNodeFactory;
 import com.graphicsengine.spritemesh.SpriteMeshNode;
 import com.nucleus.CoreApp;
 import com.nucleus.CoreApp.ClientApplication;
@@ -62,7 +62,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         renderer = coreApp.getRenderer();
         coreApp.getInputProcessor().addMMIListener(this);
         coreApp.getRenderer().addContextListener(this);
-        SpriteControllerFactory.setActorResolver(new SuperSpriteResolver());
+        SpriteNodeFactory.setActorResolver(new SuperSpriteResolver());
     }
 
     @Override
