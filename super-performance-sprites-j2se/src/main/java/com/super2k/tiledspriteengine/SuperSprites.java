@@ -12,6 +12,7 @@ import com.graphicsengine.spritemesh.SpriteMeshNode;
 import com.nucleus.CoreApp;
 import com.nucleus.CoreApp.ClientApplication;
 import com.nucleus.actor.J2SELogicProcessor;
+import com.nucleus.geometry.Mesh;
 import com.nucleus.io.SceneSerializer;
 import com.nucleus.mmi.MMIEventListener;
 import com.nucleus.mmi.MMIPointerEvent;
@@ -127,7 +128,8 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         if (spriteNode == null) {
             try {
                 SceneSerializer sf = SceneSerializerFactory.getSerializer(GSONGraphicsEngineFactory.class.getName(),
-                        renderer, GSONGraphicsEngineFactory.getNodeFactory());
+                        renderer, GSONGraphicsEngineFactory.getNodeFactory(),
+                        GSONGraphicsEngineFactory.getMeshFactory());
                 RootNode scene = sf.importScene("assets/scene.json");
                 LayerNode credit = scene.getScene(Scenes.credit);
                 LayerNode game = scene.getScene(Scenes.game);
@@ -139,8 +141,9 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
 
                 if (sprites != null && sprites instanceof SpriteMeshNode) {
                     spriteNode = (SpriteMeshNode) sprites;
-                    TiledTexture2D tiledTexture = spriteNode.getSpriteSheet()
-                            .getTiledTexture(Texture2D.TEXTURE_0);
+                    Mesh mesh = spriteNode.getMeshById(spriteNode.getReference());
+                    // TODO A method to query the mesh how many frames it supports?
+                    TiledTexture2D tiledTexture = (TiledTexture2D) mesh.getTexture(Texture2D.TEXTURE_0);
                     spriteFrames = tiledTexture.getTileWidth() * tiledTexture.getTileHeight();
                     SPRITECOUNT = spriteNode.getCount();
 
