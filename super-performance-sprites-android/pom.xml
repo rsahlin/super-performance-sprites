@@ -14,17 +14,19 @@
         <testSourceDirectory>src/test/java</testSourceDirectory>
     <plugins>
     <plugin>
-     <groupId>com.jayway.maven.plugins.android.generation2</groupId>
-     <artifactId>android-maven-plugin</artifactId>
-     <version>3.9.0-rc.1</version>
+                <groupId>com.simpligility.maven.plugins</groupId>
+                <artifactId>android-maven-plugin</artifactId>
+                <version>${android.plugin.version}</version>
                <configuration>
+		<resourceDirectory>./res</resourceDirectory>
+		<androidManifestFile>AndroidManifest.xml</androidManifestFile>
                     <sdk>
                         <platform>22</platform>
                     </sdk>
                     <deleteConflictingFiles>true</deleteConflictingFiles>
                     <undeployBeforeDeploy>true</undeployBeforeDeploy>
                 </configuration>
-     <extensions>true</extensions>
+     		<extensions>true</extensions>
      </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
