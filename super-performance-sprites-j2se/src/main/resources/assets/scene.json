@@ -2,11 +2,13 @@
     resources:{
         mesh:[
           {id:mesh1, textureref:uv-texture},
-          {id:playfieldmesh,textureref:charmap-texture}
+          {id:playfieldmesh,textureref:charmap-texture},
+          {id:spritemesh,textureref:sprite-texture},
+          {id:spritemesh2,textureref:uv-texture}
           ],
         spriteMeshNode:[
-          {id:tiledsprites, count:1200,size:[0.05,0.05],anchor:{values:[0.5,0.5,0]},charset:{size:[0.05,0.05],anchor:{values:[0.5,0.5,0]}, textureref:sprite-texture},actordata:{data:[{instance:AFSPRITE,index:0,count:-1}]}},
-          {id:tiledsprites2, count:1,size:[0.5,0.5],anchor:{values:[0.5,0.5,0]}, charset:{count:1,size:[0.5,0.5],anchor:{values:[0.5,0.5,0]}, textureref:uv-texture},actordata:{data:[{instance:AFSPRITE,index:0,count:-1}]}}
+          {id:tiledsprites,count:1200,size:[0.05,0.05],anchor:{values:[0.5,0.5,0]},meshRef:spritemesh,actordata:{data:[{instance:AFSPRITE,index:0,count:-1}]}},
+          {id:tiledsprites2,count:1,size:[0.5,0.5],anchor:{values:[0.5,0.5,0]},meshRef:spritemesh2,actordata:{data:[{instance:AFSPRITE,index:0,count:-1}]}}
           ],
         playfield:[{id:playfield-data,arrayInput:{components:1,size:{data:[5,3]},dataType:INT,data:[65,66,67,68,69,70,71,72,73,74,75,76,77,78,79]}}], 
         texture2D:[{id:test,externalReference:{source:"assets\/charset.png"},resolution:HD,mipmap:1,texparameter:{values:[NEAREST,NEAREST,CLAMP,CLAMP]}}],

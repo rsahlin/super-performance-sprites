@@ -141,7 +141,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
 
                 if (sprites != null && sprites instanceof SpriteMeshNode) {
                     spriteNode = (SpriteMeshNode) sprites;
-                    Mesh mesh = spriteNode.getMeshById(spriteNode.getReference());
+                    Mesh mesh = spriteNode.getMeshById(spriteNode.getMeshRef());
                     // TODO A method to query the mesh how many frames it supports?
                     TiledTexture2D tiledTexture = (TiledTexture2D) mesh.getTexture(Texture2D.TEXTURE_0);
                     spriteFrames = tiledTexture.getTileWidth() * tiledTexture.getTileHeight();
