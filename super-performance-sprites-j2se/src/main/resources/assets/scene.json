@@ -1,14 +1,14 @@
 {
     resources:{
         mesh:[
-          {id:mesh1, textureref:uv-texture},
+          {id:mesh1,textureref:uv-texture},
           {id:playfieldmesh,textureref:charmap-texture},
           {id:spritemesh,textureref:sprite-texture},
           {id:spritemesh2,textureref:uv-texture}
           ],
         spriteMeshNode:[
-          {id:tiledsprites,count:1200,size:[0.05,0.05],anchor:{values:[0.5,0.5,0]},meshRef:spritemesh,actordata:{data:[{instance:AFSPRITE,index:0,count:-1}]}},
-          {id:tiledsprites2,count:1,size:[0.5,0.5],anchor:{values:[0.5,0.5,0]},meshRef:spritemesh2,actordata:{data:[{instance:AFSPRITE,index:0,count:-1}]}}
+          {id:tiledsprites,count:1200,spriteSize:[0.05,0.05],anchor:{values:[0.5,0.5,0]},meshRef:spritemesh,actordata:{data:[{instance:AFSPRITE,index:0,count:-1}]}},
+          {id:tiledsprites2,count:1,spriteSize:[0.5,0.5],anchor:{values:[0.5,0.5,0]},meshRef:spritemesh2,actordata:{data:[{instance:AFSPRITE,index:0,count:-1}]}}
           ],
         playfield:[{id:playfield-data,arrayInput:{components:1,size:{data:[5,3]},dataType:INT,data:[65,66,67,68,69,70,71,72,73,74,75,76,77,78,79]}}], 
         texture2D:[{id:test,externalReference:{source:"assets\/charset.png"},resolution:HD,mipmap:1,texparameter:{values:[NEAREST,NEAREST,CLAMP,CLAMP]}}],
@@ -16,7 +16,8 @@
                            {id:sprite-texture,externalReference:{source:"assets\/af.png"},resolution:HD,mipmap:2,tile:[5,2],texparameter:{values:[LINEAR_MIPMAP_NEAREST,LINEAR_MIPMAP_NEAREST,CLAMP,CLAMP]}}],
         uvTexture2D:[{id:uv-texture,UVAtlas:{UVData:[0,0,1,1]},externalReference:{source:"assets\/af.png"},resolution:HD,mipmap:1,texparameter:{values:[NEAREST,NEAREST,CLAMP,CLAMP]}}],
         playfieldNode:[{id:playfield123,mapSize:[40,40],charSize:[0.1,0.1],anchor:{values:[0.5,0.5,0]},meshRef:playfieldmesh,mapRef:playfield-data}],
-        button:[{id:button1,mesh:mesh1}]
+        button:[{id:button1,meshRef:mesh1,size:[0.1,0.1],anchor:{values:[0.5,0.5,0]}}],
+        uiNode:[{id:ui1}]
     },
     scenes:
       [
@@ -27,7 +28,7 @@
               [
               {id:sprites,type:spriteMeshNode,reference:tiledsprites},
               {id:sprites2,type:spriteMeshNode,reference:tiledsprites2},
-              {id:mybutton,type:button,reference:button1,transform:{translate:[0,-0.3,0]}}
+              {id:ui,type:uiNode,reference:ui1,children:[{id:buttonNode,type:button,reference:button1}]}
               ]}
           ]},
       {layer:SCENE,id:credit,type:layernode,transform:{scaleLimit:{min:[1],max:[1]}},
