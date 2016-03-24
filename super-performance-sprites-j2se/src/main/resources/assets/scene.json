@@ -7,16 +7,16 @@
           {id:spritemesh2,textureref:uv-texture}
           ],
         spriteMeshNode:[
-          {id:tiledsprites,count:1200,spriteSize:[0.05,0.05],anchor:{values:[0.5,0.5,0]},meshRef:spritemesh,actordata:{data:[{instance:AFSPRITE,index:0,count:-1}]}},
-          {id:tiledsprites2,count:1,spriteSize:[0.5,0.5],anchor:{values:[0.5,0.5,0]},meshRef:spritemesh2,actordata:{data:[{instance:AFSPRITE,index:0,count:-1}]}}
+          {id:tiledsprites,count:1200,rect:{mode:SIZE,values:[-0.025,-0.025,0.05,0.05]},meshRef:spritemesh,actordata:{data:[{instance:AFSPRITE,index:0,count:-1}]}},
+          {id:tiledsprites2,count:1,rect:{mode:SIZE,values:[-0.25,-0.25,0.5,0.5]},meshRef:spritemesh2,actordata:{data:[{instance:AFSPRITE,index:0,count:-1}]}}
           ],
         playfield:[{id:playfield-data,arrayInput:{components:1,size:{data:[5,3]},dataType:INT,data:[65,66,67,68,69,70,71,72,73,74,75,76,77,78,79]}}], 
         texture2D:[{id:test,externalReference:{source:"assets\/charset.png"},resolution:HD,mipmap:1,texparameter:{values:[NEAREST,NEAREST,CLAMP,CLAMP]}}],
         tiledTexture2D:[{id:charmap-texture,externalReference:{source:"assets\/charset.png"},resolution:HD,mipmap:1,tile:[32,8],texparameter:{values:[LINEAR_MIPMAP_NEAREST,LINEAR_MIPMAP_NEAREST,CLAMP,CLAMP]}},
                            {id:sprite-texture,externalReference:{source:"assets\/af.png"},resolution:HD,mipmap:2,tile:[5,2],texparameter:{values:[LINEAR_MIPMAP_NEAREST,LINEAR_MIPMAP_NEAREST,CLAMP,CLAMP]}}],
         uvTexture2D:[{id:uv-texture,UVAtlas:{UVData:[0,0,1,1,0.9,0.9,0.1,0.1]},externalReference:{source:"assets\/af.png"},resolution:HD,mipmap:1,texparameter:{values:[NEAREST,NEAREST,CLAMP,CLAMP]}}],
-        playfieldNode:[{id:playfield123,mapSize:[40,40],charSize:[0.1,0.1],anchor:{values:[0.5,0.5,0]},meshRef:playfieldmesh,mapRef:playfield-data}],
-        sharedMeshNode:[{id:button1,size:[0.1,0.1],anchor:{values:[0.5,0.5,0]},transform:{scale:[3,1.4,1.4],translate:[0.3,0,0]}}],
+        playfieldNode:[{id:playfield123,mapSize:[40,40],offset:[-2,-2],rect:{mode:SIZE,values:[-0.05,-0.05,0.1,0.1]},meshRef:playfieldmesh,mapRef:playfield-data}],
+        sharedMeshNode:[{id:button1,rect:{mode:SIZE,values:[-0.05,-0.05,0.1,0.1]},bounds:{bounds:[0,0,0.1,0.1],type:RECTANGULAR},transform:{scale:[3,1.4,1.4],translate:[0.0,0,0]}}],
         quadNode:[{id:ui1,meshRef:mesh1,maxQuads:100}]
     },
     scenes:
