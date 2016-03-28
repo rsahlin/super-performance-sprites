@@ -41,6 +41,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
 
     Window window;
     CoreApp coreApp;
+    RootNode root;
     NucleusRenderer renderer;
     private SpriteMeshNode spriteNode;
     private int spriteFrames;
@@ -82,8 +83,8 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
             Vector2D zoom = event.getZoom();
             float z = ((zoom.vector[Vector2D.MAGNITUDE] * zoom.vector[VecMath.X]) / window.getWidth())
                     * ZOOM_FACTOR;
-            renderer.getNode(Layer.SCENE).getTransform().scale(z);
-            float[] scale = renderer.getNode(Layer.SCENE).getTransform().getScale();
+            root.getNode(Layer.SCENE).getTransform().scale(z);
+            float[] scale = root.getNode(Layer.SCENE).getTransform().getScale();
             System.out.println("scale: " + scale[VecMath.X]);
             worldLimit[0] = (ORTHO_LEFT) / scale[VecMath.X];
             worldLimit[1] = (ORTHO_TOP) / scale[VecMath.Y];
@@ -99,7 +100,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         if (spriteNode == null) {
             return;
         }
-        float[] scale = renderer.getNode(Layer.SCENE).getTransform().getScale();
+        float[] scale = root.getNode(Layer.SCENE).getTransform().getScale();
         float x = ((pos[0] / window.getWidth() + ORTHO_LEFT) / scale[VecMath.X]);
         float y = ((pos[1] / window.getHeight() + ORTHO_TOP) / scale[VecMath.Y]);
         Sprite s = spriteNode.getSprites()[currentSprite];
@@ -130,11 +131,13 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                 SceneSerializer sf = SceneSerializerFactory.getSerializer(GSONGraphicsEngineFactory.class.getName(),
                         renderer, GSONGraphicsEngineFactory.getNodeFactory(),
                         GSONGraphicsEngineFactory.getMeshFactory());
-                RootNode scene = sf.importScene("assets/scene.json");
-                LayerNode credit = scene.getScene(Scenes.credit);
-                LayerNode game = scene.getScene(Scenes.game);
+                root = sf.importScene("assets/scene.json");
+                LayerNode credit = root.getScene(Scenes.credit);
+                LayerNode game = root.getScene(Scenes.game);
                 Node sprites = game.getNodeByType(GraphicsEngineNodeType.spriteMeshNode.name());
-                renderer.setNode(game);
+                coreApp.setRootNode(root);
+                root.setLayer(Layer.SCENE);
+
                 renderer.getRenderSettings().setClearFunction(GLES20.GL_COLOR_BUFFER_BIT);
                 renderer.getRenderSettings().setDepthFunc(GLES20.GL_NONE);
                 renderer.getRenderSettings().setCullFace(GLES20.GL_NONE);
@@ -150,7 +153,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                 }
                 coreApp.setLogicProcessor(new J2SELogicProcessor());
                 try {
-                    sf.exportScene(System.out, scene);
+                    sf.exportScene(System.out, root);
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }

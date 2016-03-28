@@ -24,10 +24,10 @@
               {id:ui,type:quadNode,meshRef:mesh1,maxQuads:100,children:[{id:button1,type:sharedMeshNode,rect:{mode:SIZE,values:[-0.05,-0.05,0.1,0.1]},bounds:{bounds:[-0.05,-0.05,0.1,0.1],type:RECTANGULAR},transform:{scale:[3,1.4,1.4],translate:[0.0,0,0]},properties:{key:value}}]}
               ]}
           ]},
-      {layer:SCENE,id:credit,type:layernode,transform:{scaleLimit:{min:[1],max:[1]}},
+      {layer:CREDIT,id:credit,type:layernode,transform:{scaleLimit:{min:[1],max:[1]}},
         children:
           [
-            {id:chars,type:playfieldNode,mapSize:[40,40],offset:[-2,-2],rect:{mode:SIZE,values:[-0.05,-0.05,0.1,0.1]},meshRef:playfieldmesh,mapRef:playfield-data}
+            {id:chars,type:playfieldNode,mapSize:[20,20],offset:[-1,-1],rect:{mode:SIZE,values:[-0.05,-0.05,0.1,0.1]},meshRef:playfieldmesh,mapRef:playfield-data}
           ]}
       ]
 }
