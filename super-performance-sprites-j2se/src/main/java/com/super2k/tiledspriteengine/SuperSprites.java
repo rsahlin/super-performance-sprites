@@ -102,7 +102,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         }
         float[] scale = root.getNode(Layer.SCENE).getTransform().getScale();
         float x = (pos[0] / scale[VecMath.X]);
-        float y = (pos[1] / scale[VecMath.Y]);
+        float y = -(pos[1] / scale[VecMath.Y]);
         Sprite s = spriteNode.getSprites()[currentSprite];
         s.setPosition(x, y, 0);
         s.floatData[Sprite.X_POS] = x;
