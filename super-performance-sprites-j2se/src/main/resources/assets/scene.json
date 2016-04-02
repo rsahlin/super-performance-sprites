@@ -1,4 +1,5 @@
 {
+    view:{scale:[1,1,1],translate:[0.0,0,0],axisAngle:{values:[0,0,0,0]},scaleLimit:{min:[0.2],max:[2.0]}},
     resources:{
         mesh:[
           {id:mesh1,textureref:uv-texture},
@@ -14,17 +15,15 @@
     },
     scenes:
       [
-      {layer:SCENE,id:game,type:layernode,transform:{scaleLimit:{min:[0.2],max:[2.0]}},viewFrustum:{projection:ORTHOGONAL,values:[-0.5,0.5,0.5,-0.5,4,-10]},
+      {layer:SCENE,id:game,type:layernode,viewFrustum:{projection:ORTHOGONAL,values:[-0.5,0.5,0.5,-0.5,4,-10]},
         children:
           [
-            {id:chars,type:playfieldNode,mapSize:[40,40],offset:[-2,-2],rect:{mode:SIZE,values:[-0.05,-0.05,0.1,0.1]},meshRef:playfieldmesh,mapRef:playfield-data,children:
-              [
-              {id:sprites,type:spriteMeshNode,count:1200,rect:{mode:SIZE,values:[-0.025,-0.025,0.05,0.05]},meshRef:spritemesh,actordata:{data:[{instance:AFSPRITE,index:0,count:-1}]}},
-              {id:sprites2,type:spriteMeshNode,count:1,rect:{mode:SIZE,values:[-0.25,-0.25,0.5,0.5]},meshRef:spritemesh2,actordata:{data:[{instance:AFSPRITE,index:0,count:-1}]}},
-              {id:ui,type:quadNode,meshRef:mesh1,maxQuads:100,children:[{id:button1,type:sharedMeshNode,rect:{mode:SIZE,values:[-0.05,-0.05,0.1,0.1]},bounds:{bounds:[-0.05,-0.05,0.1,0.1],type:RECTANGULAR},transform:{scale:[1,1,1],translate:[0.0,0,0]},properties:{input:pointer}}]}
-              ]}
+            {id:chars,type:playfieldNode,mapSize:[40,40],offset:[-2,-2],rect:{mode:SIZE,values:[-0.05,-0.05,0.1,0.1]},meshRef:playfieldmesh,mapRef:playfield-data},
+            {id:sprites,type:spriteMeshNode,count:1200,rect:{mode:SIZE,values:[-0.025,-0.025,0.05,0.05]},meshRef:spritemesh,actordata:{data:[{instance:AFSPRITE,index:0,count:-1}]}},
+            {id:sprites2,type:spriteMeshNode,count:1,rect:{mode:SIZE,values:[-0.25,-0.25,0.5,0.5]},meshRef:spritemesh2,actordata:{data:[{instance:AFSPRITE,index:0,count:-1}]}},
+            {id:ui,type:quadNode,meshRef:mesh1,maxQuads:100,children:[{id:button1,type:sharedMeshNode,rect:{mode:SIZE,values:[-0.05,-0.05,0.1,0.1]},bounds:{bounds:[-0.05,-0.05,0.1,0.1],type:RECTANGULAR},transform:{scale:[1,1,1],translate:[0.0,0,0]},properties:{input:pointer}}]}
           ]},
-      {layer:CREDIT,id:credit,type:layernode,transform:{scaleLimit:{min:[1],max:[1]}},
+      {layer:CREDIT,id:credit,type:layernode,viewFrustum:{projection:ORTHOGONAL,values:[-0.5,0.5,0.5,-0.5,4,-10]},
         children:
           [
             {id:chars,type:playfieldNode,mapSize:[20,20],offset:[-1,-1],rect:{mode:SIZE,values:[-0.05,-0.05,0.1,0.1]},meshRef:playfieldmesh,mapRef:playfield-data}
