@@ -20,7 +20,7 @@ public class AFSprite implements ActorItem {
     public final static int ROTATE_SPEED = Sprite.SPRITE_FLOAT_COUNT + 1;
 
     private final static float TWOPI = 3.1415926f * 2;
-    public final static float GRAVITY = 5;
+    public final static float GRAVITY = -5;
 
     @Override
     public void process(ActorContainer spriteActor, float deltaTime) {
@@ -34,7 +34,7 @@ public class AFSprite implements ActorItem {
         }
         spriteActor.accelerate(0, GRAVITY, deltaTime);
         spriteActor.move(deltaTime);
-        if (floatData[Sprite.Y_POS] > SuperSprites.worldLimit[3]) {
+        if (floatData[Sprite.Y_POS] < SuperSprites.worldLimit[3]) {
             floatData[Sprite.MOVE_VECTOR_Y] = -floatData[Sprite.MOVE_VECTOR_Y]
                     * floatData[ELASTICITY];
             floatData[Sprite.Y_POS] = SuperSprites.worldLimit[3]

@@ -36,7 +36,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     private int SPRITECOUNT = 1200;
     // TODO How to find these values from the scene
     private final static float ORTHO_LEFT = -0.5f;
-    private final static float ORTHO_TOP = -0.5f;
+    private final static float ORTHO_TOP = 0.5f;
     private final static float ZOOM_FACTOR = 0.5f;
 
     Window window;
@@ -52,7 +52,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     public final static int DEFAULT_MAX_X = 1;
     public final static int DEFAULT_MAX_Y = 1;
     public final static float[] worldLimit = new float[] { ORTHO_LEFT, ORTHO_TOP, DEFAULT_MAX_X + ORTHO_LEFT,
-            DEFAULT_MAX_Y + ORTHO_TOP };
+            -ORTHO_TOP };
 
     public SuperSprites() {
         super();
@@ -90,7 +90,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
             worldLimit[0] = (ORTHO_LEFT) / scale[VecMath.X];
             worldLimit[1] = (ORTHO_TOP) / scale[VecMath.Y];
             worldLimit[2] = (DEFAULT_MAX_X + ORTHO_LEFT) / scale[VecMath.X];
-            worldLimit[3] = (DEFAULT_MAX_Y + ORTHO_TOP) / scale[VecMath.Y];
+            worldLimit[3] = (-ORTHO_TOP) / scale[VecMath.Y];
             break;
         default:
 
@@ -103,7 +103,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         }
         float[] scale = root.getView().getScale();
         float x = (pos[0] / scale[VecMath.X]);
-        float y = -(pos[1] / scale[VecMath.Y]);
+        float y = (pos[1] / scale[VecMath.Y]);
         Sprite s = spriteNode.getSprites()[currentSprite];
         s.setPosition(x, y, 0);
         s.floatData[Sprite.X_POS] = x;
