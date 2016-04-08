@@ -18,13 +18,10 @@ import com.nucleus.mmi.MMIEventListener;
 import com.nucleus.mmi.MMIPointerEvent;
 import com.nucleus.opengl.GLESWrapper.GLES20;
 import com.nucleus.renderer.NucleusRenderer;
-import com.nucleus.renderer.NucleusRenderer.Layer;
 import com.nucleus.renderer.NucleusRenderer.RenderContextListener;
 import com.nucleus.renderer.Window;
-import com.nucleus.scene.LayerNode;
 import com.nucleus.scene.Node;
 import com.nucleus.scene.RootNode;
-import com.nucleus.scene.RootNode.Scenes;
 import com.nucleus.texturing.Texture2D;
 import com.nucleus.texturing.TiledTexture2D;
 import com.nucleus.vecmath.VecMath;
@@ -133,11 +130,9 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                         renderer, GSONGraphicsEngineFactory.getNodeFactory(),
                         GSONGraphicsEngineFactory.getMeshFactory());
                 root = sf.importScene("assets/scene.json");
-                LayerNode credit = root.getScene(Scenes.credit);
-                LayerNode game = root.getScene(Scenes.game);
-                Node sprites = game.getNodeByType(GraphicsEngineNodeType.spriteMeshNode.name());
+                Node sprites = root.getScene().getNodeByType(GraphicsEngineNodeType.spriteMeshNode.name());
                 coreApp.setRootNode(root);
-                root.setLayer(Layer.SCENE);
+                // root.setLayer(Layer.SCENE);
 
                 renderer.getRenderSettings().setClearFunction(GLES20.GL_COLOR_BUFFER_BIT);
                 renderer.getRenderSettings().setDepthFunc(GLES20.GL_NONE);
