@@ -1,5 +1,4 @@
 {
-    view:{scale:[1,1,1],translate:[0.0,0,0],axisAngle:{values:[0,0,0,0]},scaleLimit:{min:[0.2],max:[2.0]}},
     resources:{
         mesh:[
           {id:mesh1,textureref:uv-texture},
@@ -16,25 +15,25 @@
     scene:{
         id:switch,type:switchnode,active:gamescene,children:
         [
-            {id:gamescene,type:switchnode,children:
+            {layer:SCENE,id:gamescene,type:viewnode,view:{scale:[1,1,1],translate:[0.0,0,0],axisAngle:{values:[0,0,0,0]},scaleLimit:{min:[0.2],max:[2.0]}},children:
             [
-                {layer:SCENE,id:game,type:viewnode,viewFrustum:{projection:ORTHOGONAL,values:[-0.5,0.5,-0.5,0.5,4,-10]},
+                {layer:SCENE,id:game,type:switchnode,viewFrustum:{projection:ORTHOGONAL,values:[-0.5,0.5,-0.5,0.5,4,-10]},
                 children:
                   [
                     {id:chars,type:playfieldNode,mapSize:[40,40],offset:[-2,2],rect:{mode:SIZE,values:[-0.05,0.05,0.1,0.1]},meshRef:playfieldmesh,mapRef:playfield-data},
                     {id:sprites,type:spriteMeshNode,count:1200,rect:{mode:SIZE,values:[-0.025,0.025,0.05,0.05]},meshRef:spritemesh,actordata:{data:[{instance:AFSPRITE,index:0,count:-1}]}},
                     {id:sprites2,type:spriteMeshNode,count:1,rect:{mode:SIZE,values:[-0.25,0.25,0.5,0.5]},meshRef:spritemesh2,actordata:{data:[{instance:AFSPRITE,index:0,count:-1}]}}
                   ]},
-                {layer:OVERLAY,id:ui,type:viewnode,viewFrustum:{projection:ORTHOGONAL,values:[-0.5,0.5,-0.5,0.5,4,-10]},
+                {layer:OVERLAY,id:ui,type:switchnode,viewFrustum:{projection:ORTHOGONAL,values:[-0.5,0.5,-0.5,0.5,4,-10]},
                 children:
                   [
                     {id:ui,type:quadNode,meshRef:mesh1,maxQuads:100,children:[{id:button1,type:sharedMeshNode,rect:{mode:SIZE,values:[-0.05,0.05,0.1,0.1]},bounds:{bounds:[-0.05,0.05,0.1,0.1],type:RECTANGULAR},transform:{scale:[1,1,1],translate:[0.3,0.3,0]},
-                        properties:{pointerinput:true,onclick:"MOVETO:0.3,-0.3,0"}}]}
+                        properties:{pointerinput:true,onclick:"view:MOVETO:0.3,-0.3,0"}}]}
                   ]}
               ]},
             {id:creditscene,type:switchnode,children:
             [
-                {layer:OVERLAY,id:ui,type:viewnode,viewFrustum:{projection:ORTHOGONAL,values:[-0.5,0.5,-0.5,0.5,4,-10]},
+                {layer:OVERLAY,id:ui,type:switchnode,viewFrustum:{projection:ORTHOGONAL,values:[-0.5,0.5,-0.5,0.5,4,-10]},
                 children:
                   [
                     {id:ui,type:quadNode,meshRef:mesh1,maxQuads:100,children:[{id:button1,type:sharedMeshNode,rect:{mode:SIZE,values:[-0.05,0.05,0.1,0.1]},bounds:{bounds:[-0.05,0.05,0.1,0.1],type:RECTANGULAR},transform:{scale:[1,1,1],translate:[0.3,0.3,0]},
