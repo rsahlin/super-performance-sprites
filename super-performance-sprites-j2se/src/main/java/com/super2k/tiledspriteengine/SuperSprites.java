@@ -25,6 +25,7 @@ import com.nucleus.scene.Node;
 import com.nucleus.scene.RootNode;
 import com.nucleus.texturing.Texture2D;
 import com.nucleus.texturing.TiledTexture2D;
+import com.nucleus.vecmath.Transform;
 import com.nucleus.vecmath.VecMath;
 import com.nucleus.vecmath.Vector2D;
 
@@ -81,7 +82,10 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
             Vector2D zoom = event.getZoom();
             float z = ((zoom.vector[Vector2D.MAGNITUDE] * zoom.vector[VecMath.X]))
                     * ZOOM_FACTOR;
-            root.getViewNode(Layer.SCENE).getView().scale(z);
+            Transform t = root.getViewNode(Layer.SCENE).getView();
+            if (t != null) {
+                t.scale(z);
+            }
             // root.getNode(Layer.SCENE).getTransform().scale(z);
             float[] scale = root.getViewNode(Layer.SCENE).getView().getScale();
             System.out.println("scale: " + scale[VecMath.X]);
@@ -133,7 +137,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                 root = sf.importScene("assets/scene.json");
                 Node sprites = root.getScene().getNodeByType(GraphicsEngineNodeType.spriteMeshNode.name());
                 coreApp.setRootNode(root);
-                // root.setLayer(Layer.SCENE);
+                coreApp.addPointerInput(root);
 
                 renderer.getRenderSettings().setClearFunction(GLES20.GL_COLOR_BUFFER_BIT);
                 renderer.getRenderSettings().setDepthFunc(GLES20.GL_NONE);
