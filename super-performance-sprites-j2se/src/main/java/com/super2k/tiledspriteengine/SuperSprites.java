@@ -23,9 +23,9 @@ import com.nucleus.renderer.NucleusRenderer.RenderContextListener;
 import com.nucleus.renderer.Window;
 import com.nucleus.scene.Node;
 import com.nucleus.scene.RootNode;
+import com.nucleus.scene.ViewNode;
 import com.nucleus.texturing.Texture2D;
 import com.nucleus.texturing.TiledTexture2D;
-import com.nucleus.vecmath.Transform;
 import com.nucleus.vecmath.VecMath;
 import com.nucleus.vecmath.Vector2D;
 
@@ -82,17 +82,16 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
             Vector2D zoom = event.getZoom();
             float z = ((zoom.vector[Vector2D.MAGNITUDE] * zoom.vector[VecMath.X]))
                     * ZOOM_FACTOR;
-            Transform t = root.getViewNode(Layer.SCENE).getView();
-            if (t != null) {
-                t.scale(z);
+            ViewNode viewNode = root.getViewNode(Layer.SCENE);
+            if (viewNode != null) {
+                viewNode.getView().scale(z);
+                float[] scale = viewNode.getView().getScale();
+                System.out.println("scale: " + scale[VecMath.X]);
+                worldLimit[0] = (ORTHO_LEFT) / scale[VecMath.X];
+                worldLimit[1] = (ORTHO_TOP) / scale[VecMath.Y];
+                worldLimit[2] = (DEFAULT_MAX_X + ORTHO_LEFT) / scale[VecMath.X];
+                worldLimit[3] = (-ORTHO_TOP) / scale[VecMath.Y];
             }
-            // root.getNode(Layer.SCENE).getTransform().scale(z);
-            float[] scale = root.getViewNode(Layer.SCENE).getView().getScale();
-            System.out.println("scale: " + scale[VecMath.X]);
-            worldLimit[0] = (ORTHO_LEFT) / scale[VecMath.X];
-            worldLimit[1] = (ORTHO_TOP) / scale[VecMath.Y];
-            worldLimit[2] = (DEFAULT_MAX_X + ORTHO_LEFT) / scale[VecMath.X];
-            worldLimit[3] = (-ORTHO_TOP) / scale[VecMath.Y];
             break;
         default:
 
@@ -142,6 +141,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                 renderer.getRenderSettings().setClearFunction(GLES20.GL_COLOR_BUFFER_BIT);
                 renderer.getRenderSettings().setDepthFunc(GLES20.GL_NONE);
                 renderer.getRenderSettings().setCullFace(GLES20.GL_NONE);
+                renderer.getRenderSettings().enableMultisampling(true);
 
                 if (sprites != null && sprites instanceof SpriteMeshNode) {
                     spriteNode = (SpriteMeshNode) sprites;
