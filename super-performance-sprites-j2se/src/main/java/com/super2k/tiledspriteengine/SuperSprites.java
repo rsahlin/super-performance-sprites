@@ -21,7 +21,6 @@ import com.nucleus.renderer.NucleusRenderer;
 import com.nucleus.renderer.NucleusRenderer.Layer;
 import com.nucleus.renderer.NucleusRenderer.RenderContextListener;
 import com.nucleus.renderer.Window;
-import com.nucleus.scene.Node;
 import com.nucleus.scene.RootNode;
 import com.nucleus.scene.ViewNode;
 import com.nucleus.texturing.Texture2D;
@@ -42,7 +41,6 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     CoreApp coreApp;
     RootNode root;
     NucleusRenderer renderer;
-    private SpriteMeshNode spriteNode;
     private int spriteFrames;
 
     private int currentSprite = 0;
@@ -99,6 +97,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     }
 
     private void releaseSprite(float[] start, float[] pos) {
+        SpriteMeshNode spriteNode = getSpriteNode(root);
         if (spriteNode == null) {
             return;
         }
@@ -124,53 +123,52 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         }
     }
 
+    private SpriteMeshNode getSpriteNode(RootNode root) {
+        return (SpriteMeshNode) root.getScene().getNodeByType(GraphicsEngineNodeType.spriteMeshNode.name());
+    }
+
     @Override
     public void contextCreated(int width, int height) {
         window = Window.getInstance();
 
-        if (spriteNode == null) {
+        try {
+            SceneSerializer sf = SceneSerializerFactory.getSerializer(GSONGraphicsEngineFactory.class.getName(),
+                    renderer, GSONGraphicsEngineFactory.getNodeFactory(),
+                    GSONGraphicsEngineFactory.getMeshFactory());
+            root = sf.importScene("assets/scene.json");
+            coreApp.setRootNode(root);
+            coreApp.addPointerInput(root);
+
+            renderer.getRenderSettings().setClearFunction(GLES20.GL_COLOR_BUFFER_BIT);
+            renderer.getRenderSettings().setDepthFunc(GLES20.GL_NONE);
+            renderer.getRenderSettings().setCullFace(GLES20.GL_NONE);
+            renderer.getRenderSettings().enableMultisampling(true);
+
+            TiledTexture2D tex = (TiledTexture2D) root.getResources().getTexture2D("sprite-texture");
+            spriteFrames = tex.getTileWidth() * tex.getTileHeight();
+            SpriteMeshNode sprites = getSpriteNode(root);
+            if (sprites != null) {
+                Mesh mesh = sprites.getMeshById(sprites.getMeshRef());
+                // TODO A method to query the mesh how many frames it supports?
+                // Maybe a way to fetch the texture from the resources?
+                TiledTexture2D tiledTexture = (TiledTexture2D) mesh.getTexture(Texture2D.TEXTURE_0);
+                spriteFrames = tiledTexture.getTileWidth() * tiledTexture.getTileHeight();
+                SPRITECOUNT = sprites.getCount();
+            }
+            coreApp.setLogicProcessor(new J2SELogicProcessor());
             try {
-                SceneSerializer sf = SceneSerializerFactory.getSerializer(GSONGraphicsEngineFactory.class.getName(),
-                        renderer, GSONGraphicsEngineFactory.getNodeFactory(),
-                        GSONGraphicsEngineFactory.getMeshFactory());
-                root = sf.importScene("assets/scene.json");
-                Node sprites = root.getScene().getNodeByType(GraphicsEngineNodeType.spriteMeshNode.name());
-                coreApp.setRootNode(root);
-                coreApp.addPointerInput(root);
-
-                renderer.getRenderSettings().setClearFunction(GLES20.GL_COLOR_BUFFER_BIT);
-                renderer.getRenderSettings().setDepthFunc(GLES20.GL_NONE);
-                renderer.getRenderSettings().setCullFace(GLES20.GL_NONE);
-                renderer.getRenderSettings().enableMultisampling(true);
-
-                if (sprites != null && sprites instanceof SpriteMeshNode) {
-                    spriteNode = (SpriteMeshNode) sprites;
-                    Mesh mesh = spriteNode.getMeshById(spriteNode.getMeshRef());
-                    // TODO A method to query the mesh how many frames it supports?
-                    TiledTexture2D tiledTexture = (TiledTexture2D) mesh.getTexture(Texture2D.TEXTURE_0);
-                    spriteFrames = tiledTexture.getTileWidth() * tiledTexture.getTileHeight();
-                    SPRITECOUNT = spriteNode.getCount();
-
-                }
-                coreApp.setLogicProcessor(new J2SELogicProcessor());
-                try {
-                    sf.exportScene(System.out, root);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
-
+                sf.exportScene(System.out, root);
             } catch (IOException e) {
                 throw new RuntimeException(e);
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            } catch (InstantiationException e) {
-                throw new RuntimeException(e);
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
             }
-
-        } else {
-            System.err.println("NOT IMPLEMENTED");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
         }
     }
 }
