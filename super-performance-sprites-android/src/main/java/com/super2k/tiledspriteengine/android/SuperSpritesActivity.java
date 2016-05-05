@@ -1,9 +1,9 @@
 package com.super2k.tiledspriteengine.android;
 
-import android.os.Bundle;
-
 import com.nucleus.android.NucleusActivity;
 import com.super2k.tiledspriteengine.SuperSprites;
+
+import android.os.Bundle;
 
 public class SuperSpritesActivity extends NucleusActivity {
 
@@ -14,5 +14,6 @@ public class SuperSpritesActivity extends NucleusActivity {
         // this class can be removed.
         SuperSprites superSprites = new SuperSprites();
         superSprites.init(coreApp);
+        System.out.println("done");
     }
 }

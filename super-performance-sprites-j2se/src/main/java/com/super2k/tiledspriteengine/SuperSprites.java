@@ -35,7 +35,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     // TODO How to find these values from the scene
     private final static float ORTHO_LEFT = -0.5f;
     private final static float ORTHO_TOP = 0.5f;
-    private final static float ZOOM_FACTOR = 0.5f;
+    private final static float ZOOM_FACTOR = 1f;
 
     Window window;
     CoreApp coreApp;
@@ -74,7 +74,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         case ACTIVE:
             float[] pos = event.getPointerData().getCurrentPosition();
             float[] start = event.getPointerData().getFirstPosition();
-            releaseSprite(start, pos);
+            releaseSprite(pos, event.getPointerData().getDelta(1));
             break;
         case ZOOM:
             Vector2D zoom = event.getZoom();
@@ -96,7 +96,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         }
     }
 
-    private void releaseSprite(float[] start, float[] pos) {
+    private void releaseSprite(float[] pos, float[] delta) {
         SpriteMeshNode spriteNode = getSpriteNode(root);
         if (spriteNode == null) {
             return;
@@ -109,9 +109,13 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         s.floatData[Sprite.X_POS] = x;
         s.floatData[Sprite.Y_POS] = y;
         s.setMoveVector(0, 0, 0);
-        s.floatData[AFSprite.ELASTICITY] = 0.95f - (random.nextFloat() / 10);
-        s.moveVector.setNormalized((pos[0] - start[0]), 0);
-        s.floatData[AFSprite.ROTATE_SPEED] = s.moveVector.vector[VecMath.X];
+        s.floatData[AFSprite.ELASTICITY] = 0.8f - (random.nextFloat() / 5);
+        if (delta != null) {
+            s.moveVector.setNormalized((delta[0] * 30) / scale[0], 0);
+        } else {
+            s.moveVector.setNormalized(0, 0);
+        }
+        s.floatData[AFSprite.ROTATE_SPEED] = -s.moveVector.vector[VecMath.X];
         s.setFrame(random.nextInt(spriteFrames));
         s.setScale(0.8f + random.nextFloat() * 0.5f, 0.8f + random.nextFloat() * 0.5f);
 
@@ -124,6 +128,9 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     }
 
     private SpriteMeshNode getSpriteNode(RootNode root) {
+        if (root == null) {
+            return null;
+        }
         return (SpriteMeshNode) root.getScene().getNodeByType(GraphicsEngineNodeType.spriteMeshNode.name());
     }
 
@@ -142,7 +149,6 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
             renderer.getRenderSettings().setClearFunction(GLES20.GL_COLOR_BUFFER_BIT);
             renderer.getRenderSettings().setDepthFunc(GLES20.GL_NONE);
             renderer.getRenderSettings().setCullFace(GLES20.GL_NONE);
-            renderer.getRenderSettings().enableMultisampling(true);
 
             TiledTexture2D tex = (TiledTexture2D) root.getResources().getTexture2D("sprite-texture");
             spriteFrames = tex.getTileWidth() * tex.getTileHeight();
