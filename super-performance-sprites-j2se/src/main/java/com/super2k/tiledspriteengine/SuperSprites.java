@@ -31,7 +31,10 @@ import com.nucleus.vecmath.Vector2D;
 public class SuperSprites implements MMIEventListener, RenderContextListener, ClientApplication {
 
     protected final static String TILED_SPRITE_RENDERER_TAG = "TiledSpiteRenderer";
-    private int SPRITECOUNT = 1200;
+    /**
+     * Must be set from scenetree
+     */
+    private int spritecount;
     // TODO How to find these values from the scene
     private final static float ORTHO_LEFT = -0.5f;
     private final static float ORTHO_TOP = 0.5f;
@@ -73,7 +76,6 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         case MOVE:
         case ACTIVE:
             float[] pos = event.getPointerData().getCurrentPosition();
-            float[] start = event.getPointerData().getFirstPosition();
             releaseSprite(pos, event.getPointerData().getDelta(1));
             break;
         case ZOOM:
@@ -101,6 +103,9 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         if (spriteNode == null) {
             return;
         }
+        if (spritecount == 0) {
+            fetchSpritesInfo();
+        }
         float[] scale = root.getViewNode(Layer.SCENE).getView().getScale();
         float x = (pos[0] / scale[VecMath.X]);
         float y = (pos[1] / scale[VecMath.Y]);
@@ -109,22 +114,39 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         s.floatData[Sprite.X_POS] = x;
         s.floatData[Sprite.Y_POS] = y;
         s.setMoveVector(0, 0, 0);
-        s.floatData[AFSprite.ELASTICITY] = 0.8f - (random.nextFloat() / 5);
+        s.floatData[BounceSprite.ELASTICITY] = 1f - (random.nextFloat() / 5);
         if (delta != null) {
             s.moveVector.setNormalized((delta[0] * 30) / scale[0], 0);
         } else {
             s.moveVector.setNormalized(0, 0);
         }
-        s.floatData[AFSprite.ROTATE_SPEED] = -s.moveVector.vector[VecMath.X];
+        s.floatData[BounceSprite.ROTATE_SPEED] = s.moveVector.vector[VecMath.X];
         s.setFrame(random.nextInt(spriteFrames));
         s.setScale(0.8f + random.nextFloat() * 0.5f, 0.8f + random.nextFloat() * 0.5f);
 
-        s.floatData[Sprite.SCALE] = 1 + random.nextFloat();
-
         currentSprite++;
-        if (currentSprite > SPRITECOUNT - 1) {
+        if (currentSprite > spritecount - 1) {
             currentSprite = 0;
         }
+    }
+
+    /**
+     * Fetches the framecount and number of sprites
+     */
+    private void fetchSpritesInfo() {
+        SpriteMeshNode sprites = getSpriteNode(root);
+        if (sprites != null) {
+            Mesh mesh = sprites.getMeshById(sprites.getMeshRef());
+            // TODO A method to query the mesh how many frames it supports?
+            // Maybe a way to fetch the texture from the resources?
+            TiledTexture2D tiledTexture = (TiledTexture2D) mesh.getTexture(Texture2D.TEXTURE_0);
+            spriteFrames = tiledTexture.getTileWidth() * tiledTexture.getTileHeight();
+            spritecount = sprites.getCount();
+            System.out.println("Spritecount: " + spritecount + ", Spriteframes: " + spriteFrames);
+        } else {
+            throw new IllegalArgumentException("Could not find sprite node");
+        }
+
     }
 
     private SpriteMeshNode getSpriteNode(RootNode root) {
@@ -152,15 +174,6 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
 
             TiledTexture2D tex = (TiledTexture2D) root.getResources().getTexture2D("sprite-texture");
             spriteFrames = tex.getTileWidth() * tex.getTileHeight();
-            SpriteMeshNode sprites = getSpriteNode(root);
-            if (sprites != null) {
-                Mesh mesh = sprites.getMeshById(sprites.getMeshRef());
-                // TODO A method to query the mesh how many frames it supports?
-                // Maybe a way to fetch the texture from the resources?
-                TiledTexture2D tiledTexture = (TiledTexture2D) mesh.getTexture(Texture2D.TEXTURE_0);
-                spriteFrames = tiledTexture.getTileWidth() * tiledTexture.getTileHeight();
-                SPRITECOUNT = sprites.getCount();
-            }
             coreApp.setLogicProcessor(new J2SELogicProcessor());
             try {
                 sf.exportScene(System.out, root);

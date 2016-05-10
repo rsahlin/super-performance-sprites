@@ -12,7 +12,8 @@ import com.nucleus.actor.ActorResolver;
 public class SuperSpriteResolver implements ActorResolver {
 
     public enum Logics {
-        AFSPRITE(AFSprite.class);
+        BOUNCESPRITE(BounceSprite.class),
+        SPRITE(SimpleSprite.class);
 
         private final Class clazz;
 

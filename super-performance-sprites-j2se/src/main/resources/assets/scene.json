@@ -6,10 +6,10 @@
           {id:spritemesh,textureref:sprite-texture},
           {id:spritemesh2,textureref:uv-texture}
           ],
-        playfield:[{id:playfield-data,arrayInput:{components:1,size:{data:[5,3]},dataType:INT,data:[65,66,67,68,69,70,71,72,73,74,75,76,77,78,79]}}], 
-        texture2D:[{id:test,externalReference:{source:"assets\/charset.png"},resolution:HD,mipmap:2,texParameters:{values:[NEAREST_MIPMAP_NEAREST,NEAREST,CLAMP,CLAMP]}}],
-        tiledTexture2D:[{id:charmap-texture,externalReference:{source:"assets\/charset.png"},resolution:HD,mipmap:2,tile:[32,8],texParameters:{values:[NEAREST_MIPMAP_NEAREST,NEAREST,CLAMP,CLAMP]}},
-                           {id:sprite-texture,externalReference:{source:"assets\/af.png"},resolution:HD,mipmap:2,tile:[5,2],texParameters:{values:[NEAREST_MIPMAP_NEAREST,NEAREST,CLAMP,CLAMP]}}],
+        playfield:[{id:playfield-data,arrayInput:{components:1,size:{data:[10,4]},dataType:INT,data:[0,45,2,3,4,5,6,7,8,9,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95]}}], 
+        texture2D:[{id:test,externalReference:{source:"assets\/charset.png"},resolution:HD,mipmap:2,texParameters:{values:[LINEAR_MIPMAP_NEAREST,NEAREST,CLAMP,CLAMP]}}],
+        tiledTexture2D:[{id:charmap-texture,externalReference:{source:"assets\/charset.png"},resolution:HD,mipmap:2,tile:[32,8],texParameters:{values:[LINEAR_MIPMAP_NEAREST,NEAREST,CLAMP,CLAMP]}},
+                           {id:sprite-texture,externalReference:{source:"assets\/sprites.png"},resolution:HD,mipmap:2,tile:[18,7],texParameters:{values:[LINEAR_MIPMAP_NEAREST,NEAREST,CLAMP,CLAMP]}}],
         uvTexture2D:[{id:uv-texture,UVAtlas:{UVData:[0,0,1,1,0.9,0.9,0.1,0.1]},externalReference:{source:"assets\/mapillary.png"},resolution:ULTRA_HD,mipmap:2,texParameters:{values:[LINEAR_MIPMAP_NEAREST,NEAREST,CLAMP,CLAMP]}}]
     },
     scene:{
@@ -20,9 +20,9 @@
                 {layer:SCENE,id:game,type:switchnode,
                 children:
                   [
-                    {id:chars,type:playfieldNode,mapSize:[10,10],offset:[-2,2],rect:{mode:SIZE,values:[-0.05,0.05,0.1,0.1]},meshRef:playfieldmesh,mapRef:playfield-data},
-                    {id:sprites,type:spriteMeshNode,count:2400,rect:{mode:SIZE,values:[-0.025,0.025,0.05,0.05]},meshRef:spritemesh,actordata:{data:[{instance:AFSPRITE,index:0,count:-1}]}},
-                    {id:sprites2,type:spriteMeshNode,count:1,rect:{mode:SIZE,values:[-0.25,0.25,0.5,0.5]},meshRef:spritemesh2,actordata:{data:[{instance:AFSPRITE,index:0,count:-1}]}}
+                    {id:chars,type:playfieldNode,mapSize:[10,10],offset:[0,0],rect:{mode:SIZE,values:[-0.05,0.05,0.1,0.1]},meshRef:playfieldmesh,mapRef:playfield-data},
+                    {id:sprites,type:spriteMeshNode,count:2400,rect:{mode:SIZE,values:[-0.025,0.025,0.05,0.05]},meshRef:spritemesh,actordata:{data:[{instance:BOUNCESPRITE,index:0,count:-1}]}},
+                    {id:sprites2,type:spriteMeshNode,count:1,rect:{mode:SIZE,values:[-0.05,0.05,0.1,0.1]},meshRef:spritemesh,actordata:{data:[{instance:SPRITE,index:0,count:-1}]}}
                   ]},
                 {layer:OVERLAY,id:ui,type:switchnode,
                 children:
@@ -30,7 +30,7 @@
                     {id:ui,type:quadNode,meshRef:mesh1,maxQuads:100,
                     children:[
                         {id:button1,type:sharedMeshNode,rect:{mode:SIZE,values:[-0.05,0.05,0.1,0.1]},bounds:{bounds:[-0.05,0.05,0.1,0.1],type:RECTANGULAR},transform:{scale:[1,1,1],translate:[0.3,0.3,0]},
-                            properties:{}}
+                            properties:{POINTERINPUT:true"}}
                     ]}
                             
                   ]}
@@ -43,9 +43,9 @@
                     {id:ui,type:quadNode,meshRef:mesh1,maxQuads:100,
                     children:[{
                         id:button1,type:sharedMeshNode,rect:{mode:SIZE,values:[-0.05,0.05,0.1,0.1]},bounds:{bounds:[-0.05,0.05,0.1,0.1],type:RECTANGULAR},transform:{scale:[1,1,1],translate:[0.3,0.3,0]},
-                            properties:{pointerinput:true,onclick:"view:MOVETO:0.3,-0.3,0"}},
+                            properties:{POINTERINPUT:true,onclick:"view:MOVETO:0.3,-0.3,0"}},
                         {id:button2,type:sharedMeshNode,rect:{mode:SIZE,values:[-0.05,0.05,0.1,0.1]},bounds:{bounds:[-0.05,0.05,0.1,0.1],type:RECTANGULAR},transform:{scale:[1,1,1],translate:[0,-0.3,0]},
-                            properties:{pointerinput:true,onclick:"node:SWITCH:switch:gamescene"}}
+                            properties:{POINTERINPUT:true,onclick:"node:SWITCH:switch:gamescene"}}
                             
                         ]}
                   ]}

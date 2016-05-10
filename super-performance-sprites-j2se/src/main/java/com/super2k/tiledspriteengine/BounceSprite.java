@@ -14,7 +14,7 @@ import com.super2k.tiledspriteengine.SuperSpriteResolver.Logics;
  * @author Richard Sahlin
  *
  */
-public class AFSprite implements ActorItem {
+public class BounceSprite implements ActorItem {
 
     public final static int ELASTICITY = Sprite.SPRITE_FLOAT_COUNT;
     public final static int ROTATE_SPEED = Sprite.SPRITE_FLOAT_COUNT + 1;
@@ -56,7 +56,7 @@ public class AFSprite implements ActorItem {
 
     @Override
     public String getActorId() {
-        return Logics.AFSPRITE.name();
+        return Logics.BOUNCESPRITE.name();
     }
 
     @Override
@@ -67,6 +67,6 @@ public class AFSprite implements ActorItem {
 
     @Override
     public void init(ActorContainer logic) {
-        logic.floatData[AFSprite.ELASTICITY] = 0.8f;
+        logic.floatData[BounceSprite.ELASTICITY] = 0.8f;
     }
 }
