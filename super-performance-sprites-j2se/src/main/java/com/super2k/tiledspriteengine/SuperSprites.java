@@ -52,8 +52,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
 
     public final static int DEFAULT_MAX_X = 1;
     public final static int DEFAULT_MAX_Y = 1;
-    public final static float[] worldLimit = new float[] { ORTHO_LEFT, ORTHO_TOP, DEFAULT_MAX_X + ORTHO_LEFT,
-            -ORTHO_TOP };
+    public static float[] worldLimit;
 
     public SuperSprites() {
         super();
@@ -192,6 +191,10 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     @Override
     public void contextCreated(int width, int height) {
         window = Window.getInstance();
+        // Todo - should have a method indicating that context is lost
+        spriteNode = null;
+        worldLimit = new float[] { ORTHO_LEFT, ORTHO_TOP, DEFAULT_MAX_X + ORTHO_LEFT,
+                -ORTHO_TOP };
 
         try {
             SceneSerializer sf = SceneSerializerFactory.getSerializer(GSONGraphicsEngineFactory.class.getName(),
