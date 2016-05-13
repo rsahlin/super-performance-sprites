@@ -67,6 +67,6 @@ public class BounceSprite implements ActorItem {
 
     @Override
     public void init(ActorContainer logic) {
-        logic.floatData[BounceSprite.ELASTICITY] = 0.8f;
+        logic.floatData[BounceSprite.ELASTICITY] = 0.9f;
     }
 }

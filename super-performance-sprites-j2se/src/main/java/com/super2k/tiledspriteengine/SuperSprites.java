@@ -45,7 +45,8 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     RootNode root;
     NucleusRenderer renderer;
     private int spriteFrames;
-
+    private SpriteMeshNode spriteNode;
+    private ViewNode viewNode;
     private int currentSprite = 0;
     private Random random = new Random();
 
@@ -82,35 +83,35 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
             Vector2D zoom = event.getZoom();
             float z = ((zoom.vector[Vector2D.MAGNITUDE] * zoom.vector[VecMath.X]))
                     * ZOOM_FACTOR;
-            ViewNode viewNode = root.getViewNode(Layer.SCENE);
-            if (viewNode != null) {
-                viewNode.getView().scale(z);
-                float[] scale = viewNode.getView().getScale();
-                System.out.println("scale: " + scale[VecMath.X]);
-                worldLimit[0] = (ORTHO_LEFT) / scale[VecMath.X];
-                worldLimit[1] = (ORTHO_TOP) / scale[VecMath.Y];
-                worldLimit[2] = (DEFAULT_MAX_X + ORTHO_LEFT) / scale[VecMath.X];
-                worldLimit[3] = (-ORTHO_TOP) / scale[VecMath.Y];
-            }
+            updateNodeScale(z);
             break;
         default:
 
         }
     }
 
-    private void releaseSprite(float[] pos, float[] delta) {
-        SpriteMeshNode spriteNode = getSpriteNode(root);
-        if (spriteNode == null) {
-            return;
+    private void updateNodeScale(float zoom) {
+        if (viewNode != null) {
+            viewNode.getView().scale(zoom);
+            float[] scale = viewNode.getView().getScale();
+            // System.out.println("scale: " + scale[VecMath.X]);
+            worldLimit[0] = (ORTHO_LEFT) / scale[VecMath.X];
+            worldLimit[1] = (ORTHO_TOP) / scale[VecMath.Y];
+            worldLimit[2] = (DEFAULT_MAX_X + ORTHO_LEFT) / scale[VecMath.X];
+            worldLimit[3] = (-ORTHO_TOP) / scale[VecMath.Y];
         }
-        if (spritecount == 0) {
-            fetchSpritesInfo();
+
+    }
+
+    private void releaseSprite(float[] pos, float[] delta) {
+        if (!fetchSprites()) {
+            return;
         }
         float[] scale = root.getViewNode(Layer.SCENE).getView().getScale();
         float x = (pos[0] / scale[VecMath.X]);
         float y = (pos[1] / scale[VecMath.Y]);
         Sprite s = spriteNode.getSprites()[currentSprite];
-        s.setPosition(x, y, 0);
+        // s.setPosition(x, y, 0);
         s.floatData[Sprite.X_POS] = x;
         s.floatData[Sprite.Y_POS] = y;
         s.setMoveVector(0, 0, 0);
@@ -133,20 +134,52 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     /**
      * Fetches the framecount and number of sprites
      */
-    private void fetchSpritesInfo() {
-        SpriteMeshNode sprites = getSpriteNode(root);
-        if (sprites != null) {
-            Mesh mesh = sprites.getMeshById(sprites.getMeshRef());
+    private boolean fetchSprites() {
+        if (spriteNode != null) {
+            return true;
+        }
+        spriteNode = getSpriteNode(root);
+        if (spriteNode != null) {
+            viewNode = root.getViewNode(Layer.SCENE);
+            updateNodeScale(0);
+            Mesh mesh = spriteNode.getMeshById(spriteNode.getMeshRef());
             // TODO A method to query the mesh how many frames it supports?
             // Maybe a way to fetch the texture from the resources?
             TiledTexture2D tiledTexture = (TiledTexture2D) mesh.getTexture(Texture2D.TEXTURE_0);
             spriteFrames = tiledTexture.getTileWidth() * tiledTexture.getTileHeight();
-            spritecount = sprites.getCount();
+            spritecount = spriteNode.getCount();
             System.out.println("Spritecount: " + spritecount + ", Spriteframes: " + spriteFrames);
-        } else {
-            throw new IllegalArgumentException("Could not find sprite node");
+            initSprites(spriteNode);
+            return true;
         }
+        return false;
+    }
 
+    private void initSprites(SpriteMeshNode sprites) {
+        int frame = 0;
+        int width = (int) Math.sqrt(spritecount);
+        int x = 0;
+        float xpos = worldLimit[0];
+        float ypos = worldLimit[1];
+        float delta = (worldLimit[2] - worldLimit[0]) / width;
+        Sprite s;
+        for (int i = 0; i < spritecount; i++) {
+            s = sprites.getSprites()[i];
+            s.floatData[Sprite.X_POS] = xpos;
+            s.floatData[Sprite.Y_POS] = ypos;
+            s.setFrame(frame++);
+            s.floatData[Sprite.ROTATION] = (float) i / 360;
+            if (frame > spriteFrames) {
+                frame = 0;
+            }
+            xpos += delta;
+            x++;
+            if (x > width) {
+                x = 0;
+                xpos = worldLimit[0];
+                ypos += delta;
+            }
+        }
     }
 
     private SpriteMeshNode getSpriteNode(RootNode root) {
@@ -175,6 +208,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
             TiledTexture2D tex = (TiledTexture2D) root.getResources().getTexture2D("sprite-texture");
             spriteFrames = tex.getTileWidth() * tex.getTileHeight();
             coreApp.setLogicProcessor(new J2SELogicProcessor());
+            fetchSprites();
             try {
                 sf.exportScene(System.out, root);
             } catch (IOException e) {
