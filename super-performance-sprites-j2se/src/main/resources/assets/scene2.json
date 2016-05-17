@@ -20,6 +20,7 @@
                 {layer:SCENE,id:game,type:switchnode,
                 children:
                   [
+                    {id:chars,type:playfieldNode,mapSize:[10,10],offset:[0,0],rect:{mode:SIZE,values:[-0.05,0.05,0.1,0.1]},meshRef:playfieldmesh,mapRef:playfield-data},
                     {id:sprites,type:spriteMeshNode,count:2400,rect:{mode:SIZE,values:[-0.025,0.025,0.05,0.05]},meshRef:spritemesh,actordata:{data:[{instance:BOUNCESPRITE,index:0,count:-1}]}}
                   ]}
               ]},
