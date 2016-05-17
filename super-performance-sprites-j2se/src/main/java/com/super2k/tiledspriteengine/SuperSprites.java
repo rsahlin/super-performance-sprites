@@ -12,6 +12,7 @@ import com.graphicsengine.spritemesh.SpriteMeshNode;
 import com.nucleus.CoreApp;
 import com.nucleus.CoreApp.ClientApplication;
 import com.nucleus.actor.J2SELogicProcessor;
+import com.nucleus.camera.ViewFrustum;
 import com.nucleus.geometry.Mesh;
 import com.nucleus.io.SceneSerializer;
 import com.nucleus.mmi.MMIEventListener;
@@ -21,6 +22,7 @@ import com.nucleus.renderer.NucleusRenderer;
 import com.nucleus.renderer.NucleusRenderer.Layer;
 import com.nucleus.renderer.NucleusRenderer.RenderContextListener;
 import com.nucleus.renderer.Window;
+import com.nucleus.scene.Node;
 import com.nucleus.scene.RootNode;
 import com.nucleus.scene.ViewNode;
 import com.nucleus.texturing.Texture2D;
@@ -36,8 +38,8 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
      */
     private int spritecount;
     // TODO How to find these values from the scene
-    private final static float ORTHO_LEFT = -0.5f;
-    private final static float ORTHO_TOP = 0.5f;
+    private static float ORTHO_LEFT = -0.5f;
+    private static float ORTHO_TOP = 0.5f;
     private final static float ZOOM_FACTOR = 1f;
 
     Window window;
@@ -51,8 +53,9 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     private Random random = new Random();
 
     public final static int DEFAULT_MAX_X = 1;
-    public final static int DEFAULT_MAX_Y = 1;
     public static float[] worldLimit;
+    // Ugly fix just to enable stopping sprites
+    public static boolean process = false;
 
     public SuperSprites() {
         super();
@@ -77,6 +80,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         case ACTIVE:
             float[] pos = event.getPointerData().getCurrentPosition();
             releaseSprite(pos, event.getPointerData().getDelta(1));
+            process = true;
             break;
         case ZOOM:
             Vector2D zoom = event.getZoom();
@@ -93,7 +97,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         if (viewNode != null) {
             viewNode.getView().scale(zoom);
             float[] scale = viewNode.getView().getScale();
-            // System.out.println("scale: " + scale[VecMath.X]);
+            System.out.println("scale: " + scale[VecMath.X]);
             worldLimit[0] = (ORTHO_LEFT) / scale[VecMath.X];
             worldLimit[1] = (ORTHO_TOP) / scale[VecMath.Y];
             worldLimit[2] = (DEFAULT_MAX_X + ORTHO_LEFT) / scale[VecMath.X];
@@ -176,7 +180,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
             if (x > width) {
                 x = 0;
                 xpos = worldLimit[0];
-                ypos += delta;
+                ypos -= delta;
             }
         }
     }
@@ -191,11 +195,10 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     @Override
     public void contextCreated(int width, int height) {
         window = Window.getInstance();
-        // Todo - should have a method indicating that context is lost
-        spriteNode = null;
         worldLimit = new float[] { ORTHO_LEFT, ORTHO_TOP, DEFAULT_MAX_X + ORTHO_LEFT,
                 -ORTHO_TOP };
-
+        // Todo - should have a method indicating that context is lost
+        spriteNode = null;
         try {
             SceneSerializer sf = SceneSerializerFactory.getSerializer(GSONGraphicsEngineFactory.class.getName(),
                     renderer, GSONGraphicsEngineFactory.getNodeFactory(),
@@ -203,6 +206,24 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
             root = sf.importScene("assets/scene.json");
             coreApp.setRootNode(root);
             coreApp.addPointerInput(root);
+            /**
+             * TODO - this should be handled in a more generic way.
+             */
+            Node scene = root.getScene();
+            ViewFrustum vf = scene.getViewFrustum();
+            if (vf != null) {
+                float[] values = vf.getValues();
+                float w = Math.abs(values[ViewFrustum.LEFT_INDEX] - values[ViewFrustum.RIGHT_INDEX]);
+                float h = Math.abs(values[ViewFrustum.TOP_INDEX] - values[ViewFrustum.BOTTOM_INDEX]);
+                // If y is going down then reverse y so that 0 is at bottom which is the same as OpenGL
+                coreApp.getInputProcessor().setPointerTransform(w / width, h / -height, values[ViewFrustum.LEFT_INDEX],
+                        values[ViewFrustum.TOP_INDEX]);
+                ORTHO_LEFT = values[ViewFrustum.LEFT_INDEX];
+                ORTHO_TOP = values[ViewFrustum.TOP_INDEX];
+            } else {
+                // If y is going down then reverse y so that 0 is at bottom which is the same as OpenGL
+                coreApp.getInputProcessor().setPointerTransform((float) 1 / width, (float) 1 / -height, -0.5f, 0.5f);
+            }
 
             renderer.getRenderSettings().setClearFunction(GLES20.GL_COLOR_BUFFER_BIT);
             renderer.getRenderSettings().setDepthFunc(GLES20.GL_NONE);

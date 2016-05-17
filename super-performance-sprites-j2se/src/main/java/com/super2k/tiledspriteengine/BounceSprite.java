@@ -24,7 +24,9 @@ public class BounceSprite implements ActorItem {
 
     @Override
     public void process(ActorContainer spriteActor, float deltaTime) {
-
+        if (!SuperSprites.process) {
+            return;
+        }
         float[] floatData = spriteActor.floatData;
         Vector2D moveVector = spriteActor.moveVector;
 
@@ -51,7 +53,6 @@ public class BounceSprite implements ActorItem {
             moveVector.vector[VecMath.X] = -moveVector.vector[VecMath.X] * floatData[ELASTICITY];
             floatData[ROTATE_SPEED] = -floatData[ROTATE_SPEED] * floatData[ELASTICITY];
         }
-
     }
 
     @Override
@@ -69,4 +70,5 @@ public class BounceSprite implements ActorItem {
     public void init(ActorContainer logic) {
         logic.floatData[BounceSprite.ELASTICITY] = 0.9f;
     }
+
 }
