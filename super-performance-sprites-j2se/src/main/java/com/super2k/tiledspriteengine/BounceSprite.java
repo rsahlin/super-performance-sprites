@@ -24,10 +24,14 @@ public class BounceSprite implements ActorItem {
 
     @Override
     public void process(ActorContainer spriteActor, float deltaTime) {
+        float[] floatData = spriteActor.floatData;
         if (!SuperSprites.process) {
+            floatData[Sprite.ROTATION] += deltaTime * 1.5f;
+            if (floatData[Sprite.ROTATION] > TWOPI) {
+                floatData[Sprite.ROTATION] -= TWOPI;
+            }
             return;
         }
-        float[] floatData = spriteActor.floatData;
         Vector2D moveVector = spriteActor.moveVector;
 
         floatData[Sprite.ROTATION] += deltaTime * floatData[ROTATE_SPEED];

@@ -1,26 +1,15 @@
 {
-    resources:{
-        mesh:[
-          {id:mesh1,textureref:uv-texture},
-          {id:playfieldmesh,textureref:charmap-texture},
-          {id:spritemesh,textureref:sprite-texture},
-          {id:spritemesh2,textureref:uv-texture}
-          ],
-        playfield:[{id:playfield-data,arrayInput:{components:1,size:{data:[10,4]},dataType:INT,data:[224,45,225,3,192,5,6,7,8,9,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95]}}], 
-        texture2D:[{id:test,externalReference:{source:"assets\/charset.png"},resolution:HD,mipmap:2,texParameters:{values:[LINEAR_MIPMAP_NEAREST,NEAREST,CLAMP,CLAMP]}}],
-        tiledTexture2D:[{id:charmap-texture,externalReference:{source:"assets\/charset2.png"},resolution:HD,mipmap:2,tile:[32,8],texParameters:{values:[LINEAR_MIPMAP_NEAREST,NEAREST,CLAMP,CLAMP]}},
-                           {id:sprite-texture,externalReference:{source:"assets\/sprites.png"},resolution:HD,mipmap:2,tile:[18,7],texParameters:{values:[LINEAR_MIPMAP_NEAREST,NEAREST,CLAMP,CLAMP]}}],
-        uvTexture2D:[{id:uv-texture,UVAtlas:{UVData:[0,0,1,1,0.9,0.9,0.1,0.1]},externalReference:{source:"assets\/mapillary.png"},resolution:ULTRA_HD,mipmap:2,texParameters:{values:[LINEAR_MIPMAP_NEAREST,NEAREST,CLAMP,CLAMP]}}]
-    },
+    resources:{},
     scene:{
-        id:switch,type:switchnode,active:gamescene,viewFrustum:{projection:ORTHOGONAL,values:[-0.5,0.5,-0.28125,0.28125,4,-10]},children:
+        id:switch,type:switchnode,active:gamescene,viewFrustum:{projection:ORTHOGONAL,values:[-0.5,0.5,-0.50,0.50,4,-10]},children:
         [
-            {layer:SCENE,id:gamescene,type:viewnode,view:{scale:[0.2,0.2,1],translate:[0.0,0,0],axisAngle:{values:[0,0,0,0]},scaleLimit:{min:[0.15],max:[3.0]}},children:
+            {layer:SCENE,id:gamescene,type:viewnode,view:{scale:[1,1,1],translate:[0.0,0,0],axisAngle:{values:[0,0,0,0]},scaleLimit:{min:[0.15],max:[6.0]}},children:
             [
                 {layer:SCENE,id:game,type:switchnode,
                 children:
                   [
-                    {id:sprites,type:spriteMeshNode,count:2400,rect:{mode:SIZE,values:[-0.025,0.025,0.05,0.05]},meshRef:spritemesh,actordata:{data:[{instance:BOUNCESPRITE,index:0,count:-1}]}}
+                    {id:chars,type:playfieldNode,mapSize:[64,18],rect:{values:[-0.05,0.05,0.1,0.1]},textureRef:{source:"assets/steamengine2.tex"},mapRef:{source:"assets/steamengine2.map"}},
+                    {id:sprites2,type:spriteComponentNode,transform:{translate:[0.5,-0.5,0.0]},textureRef:{source:"assets/spritetexture.tex"},components:[{id:spritecomponent,type:spritecomponent,count:400,rect:{values:[-0.025,0.025,0.05,0.05]}}]}
                   ]}
               ]},
             {id:creditscene,type:viewnode,view:{scale:[1,1,1],translate:[0.0,0,0],axisAngle:{values:[0,0,0,0]}},children:
@@ -28,11 +17,11 @@
                 {layer:OVERLAY,id:ui,type:switchnode,
                 children:
                   [
-                    {id:ui,type:quadNode,meshRef:mesh1,maxQuads:100,
+                    {id:ui,type:quadNode,textureRef:{source:"assets/uvtexture.tex"},maxQuads:100,
                     children:[{
-                        id:button1,type:sharedMeshNode,rect:{mode:SIZE,values:[-0.05,0.05,0.1,0.1]},bounds:{bounds:[-0.05,0.05,0.1,0.1],type:RECTANGULAR},transform:{scale:[1,1,1],translate:[0.3,0.3,0]},
+                        id:button1,type:sharedMeshNode,rect:{values:[-0.05,0.05,0.1,0.1]},bounds:{bounds:[-0.05,0.05,0.1,0.1],type:RECTANGULAR},transform:{scale:[1,1,1],translate:[0.3,0.3,0]},
                             properties:{POINTERINPUT:true,onclick:"view:MOVETO:0.3,-0.3,0"}},
-                        {id:button2,type:sharedMeshNode,rect:{mode:SIZE,values:[-0.05,0.05,0.1,0.1]},bounds:{bounds:[-0.05,0.05,0.1,0.1],type:RECTANGULAR},transform:{scale:[1,1,1],translate:[0,-0.3,0]},
+                        {id:button2,type:sharedMeshNode,rect:{values:[-0.05,0.05,0.1,0.1]},bounds:{bounds:[-0.05,0.05,0.1,0.1],type:RECTANGULAR},transform:{scale:[1,1,1],translate:[0,-0.3,0]},
                             properties:{POINTERINPUT:true,onclick:"node:SWITCH:switch:gamescene"}}
                             
                         ]}
