@@ -3,13 +3,19 @@
     scene:{
         id:switch,type:switchnode,active:gamescene,viewFrustum:{projection:ORTHOGONAL,values:[-0.5,0.5,-0.50,0.50,4,-10]},children:
         [
-            {layer:SCENE,id:gamescene,type:viewnode,view:{scale:[1,1,1],translate:[0.0,0,0],axisAngle:{values:[0,0,0,0]},scaleLimit:{min:[0.1],max:[6.0]}},children:
+            {layer:SCENE,id:gamescene,type:viewnode,view:{scale:[1,1,1],translate:[0.0,0,0],axisAngle:{values:[0,0,0,0]},scaleLimit:{min:[0.05],max:[6.0]}},children:
             [
                 {layer:SCENE,id:game,type:switchnode,
                 children:
                   [
-                    {id:chars,type:playfieldNode,mapSize:[64,18],rect:{values:[-0.05,0.05,0.1,0.1]},textureRef:{source:"assets/steamengine1.tex"},mapRef:{source:"assets/steamengine1.map"}},
-                    {id:sprites2,type:spriteComponentNode,transform:{translate:[0.5,-0.5,0.0]},textureRef:{source:"assets/spritetexture.tex"},components:[{id:spritecomponent,type:spritecomponent,count:400,rect:{values:[-0.025,0.025,0.05,0.05]}}]}
+                    {id:chars,type:playfieldNode,mapSize:[64,18],rect:{values:[-0.05,0.05,0.1,0.1]},textureRef:{source:"assets/steamengine1.tex"}, 
+                    material:{blendFunc:[GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA, GL_DST_ALPHA],
+                    blendEquation:[GL_FUNC_ADD,GL_FUNC_ADD]}, 
+                    mapRef:{source:"assets/steamengine1.map"}},
+                    {id:sprites2,type:spriteComponentNode,transform:{translate:[0.5,-0.5,0.0]},textureRef:{source:"assets/spritetexture.tex"},
+                    material:{blendFunc:[GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA, GL_DST_ALPHA],
+                    blendEquation:[GL_FUNC_ADD,GL_FUNC_ADD]}, 
+                    components:[{id:spritecomponent,type:spritecomponent,count:400,rect:{values:[-0.025,0.025,0.05,0.05]}}]}
                   ]}
               ]},
             {id:creditscene,type:viewnode,view:{scale:[1,1,1],translate:[0.0,0,0],axisAngle:{values:[0,0,0,0]}},children:
@@ -17,7 +23,10 @@
                 {layer:OVERLAY,id:ui,type:switchnode,
                 children:
                   [
-                    {id:ui,type:quadNode,textureRef:{source:"assets/uvtexture.tex"},maxQuads:100,
+                    {id:ui,type:quadNode,textureRef:{source:"assets/uvtexture.tex"},
+                    material:{blendFunc:[GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_SRC_ALPHA, GL_DST_ALPHA],
+                    blendEquation:[GL_FUNC_ADD,GL_FUNC_ADD]}, 
+                    maxQuads:100,
                     children:[{
                         id:button1,type:sharedMeshNode,rect:{values:[-0.05,0.05,0.1,0.1]},bounds:{bounds:[-0.05,0.05,0.1,0.1],type:RECTANGULAR},transform:{scale:[1,1,1],translate:[0.3,0.3,0]},
                             properties:{POINTERINPUT:true,onclick:"view:MOVETO:0.3,-0.3,0"}},
