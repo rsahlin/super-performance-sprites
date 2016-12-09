@@ -12,6 +12,7 @@ import com.graphicsengine.sprite.SpriteNodeFactory;
 import com.graphicsengine.spritemesh.SpriteMeshNode;
 import com.nucleus.CoreApp;
 import com.nucleus.CoreApp.ClientApplication;
+import com.nucleus.SimpleLogger;
 import com.nucleus.actor.ComponentNode;
 import com.nucleus.actor.J2SELogicProcessor;
 import com.nucleus.camera.ViewFrustum;
@@ -106,7 +107,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         if (viewNode != null) {
             viewNode.getView().scale(zoom);
             float[] scale = viewNode.getView().getScale();
-            System.out.println("scale: " + scale[VecMath.X] + " zoom " + zoom);
+            SimpleLogger.d(SuperSprites.class, "Scale: " + scale[VecMath.X] + " zoom " + zoom);
             worldLimit[0] = (orthoLeft) / scale[VecMath.X];
             worldLimit[1] = (orthoTop) / scale[VecMath.Y];
             worldLimit[2] = (-orthoLeft) / scale[VecMath.X];
@@ -173,8 +174,8 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
             int spriteCount = c.getCount();
             int height = (int) Math.sqrt(spriteCount);
             int width = (height);
-            float deltay = ((worldLimit[1] - worldLimit[3]) / height) * 1.3f;
-            float deltax = ((worldLimit[2] - worldLimit[0]) / width) * 1.3f;
+            float deltay = ((worldLimit[1] - worldLimit[3]) / height) * 1f;
+            float deltax = ((worldLimit[2] - worldLimit[0]) / width) * 1f;
             initSprites(c, xpos, ypos, deltax, deltay, width);
         }
         if (spriteNode != null) {

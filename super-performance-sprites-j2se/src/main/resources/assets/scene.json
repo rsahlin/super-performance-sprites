@@ -1,9 +1,9 @@
 {
     resources:{},
     scene:{
-        id:switch,type:switchnode,active:gamescene,viewFrustum:{projection:ORTHOGONAL,values:[-0.5,0.5,-0.50,0.50,4,-10]},children:
+        id:switch,type:switchnode,active:creditscene,viewFrustum:{projection:ORTHOGONAL,values:[-0.5,0.5,-0.50,0.50,4,-10]},children:
         [
-            {layer:SCENE,id:gamescene,type:viewnode,view:{scale:[1,1,1],translate:[0.0,0,0],axisAngle:{values:[0,0,0,0]},scaleLimit:{min:[0.05],max:[6.0]}},children:
+            {layer:SCENE,id:gamescene,type:viewnode,view:{scale:[1,1,1],translate:[0.0,0,0],axisAngle:{values:[0,0,0,0]},scaleLimit:{min:[0.05],max:[20.0]}},children:
             [
                 {layer:SCENE,id:game,type:switchnode,
                 children:
@@ -22,12 +22,14 @@
                 children:
                   [
                     {id:ui,type:quadNode,textureRef:{source:"assets/uvtexture.tex"},
-                    material:{blendEquation:[GL_FUNC_ADD,GL_FUNC_ADD]}, 
+                    material:{blendEquation:[DISABLED]}, 
                     maxQuads:100,
                     children:[{
-                        id:button1,type:sharedMeshNode,rect:{values:[-0.05,0.05,0.1,0.1]},bounds:{bounds:[-0.05,0.05,0.1,0.1],type:RECTANGULAR},transform:{scale:[1,1,1],translate:[0.3,0.3,0]},
-                            properties:{POINTERINPUT:true,onclick:"view:MOVETO:0.3,-0.3,0"}},
-                        {id:button2,type:sharedMeshNode,rect:{values:[-0.05,0.05,0.1,0.1]},bounds:{bounds:[-0.05,0.05,0.1,0.1],type:RECTANGULAR},transform:{scale:[1,1,1],translate:[0,-0.3,0]},
+                        id:button1,type:sharedMeshNode,rect:{values:[-0.05,0.05,0.1,0.1]},bounds:{bounds:[-0.05,0.05,0.1,0.1],type:RECTANGULAR},
+                        transform:{scale:[1,1,1],translate:[0.3,0.0,0.0]},
+                            properties:{POINTERINPUT:true,onclick:"view:MOVE:0.01,0,0"}},
+                        {id:button2,type:sharedMeshNode,rect:{values:[-0.05,0.05,0.1,0.1]},bounds:{bounds:[-0.05,0.05,0.1,0.1],type:RECTANGULAR},
+                        transform:{scale:[1,1,1],translate:[0,-0.3,0]},
                             properties:{POINTERINPUT:true,onclick:"node:SWITCH:switch:gamescene"}}
                             
                         ]}

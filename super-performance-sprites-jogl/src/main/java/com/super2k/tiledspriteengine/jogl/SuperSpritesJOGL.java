@@ -6,14 +6,12 @@ import com.super2k.tiledspriteengine.SuperSprites;
 
 public class SuperSpritesJOGL extends NucleusApplication {
 
-    public static void main(String[] args) {
-        SuperSpritesJOGL spritesApp = new SuperSpritesJOGL();
-        spritesApp.setProperties(args);
-        spritesApp.create(Renderers.GLES20);
+    public SuperSpritesJOGL(String[] args) {
+        super(args, Renderers.GLES20);
     }
 
-    public void create(Renderers version) {
-        super.createCore(version);
+    public static void main(String[] args) {
+        SuperSpritesJOGL spritesApp = new SuperSpritesJOGL(args);
     }
 
     @Override
