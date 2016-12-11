@@ -251,56 +251,63 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
 
     @Override
     public void contextCreated(int width, int height) {
+        SimpleLogger.d(getClass(), "contextCreated()");
         window = Window.getInstance();
         // Todo - should have a method indicating that context is lost
         spriteNode = null;
-        try {
-            SceneSerializer sf = SceneSerializerFactory.getSerializer(GSONGraphicsEngineFactory.class.getName(),
-                    renderer, GSONGraphicsEngineFactory.getNodeFactory(),
-                    GSONGraphicsEngineFactory.getMeshFactory());
-            root = sf.importScene("assets/scene.json");
-            coreApp.setRootNode(root);
-            coreApp.addPointerInput(root);
-            /**
-             * TODO - this should be handled in a more generic way.
-             */
-            Node scene = root.getScene();
-            ViewFrustum vf = scene.getViewFrustum();
-            if (vf != null) {
-                float[] values = vf.getValues();
-                float w = Math.abs(values[ViewFrustum.LEFT_INDEX] - values[ViewFrustum.RIGHT_INDEX]);
-                float h = Math.abs(values[ViewFrustum.TOP_INDEX] - values[ViewFrustum.BOTTOM_INDEX]);
-                // If y is going down then reverse y so that 0 is at bottom which is the same as OpenGL
-                coreApp.getInputProcessor().setPointerTransform(w / width, h / -height, values[ViewFrustum.LEFT_INDEX],
-                        values[ViewFrustum.TOP_INDEX]);
-                orthoLeft = values[ViewFrustum.LEFT_INDEX];
-                orthoTop = values[ViewFrustum.TOP_INDEX];
-                worldLimit = new float[] { orthoLeft, orthoTop, -orthoLeft, -orthoTop };
-            } else {
-                // If y is going down then reverse y so that 0 is at bottom which is the same as OpenGL
-                coreApp.getInputProcessor().setPointerTransform((float) 1 / width, (float) 1 / -height, -0.5f, 0.5f);
-                throw new IllegalArgumentException();
-            }
-
-            renderer.getRenderSettings().setClearFunction(GLES20.GL_COLOR_BUFFER_BIT);
-            renderer.getRenderSettings().setDepthFunc(GLES20.GL_NONE);
-            renderer.getRenderSettings().setCullFace(GLES20.GL_NONE);
-            coreApp.setLogicProcessor(new J2SELogicProcessor());
-            ComponentHandler.getInstance().initSystems(root, renderer);
-            fetchSprites();
+        if (root == null) {
             try {
-                sf.exportScene(System.out, root);
-            } catch (IOException e) {
+                SimpleLogger.d(getClass(), "Loading scene");
+                SceneSerializer sf = SceneSerializerFactory.getSerializer(GSONGraphicsEngineFactory.class.getName(),
+                        renderer, GSONGraphicsEngineFactory.getNodeFactory(),
+                        GSONGraphicsEngineFactory.getMeshFactory());
+                root = sf.importScene("assets/scene.json");
+                coreApp.setRootNode(root);
+                coreApp.addPointerInput(root);
+                /**
+                 * TODO - this should be handled in a more generic way.
+                 */
+                Node scene = root.getScene();
+                ViewFrustum vf = scene.getViewFrustum();
+                if (vf != null) {
+                    float[] values = vf.getValues();
+                    float w = Math.abs(values[ViewFrustum.LEFT_INDEX] - values[ViewFrustum.RIGHT_INDEX]);
+                    float h = Math.abs(values[ViewFrustum.TOP_INDEX] - values[ViewFrustum.BOTTOM_INDEX]);
+                    // If y is going down then reverse y so that 0 is at bottom which is the same as OpenGL
+                    coreApp.getInputProcessor().setPointerTransform(w / width, h / -height,
+                            values[ViewFrustum.LEFT_INDEX],
+                            values[ViewFrustum.TOP_INDEX]);
+                    orthoLeft = values[ViewFrustum.LEFT_INDEX];
+                    orthoTop = values[ViewFrustum.TOP_INDEX];
+                    worldLimit = new float[] { orthoLeft, orthoTop, -orthoLeft, -orthoTop };
+                } else {
+                    // If y is going down then reverse y so that 0 is at bottom which is the same as OpenGL
+                    coreApp.getInputProcessor().setPointerTransform((float) 1 / width, (float) 1 / -height, -0.5f,
+                            0.5f);
+                    throw new IllegalArgumentException();
+                }
+
+                renderer.getRenderSettings().setClearFunction(GLES20.GL_COLOR_BUFFER_BIT);
+                renderer.getRenderSettings().setDepthFunc(GLES20.GL_NONE);
+                renderer.getRenderSettings().setCullFace(GLES20.GL_NONE);
+                coreApp.setLogicProcessor(new J2SELogicProcessor());
+                ComponentHandler.getInstance().initSystems(root, renderer);
+                fetchSprites();
+                try {
+                    sf.exportScene(System.out, root);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            } catch (NodeException e) {
+                throw new RuntimeException(e);
+            } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
+            } catch (InstantiationException e) {
+                throw new RuntimeException(e);
+            } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
-        } catch (NodeException e) {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
+
         }
     }
 }

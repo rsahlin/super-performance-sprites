@@ -7,13 +7,16 @@ import android.os.Bundle;
 
 public class SuperSpritesActivity extends NucleusActivity {
 
+    private SuperSprites superSprites;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // TODO Register classname for and create then call the init method, this way the Android implementation of
         // this class can be removed.
-        SuperSprites superSprites = new SuperSprites();
-        superSprites.init(coreApp);
-        System.out.println("done");
+        if (superSprites == null) {
+            superSprites = new SuperSprites();
+            superSprites.init(coreApp);
+        }
     }
 }
