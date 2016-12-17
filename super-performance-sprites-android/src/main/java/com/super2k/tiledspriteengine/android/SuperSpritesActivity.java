@@ -12,6 +12,11 @@ public class SuperSpritesActivity extends NucleusActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+    }
+
+    @Override
+    public void contextCreated(int width, int height) {
+        super.contextCreated(width, height);
         // TODO Register classname for and create then call the init method, this way the Android implementation of
         // this class can be removed.
         if (superSprites == null) {

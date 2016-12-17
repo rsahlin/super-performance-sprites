@@ -6,6 +6,8 @@ import com.super2k.tiledspriteengine.SuperSprites;
 
 public class SuperSpritesJOGL extends NucleusApplication {
 
+    SuperSprites superSprites;
+
     public SuperSpritesJOGL(String[] args) {
         super(args, Renderers.GLES20);
     }
@@ -17,7 +19,11 @@ public class SuperSpritesJOGL extends NucleusApplication {
     @Override
     public void contextCreated(int width, int height) {
         super.contextCreated(width, height);
-        SuperSprites sprites = new SuperSprites();
-        sprites.init(coreApp);
+        // TODO Register classname for and create then call the init method, this way the Android implementation of
+        // this class can be removed.
+        if (superSprites == null) {
+            superSprites = new SuperSprites();
+            superSprites.init(coreApp);
+        }
     }
 }

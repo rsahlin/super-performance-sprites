@@ -59,6 +59,9 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
 
     @Override
     public void init(CoreApp coreApp) {
+        if (!coreApp.getRenderer().isInitialized()) {
+            throw new IllegalArgumentException("Renderer is not initialized!");
+        }
         this.coreApp = coreApp;
         renderer = coreApp.getRenderer();
         coreApp.getInputProcessor().addMMIListener(this);
@@ -105,32 +108,32 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         }
     }
 
-    private void releaseSprite(float[] pos, float[] delta) {
-        float[] scale = root.getViewNode(Layer.SCENE).getView().getScale();
-        float x = (pos[0] / scale[VecMath.X]);
-        float y = (pos[1] / scale[VecMath.Y]);
-        /*
-         * Sprite s = spriteNode.getSprites()[currentSprite];
-         * // s.setPosition(x, y, 0);
-         * s.floatData[Sprite.X_POS] = x;
-         * s.floatData[Sprite.Y_POS] = y;
-         * s.setMoveVector(0, 0, 0);
-         * s.floatData[BounceSprite.ELASTICITY] = 1f - (random.nextFloat() / 5);
-         * if (delta != null) {
-         * s.moveVector.setNormalized((delta[0] * 30) / scale[0], 0);
-         * } else {
-         * s.moveVector.setNormalized(0, 0);
-         * }
-         * s.floatData[BounceSprite.ROTATE_SPEED] = s.moveVector.vector[VecMath.X];
-         * s.setFrame(random.nextInt(spriteFrames));
-         * s.setScale(0.8f + random.nextFloat() * 0.5f, 0.8f + random.nextFloat() * 0.5f);
-         * 
-         * currentSprite++;
-         * if (currentSprite > spritecount - 1) {
-         * currentSprite = 0;
-         * }
-         */
-    }
+    /*
+     * private void releaseSprite(float[] pos, float[] delta) {
+     * float[] scale = root.getViewNode(Layer.SCENE).getView().getScale();
+     * float x = (pos[0] / scale[VecMath.X]);
+     * float y = (pos[1] / scale[VecMath.Y]);
+     * Sprite s = spriteNode.getSprites()[currentSprite];
+     * // s.setPosition(x, y, 0);
+     * s.floatData[Sprite.X_POS] = x;
+     * s.floatData[Sprite.Y_POS] = y;
+     * s.setMoveVector(0, 0, 0);
+     * s.floatData[BounceSprite.ELASTICITY] = 1f - (random.nextFloat() / 5);
+     * if (delta != null) {
+     * s.moveVector.setNormalized((delta[0] * 30) / scale[0], 0);
+     * } else {
+     * s.moveVector.setNormalized(0, 0);
+     * }
+     * s.floatData[BounceSprite.ROTATE_SPEED] = s.moveVector.vector[VecMath.X];
+     * s.setFrame(random.nextInt(spriteFrames));
+     * s.setScale(0.8f + random.nextFloat() * 0.5f, 0.8f + random.nextFloat() * 0.5f);
+     * 
+     * currentSprite++;
+     * if (currentSprite > spritecount - 1) {
+     * currentSprite = 0;
+     * }
+     * }
+     */
 
     /**
      * Fetches the framecount and number of sprites
@@ -197,7 +200,6 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     public void contextCreated(int width, int height) {
         SimpleLogger.d(getClass(), "contextCreated()");
         window = Window.getInstance();
-        // Todo - should have a method indicating that context is lost
         if (root == null) {
             try {
                 SimpleLogger.d(getClass(), "Loading scene");
@@ -229,7 +231,6 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                             0.5f);
                     throw new IllegalArgumentException();
                 }
-
                 renderer.getRenderSettings().setClearFunction(GLES20.GL_COLOR_BUFFER_BIT);
                 renderer.getRenderSettings().setDepthFunc(GLES20.GL_NONE);
                 renderer.getRenderSettings().setCullFace(GLES20.GL_NONE);
