@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
         <artifactId>super-performance-sprites</artifactId>
-        <groupId>super-performance-sprites</groupId>
+        <groupId>com.super2k.super-performance-sprites</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
 	<artifactId>super-performance-sprites-android</artifactId>
@@ -13,20 +13,19 @@
     <dependency>
         <groupId>com.google.android</groupId>
         <artifactId>android</artifactId>
-        <version>4.1.1.4</version>
         <scope>provided</scope>
     </dependency>
-   <dependency>
-           <groupId>com.nucleus</groupId>
-           <artifactId>graphics-by-opengl-android</artifactId>
-           <version>0.0.1-SNAPSHOT</version>
-            <type>apklib</type>
-       </dependency>
-       <dependency>
-       <groupId>super-performance-sprites</groupId>
-       <artifactId>super-performance-sprites-j2se</artifactId>
-       <version>0.0.1-SNAPSHOT</version>
-       </dependency>
+    <dependency>
+    	<groupId>com.super2k.graphics-by-opengl</groupId>
+    	<artifactId>graphics-by-opengl-android</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+    	<type>apklib</type>
+    </dependency>
+    <dependency>
+    	<groupId>com.super2k.super-performance-sprites</groupId>
+    	<artifactId>super-performance-sprites-j2se</artifactId>
+    	<version>0.0.1-SNAPSHOT</version>
+    </dependency>
     </dependencies>
 	<build>
         <sourceDirectory>src/main/java</sourceDirectory>
