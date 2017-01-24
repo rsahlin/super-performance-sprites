@@ -1,16 +1,17 @@
-package com.super2k.tiledspriteengine;
+package com.super2k.supersprites;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import com.graphicsengine.component.SpriteComponent;
 import com.graphicsengine.io.GSONGraphicsEngineFactory;
 import com.graphicsengine.scene.GraphicsEngineNodeType;
-import com.graphicsengine.scene.SceneSerializerFactory;
 import com.nucleus.CoreApp;
 import com.nucleus.CoreApp.ClientApplication;
 import com.nucleus.SimpleLogger;
 import com.nucleus.actor.ComponentNode;
 import com.nucleus.camera.ViewFrustum;
+import com.nucleus.common.Type;
 import com.nucleus.geometry.Mesh;
 import com.nucleus.io.SceneSerializer;
 import com.nucleus.mmi.MMIEventListener;
@@ -29,8 +30,34 @@ import com.nucleus.texturing.Texture2D;
 import com.nucleus.texturing.TiledTexture2D;
 import com.nucleus.vecmath.VecMath;
 import com.nucleus.vecmath.Vector2D;
+import com.super2k.supersprites.system.SuperSpriteSystem;
 
 public class SuperSprites implements MMIEventListener, RenderContextListener, ClientApplication {
+
+    /**
+     * The types that can be used to represent classes when importing/exporting
+     * This is used as a means to decouple serialized name from implementing class.
+     * 
+     */
+    public enum SuperSpritesClasses implements Type<Object> {
+        superspritesystem(SuperSpriteSystem.class);
+
+        private final Class<?> theClass;
+
+        private SuperSpritesClasses(Class<?> theClass) {
+            this.theClass = theClass;
+        }
+
+        @Override
+        public Class<Object> getTypeClass() {
+            return (Class<Object>) theClass;
+        }
+
+        @Override
+        public String getName() {
+            return name();
+        }
+    }
 
     protected final static String TILED_SPRITE_RENDERER_TAG = "TiledSpiteRenderer";
     /**
@@ -203,9 +230,9 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         if (root == null) {
             try {
                 SimpleLogger.d(getClass(), "Loading scene");
-                SceneSerializer sf = SceneSerializerFactory.getSerializer(GSONGraphicsEngineFactory.class.getName(),
-                        renderer, GSONGraphicsEngineFactory.getNodeFactory(),
-                        GSONGraphicsEngineFactory.getMeshFactory());
+                SceneSerializer sf = new GSONGraphicsEngineFactory(renderer, GSONGraphicsEngineFactory.getNodeFactory(),
+                        GSONGraphicsEngineFactory.getMeshFactory(),
+                        Arrays.asList((Type<?>[]) SuperSpritesClasses.values()));
                 root = sf.importScene("assets/scene.json");
                 coreApp.setRootNode(root);
                 coreApp.addPointerInput(root);
@@ -243,14 +270,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                 }
             } catch (NodeException e) {
                 throw new RuntimeException(e);
-            } catch (ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            } catch (InstantiationException e) {
-                throw new RuntimeException(e);
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
             }
-
         }
     }
 }

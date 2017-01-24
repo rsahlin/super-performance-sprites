@@ -1,7 +1,7 @@
 package com.super2k.tiledspriteengine.android;
 
 import com.nucleus.android.NucleusActivity;
-import com.super2k.tiledspriteengine.SuperSprites;
+import com.super2k.supersprites.SuperSprites;
 
 import android.os.Bundle;
 

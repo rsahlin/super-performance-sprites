@@ -1,10 +1,10 @@
-package com.super2k.tiledspriteengine;
+package com.super2k.supersprites;
 
 import com.graphicsengine.sprite.Sprite;
 import com.nucleus.actor.ActorContainer;
 import com.nucleus.actor.ActorItem;
 import com.nucleus.vecmath.Vector2D;
-import com.super2k.tiledspriteengine.SuperSpriteResolver.Logics;
+import com.super2k.supersprites.SuperSpriteResolver.Logics;
 
 public class SimpleSprite implements ActorItem {
 

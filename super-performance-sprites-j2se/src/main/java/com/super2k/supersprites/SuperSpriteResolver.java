@@ -1,4 +1,4 @@
-package com.super2k.tiledspriteengine;
+package com.super2k.supersprites;
 
 import com.nucleus.actor.ActorItem;
 import com.nucleus.actor.ActorResolver;

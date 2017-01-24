@@ -2,7 +2,7 @@ package com.super2k.tiledspriteengine.jogl;
 
 import com.nucleus.jogl.NucleusApplication;
 import com.nucleus.opengl.GLESWrapper.Renderers;
-import com.super2k.tiledspriteengine.SuperSprites;
+import com.super2k.supersprites.SuperSprites;
 
 public class SuperSpritesJOGL extends NucleusApplication {
 
