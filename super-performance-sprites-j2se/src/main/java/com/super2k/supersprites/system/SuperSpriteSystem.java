@@ -100,11 +100,11 @@ public class SuperSpriteSystem extends System {
             spriteData[SpriteData.TRANSLATE_X.index + readIndex] = xpos;
             spriteData[SpriteData.TRANSLATE_Y.index + readIndex] = ypos;
             for (int i = 0; i < ShaderProgram.VERTICES_PER_SPRITE; i++) {
-                attributeData[writeIndex + mapper.TRANSLATE_INDEX] = xpos;
-                attributeData[writeIndex + mapper.TRANSLATE_INDEX + 1] = ypos;
+                attributeData[writeIndex + mapper.translateOffset] = xpos;
+                attributeData[writeIndex + mapper.translateOffset + 1] = ypos;
                 // attributeData[index + mapper.TRANSLATE_INDEX + 2] = zpos;
-                attributeData[writeIndex + mapper.ROTATE_INDEX + 2] = rotate;
-                writeIndex += mapper.ATTRIBUTES_PER_VERTEX;
+                attributeData[writeIndex + mapper.rotateOffset + 2] = rotate;
+                writeIndex += mapper.attributesPerVertex;
             }
             readIndex += readLength;
         }
