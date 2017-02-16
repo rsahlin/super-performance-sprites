@@ -16,7 +16,7 @@ gen/
 # Gradle files
 .gradle/
 build/
-
+gradle/
 # Local configuration file (sdk path, etc)
 local.properties
 
@@ -35,6 +35,7 @@ proguard/
 /target/
 .settings/
 *.properties
+
 
 # Maven
 */dependency-reduced-pom.xml
