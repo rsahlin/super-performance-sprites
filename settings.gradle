@@ -1,0 +1,8 @@
+rootProject.name = 'super-performance-sprites'
+include ':super-performance-sprites-android'
+include ':super-performance-sprites-jogl'
+include ':super-performance-sprites-j2se'
+
+project(':super-performance-sprites-android').projectDir = "$rootDir/super-performance-sprites-android" as File
+project(':super-performance-sprites-jogl').projectDir = "$rootDir/super-performance-sprites-jogl" as File
+project(':super-performance-sprites-j2se').projectDir = "$rootDir/super-performance-sprites-j2se" as File

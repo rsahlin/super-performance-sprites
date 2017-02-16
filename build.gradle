@@ -1,0 +1,16 @@
+allprojects  {
+    group = 'com.super2k.super-performance-sprites'
+    version = '0.0.1-SNAPSHOT'
+    tasks.withType(JavaCompile) {
+        options.encoding = 'UTF-8'
+        sourceCompatibility = JavaVersion.VERSION_1_7
+        targetCompatibility = JavaVersion.VERSION_1_7
+    }
+    
+}
+subprojects {
+    repositories {
+        mavenLocal()
+        jcenter()
+    }
+}

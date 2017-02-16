@@ -1,0 +1,2 @@
+rootProject.name = 'super-performance-sprites-android'
+include ':super-performance-sprites-j2se'
