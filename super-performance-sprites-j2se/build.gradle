@@ -23,7 +23,7 @@ repositories {
     jcenter() 
 }
 dependencies {
-    compile 'com.super2k.graphics-engine:graphics-engine:0.0.1-SNAPSHOT'
+    compile 'com.super2k.graphics-by-opengl:graphics-by-opengl-j2se:0.0.1-SNAPSHOT'
     compile 'com.super2k.vecmath:vecmath:0.0.1-SNAPSHOT'
     compile 'com.super2k.graphics-engine:graphics-engine:0.0.1-SNAPSHOT'
     compile 'com.google.code.gson:gson:2.5'
