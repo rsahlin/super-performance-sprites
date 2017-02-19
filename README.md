@@ -10,6 +10,9 @@ On Eclipse Neon there is no support for Android Gradle projects so you need to d
 - Open 'properties-java build path', delete 'super-performance-sprites-android/src'
 - Click 'Add folder' and select the subfolder 'src/main/java'
 - Reference graphics-by-opengl-android and super-performance-sprites-j2se
+- When running Android app if you see this error 'Dx unsupported class file version 52.0' it means that the referenced class is compiled with a Java compiler > 1.7 and Android is not compatible with that. 
+To resolve make sure referenced libraries vecmath, graphics-engine, graphics-by-opengl are built using compiler version 1.7. This should not happen if libraries are built using gradle, but if libraries are also imported to Eclipse the default compiler level may differ.
+
 
 ADT needs to be installed.
 
