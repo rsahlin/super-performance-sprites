@@ -1,5 +1,8 @@
 # super-performance-sprites
-1000 sprites on a low/medium end mobile phone using one draw call in OpenGL ES
+1000 sprites on a low/medium end mobile phone using one draw call in OpenGL ES - this is a multi platform project that supports running on J2SE using JOGAMP
+
+I use Eclipse when developing since I feel the multi platform nature of this project is best supported on this IDE:
+If you wish you can import the Eclipse projects, this will setup projects with correct source references.
 
 - To use as Maven project in Eclipse, import as Existing Maven project.
 
@@ -29,6 +32,14 @@ You may experience problem with non-existing project.properties file
 Maven - update project,or clean build to get rid of any trailing errors.
 
 Gradle - make sure you have run 'gradle publishToMavenLocal' for dependent libraries 'vecmath', 'graphics-engine' and 'graphics-by-opengl'
+
+This project depends on:
+graphics-by-opengl
+vecmath
+graphics-engine
+
+
+
 
 
 
