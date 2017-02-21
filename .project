@@ -3,6 +3,9 @@
 	<name>super-performance-sprites</name>
 	<comment>Project super-performance-sprites created by Buildship.</comment>
 	<projects>
+		<project>graphics-by-opengl-j2se</project>
+		<project>graphics-engine</project>
+		<project>vecmath</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
@@ -10,8 +13,14 @@
 			<arguments>
 			</arguments>
 		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.m2e.core.maven2Builder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
 	</buildSpec>
 	<natures>
+		<nature>org.eclipse.m2e.core.maven2Nature</nature>
 		<nature>org.eclipse.buildship.core.gradleprojectnature</nature>
 	</natures>
 </projectDescription>
