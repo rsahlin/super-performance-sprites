@@ -65,37 +65,21 @@ public class SuperSpriteSystem extends System {
             float xpos = spriteData[SpriteData.TRANSLATE_X.index + readIndex];
             float ypos = spriteData[SpriteData.TRANSLATE_Y.index + readIndex];
 
-            // xpos += deltaTime * moveVector[sprite].vector[VecMath.X] * moveVector[sprite].vector[Vector2D.MAGNITUDE]
-            // +
-            // spriteData[SpriteData.MOVE_VECTOR_X.index + readIndex] * deltaTime;
-            // ypos += deltaTime * moveVector[sprite].vector[VecMath.Y]
-            // * moveVector[sprite].vector[Vector2D.MAGNITUDE] +
-            // spriteData[SpriteData.MOVE_VECTOR_Y.index + readIndex] * deltaTime;
-            /*
-             * if (ypos < worldLimit[3]) {
-             * spriteData[SpriteData.MOVE_VECTOR_Y.index
-             * + readIndex] = -spriteData[SpriteData.MOVE_VECTOR_Y.index + readIndex]
-             * spriteData[SpriteData.ELASTICITY.index + readIndex];
-             * ypos = worldLimit[3] - (ypos - worldLimit[3]);
-             * }
-             * if (xpos > worldLimit[2]) {
-             * xpos = worldLimit[2]
-             * - (xpos - worldLimit[2]);
-             * moveVector[sprite].vector[VecMath.X] = -moveVector[sprite].vector[VecMath.X]
-             * spriteData[SpriteData.ELASTICITY.index + readIndex];
-             * spriteData[SpriteData.ROTATE_SPEED.index
-             * + readIndex] = -spriteData[SpriteData.ROTATE_SPEED.index + readIndex]
-             * spriteData[SpriteData.ELASTICITY.index];
-             * } else if (xpos < worldLimit[0]) {
-             * xpos = worldLimit[0]
-             * - (xpos - worldLimit[0]);
-             * moveVector[sprite].vector[VecMath.X] = -moveVector[sprite].vector[VecMath.X]
-             * spriteData[SpriteData.ELASTICITY.index + readIndex];
-             * spriteData[SpriteData.ROTATE_SPEED.index
-             * + readIndex] = -spriteData[SpriteData.ROTATE_SPEED.index + readIndex]
-             * spriteData[SpriteData.ELASTICITY.index + readIndex];
-             * }
-             */
+            xpos += deltaTime * moveVector[sprite].vector[VecMath.X] * moveVector[sprite].vector[Vector2D.MAGNITUDE] + spriteData[SpriteData.MOVE_VECTOR_X.index + readIndex] * deltaTime;
+            ypos += deltaTime * moveVector[sprite].vector[VecMath.Y] * moveVector[sprite].vector[Vector2D.MAGNITUDE] + spriteData[SpriteData.MOVE_VECTOR_Y.index + readIndex] * deltaTime;
+            if (ypos < worldLimit[3]) {
+	             spriteData[SpriteData.MOVE_VECTOR_Y.index + readIndex] = -spriteData[SpriteData.MOVE_VECTOR_Y.index + readIndex] * spriteData[SpriteData.ELASTICITY.index + readIndex];
+	             ypos = worldLimit[3] - (ypos - worldLimit[3]);
+            }
+            if (xpos > worldLimit[2]) {
+            	xpos = worldLimit[2] - (xpos - worldLimit[2]);
+            	moveVector[sprite].vector[VecMath.X] = -moveVector[sprite].vector[VecMath.X] * spriteData[SpriteData.ELASTICITY.index + readIndex];
+            	spriteData[SpriteData.ROTATE_SPEED.index + readIndex] = -spriteData[SpriteData.ROTATE_SPEED.index + readIndex] * spriteData[SpriteData.ELASTICITY.index];
+            } else if (xpos < worldLimit[0]) {
+            	xpos = worldLimit[0] - (xpos - worldLimit[0]);
+            	moveVector[sprite].vector[VecMath.X] = -moveVector[sprite].vector[VecMath.X] * spriteData[SpriteData.ELASTICITY.index + readIndex];
+            	spriteData[SpriteData.ROTATE_SPEED.index + readIndex] = -spriteData[SpriteData.ROTATE_SPEED.index + readIndex] * spriteData[SpriteData.ELASTICITY.index + readIndex];
+            }
             float rotate = spriteData[SpriteData.ROTATE.index + readIndex];
             spriteData[SpriteData.TRANSLATE_X.index + readIndex] = xpos;
             spriteData[SpriteData.TRANSLATE_Y.index + readIndex] = ypos;

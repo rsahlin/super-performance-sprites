@@ -2,8 +2,10 @@ package com.super2k.supersprites;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Random;
 
 import com.graphicsengine.component.SpriteComponent;
+import com.graphicsengine.component.SpriteComponent.SpriteData;
 import com.graphicsengine.io.GSONGraphicsEngineFactory;
 import com.graphicsengine.scene.GraphicsEngineNodeType;
 import com.nucleus.CoreApp;
@@ -64,13 +66,17 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
      * Must be set from scenetree
      */
     private int spritecount;
-
+    private int currentSprite = 0;
+    private Random random = new Random(System.currentTimeMillis());
+    
     Window window;
     CoreApp coreApp;
     RootNode root;
     NucleusRenderer renderer;
     private int spriteFrames;
     private ComponentNode component;
+    private SpriteComponent spriteComponent;
+    private float[] spriteData;
     private float[] pointerScale = new float[2];
     private ViewNode viewNode;
 
@@ -108,8 +114,11 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
             if (move != null && component != null) {
                 component.getTransform().translate(move[0], move[1]);
             }
+            releaseSprite(event.getPointerData().getCurrentPosition(), move);
+            break;
         case ACTIVE:
             fetchSprites();
+            releaseSprite(event.getPointerData().getCurrentPosition(), null);
             process = true;
             break;
         case ZOOM:
@@ -135,32 +144,37 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         }
     }
 
-    /*
-     * private void releaseSprite(float[] pos, float[] delta) {
-     * float[] scale = root.getViewNode(Layer.SCENE).getView().getScale();
-     * float x = (pos[0] / scale[VecMath.X]);
-     * float y = (pos[1] / scale[VecMath.Y]);
-     * Sprite s = spriteNode.getSprites()[currentSprite];
-     * // s.setPosition(x, y, 0);
-     * s.floatData[Sprite.X_POS] = x;
-     * s.floatData[Sprite.Y_POS] = y;
-     * s.setMoveVector(0, 0, 0);
-     * s.floatData[BounceSprite.ELASTICITY] = 1f - (random.nextFloat() / 5);
-     * if (delta != null) {
-     * s.moveVector.setNormalized((delta[0] * 30) / scale[0], 0);
-     * } else {
-     * s.moveVector.setNormalized(0, 0);
-     * }
-     * s.floatData[BounceSprite.ROTATE_SPEED] = s.moveVector.vector[VecMath.X];
-     * s.setFrame(random.nextInt(spriteFrames));
-     * s.setScale(0.8f + random.nextFloat() * 0.5f, 0.8f + random.nextFloat() * 0.5f);
-     * 
-     * currentSprite++;
-     * if (currentSprite > spritecount - 1) {
-     * currentSprite = 0;
-     * }
-     * }
-     */
+    
+    private void releaseSprite(float[] pos, float[] delta) {
+    	if (spriteData == null) {
+    		return;
+    	}
+	    float[] scale = root.getViewNode(Layer.SCENE).getView().getScale();
+	    float x = (pos[0] / scale[VecMath.X]);
+	    float y = (pos[1] / scale[VecMath.Y]);
+	    // s.setPosition(x, y, 0);
+	    int index = currentSprite * SpriteComponent.SpriteData.getSize();
+	    spriteData[index + SpriteData.TRANSLATE_X.index] = x;
+	    spriteData[index + SpriteData.TRANSLATE_Y.index] = y;
+	    spriteData[index + SpriteData.MOVE_VECTOR_X.index] = 0;
+	    spriteData[index + SpriteData.MOVE_VECTOR_Y.index] = 0;
+	    spriteData[index + SpriteData.ELASTICITY.index] = 0.5f + random.nextFloat() * 0.5f;
+//	    if (delta != null) {
+//	    	s.moveVector.setNormalized((delta[0] * 30) / scale[0], 0);
+//	    } else {
+//	    	s.moveVector.setNormalized(0, 0);
+//	    }
+	    if (delta != null) {
+		    spriteData[index + SpriteData.ROTATE_SPEED.index] = delta[0];
+	    }
+	    spriteData[index + SpriteData.FRAME.index] = random.nextInt(spriteFrames);
+//	    s.setScale(0.8f + random.nextFloat() * 0.5f, 0.8f + random.nextFloat() * 0.5f);
+	    currentSprite++;
+	    if (currentSprite > spritecount - 1) {
+	    	currentSprite = 0;
+    	}
+    }
+    
 
     /**
      * Fetches the framecount and number of sprites
@@ -182,6 +196,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
             if (c == null) {
                 throw new IllegalArgumentException("Could not find component");
             }
+            spriteData = c.getSpriteData();
             Mesh mesh = component.getMeshes().get(0);
             // TODO A method to query the mesh how many frames it supports?
             // Maybe a way to fetch the texture from the resources?
@@ -209,7 +224,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
             spriteComponent.setScale(i, 1, 1);
             spriteComponent.setFrame(i, frame++);
             spriteComponent.setRotateSpeed(i, 0.5f);
-            spriteComponent.setElasticity(i, 1);
+//            spriteComponent.setElasticity(i, 0.5 + );
             if (frame > spriteFrames) {
                 frame = 0;
             }
