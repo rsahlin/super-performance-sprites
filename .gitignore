@@ -33,7 +33,7 @@ proguard/
 /target/
 .settings/
 *.properties
-
+.project
 
 # Maven
 */dependency-reduced-pom.xml
