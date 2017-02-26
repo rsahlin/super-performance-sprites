@@ -11,9 +11,9 @@
                     {id:chars,type:playfieldNode,mapSize:[64,18],rect:{values:[-0.05,0.05,0.1,0.1]},textureRef:{source:"assets/gauntlet.tex"},
                         material:{blendEquation:[GL_FUNC_ADD,GL_FUNC_ADD]}, 
                         mapRef:{source:"assets/gauntlet.map"}},
-                    {id:sprites2,type:spriteComponentNode,transform:{translate:[0.5,-0.5,0.0]},textureRef:{source:"assets/spritetexture.tex"},
+                    {id:sprites2,type:spriteComponentNode,transform:{translate:[0.0,0.0,0.0]},textureRef:{source:"assets/spritetexture.tex"},
                         material:{blendEquation:[DISABLED]}, 
-                        components:[{id:spritecomponent,type:spritecomponent,system:spritesystem,count:400,rect:{values:[-0.025,0.025,0.05,0.05]}}]}
+                        components:[{id:spritecomponent,type:spritecomponent,system:superspritesystem,count:400,rect:{values:[-0.025,0.025,0.05,0.05]}}]}
                   ]}
               ]},
             {id:creditscene,type:viewnode,view:{scale:[1,1,1],translate:[0.0,0,0],axisAngle:{values:[0,0,0,0]}},children:

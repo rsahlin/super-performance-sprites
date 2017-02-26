@@ -112,7 +112,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         case MOVE:
             float[] move = event.getPointerData().getDelta(1);
             if (move != null && component != null) {
-                component.getTransform().translate(move[0], move[1]);
+//                component.getTransform().translate(move[0], move[1]);
             }
             releaseSprite(event.getPointerData().getCurrentPosition(), move);
             break;

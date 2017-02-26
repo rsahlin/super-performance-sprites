@@ -16,7 +16,7 @@ import com.nucleus.vecmath.Vector2D;
 
 /**
  * The system for controlling the sprites defined by {@linkplain SpriteComponent}
- * This is the collected functionallity for the sprites, use this setup so that data is shared in such a way
+ * This is the collected functionality for the sprites, use this setup so that data is shared in such a way
  * that the logic can be accelerated by APIs such as OpenCL.
  * 
  * @author Richard Sahlin
@@ -80,6 +80,7 @@ public class SuperSpriteSystem extends System {
             	moveVector[sprite].vector[VecMath.X] = -moveVector[sprite].vector[VecMath.X] * spriteData[SpriteData.ELASTICITY.index + readIndex];
             	spriteData[SpriteData.ROTATE_SPEED.index + readIndex] = -spriteData[SpriteData.ROTATE_SPEED.index + readIndex] * spriteData[SpriteData.ELASTICITY.index + readIndex];
             }
+            
             float rotate = spriteData[SpriteData.ROTATE.index + readIndex];
             spriteData[SpriteData.TRANSLATE_X.index + readIndex] = xpos;
             spriteData[SpriteData.TRANSLATE_Y.index + readIndex] = ypos;
