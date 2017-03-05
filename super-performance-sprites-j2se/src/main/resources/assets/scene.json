@@ -8,7 +8,7 @@
                 {layer:SCENE,id:game,type:switchnode,
                 children:
                   [
-                    {id:chars,type:playfieldNode,mapSize:[64,18],rect:{values:[-0.05,0.05,0.1,0.1]},textureRef:{source:"assets/gauntlet.tex"},
+                    {id:chars,type:playfieldNode,transform:{scale:[0.2,0.2,0.2]},mapSize:[64,18],rect:{values:[-0.05,0.05,0.1,0.1]},textureRef:{source:"assets/gauntlet.tex"},
                         material:{blendEquation:[GL_FUNC_ADD,GL_FUNC_ADD]}, 
                         mapRef:{source:"assets/gauntlet.map"}},
                     {id:sprites2,type:spriteComponentNode,transform:{translate:[0.0,0.0,0.0]},textureRef:{source:"assets/spritetexture.tex"},
