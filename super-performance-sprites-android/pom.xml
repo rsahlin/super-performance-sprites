@@ -41,7 +41,7 @@
     		</sourceDirectories>
 		    <androidManifestFile>AndroidManifest.xml</androidManifestFile>
             <sdk>
-               <platform>22</platform>
+               <platform>25</platform>
             </sdk>
          </configuration>
      </plugin>
