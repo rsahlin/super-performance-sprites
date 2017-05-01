@@ -103,7 +103,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     }
 
     @Override
-    public void inputEvent(MMIPointerEvent event) {
+    public void onInputEvent(MMIPointerEvent event) {
 
         switch (event.getAction()) {
         case INACTIVE:
