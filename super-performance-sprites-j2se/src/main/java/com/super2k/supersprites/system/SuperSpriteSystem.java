@@ -110,7 +110,7 @@ public class SuperSpriteSystem extends System {
 
     private void updateNodeScale() {
         if (viewNode != null) {
-            float[] scale = viewNode.getView().getScale();
+            float[] scale = viewNode.getTransform().getScale();
             worldLimit[0] = (orthoLeft) / scale[VecMath.X];
             worldLimit[1] = (orthoTop) / scale[VecMath.Y];
             worldLimit[2] = (-orthoLeft) / scale[VecMath.X];

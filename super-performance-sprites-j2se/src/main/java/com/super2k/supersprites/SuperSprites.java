@@ -134,8 +134,8 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
 
     private void updateNodeScale(float zoom) {
         if (viewNode != null) {
-            viewNode.getView().scale(zoom);
-            float[] scale = viewNode.getView().getScale();
+            viewNode.getTransform().scale(zoom);
+            float[] scale = viewNode.getTransform().getScale();
             SimpleLogger.d(SuperSprites.class, "Scale: " + scale[VecMath.X] + " zoom " + zoom);
             worldLimit[0] = (orthoLeft) / scale[VecMath.X];
             worldLimit[1] = (orthoTop) / scale[VecMath.Y];
@@ -149,7 +149,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     	if (spriteData == null) {
     		return;
     	}
-	    float[] scale = root.getViewNode(Layer.SCENE).getView().getScale();
+        float[] scale = root.getViewNode(Layer.SCENE).getTransform().getScale();
 	    float x = (pos[0] / scale[VecMath.X]);
 	    float y = (pos[1] / scale[VecMath.Y]);
 	    // s.setPosition(x, y, 0);
