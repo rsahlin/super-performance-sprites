@@ -26,7 +26,7 @@ import com.nucleus.renderer.Window;
 import com.nucleus.scene.Node;
 import com.nucleus.scene.NodeException;
 import com.nucleus.scene.RootNode;
-import com.nucleus.scene.ViewNode;
+import com.nucleus.scene.LayerNode;
 import com.nucleus.system.ComponentHandler;
 import com.nucleus.texturing.Texture2D;
 import com.nucleus.texturing.TiledTexture2D;
@@ -78,7 +78,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     private SpriteComponent spriteComponent;
     private float[] spriteData;
     private float[] pointerScale = new float[2];
-    private ViewNode viewNode;
+    private LayerNode viewNode;
 
     public static float[] worldLimit;
     private float orthoLeft;

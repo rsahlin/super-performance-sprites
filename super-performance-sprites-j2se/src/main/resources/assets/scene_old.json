@@ -15,7 +15,7 @@
     scene:{
         id:switch,type:switchnode,active:gamescene,viewFrustum:{projection:ORTHOGONAL,values:[-0.5,0.5,-0.5,0.5,4,-10]},children:
         [
-            {layer:SCENE,id:gamescene,type:viewnode,view:{scale:[0.2,0.2,1],translate:[0.0,0,0],axisAngle:{values:[0,0,0,0]},scaleLimit:{min:[0.2],max:[2.0]}},children:
+            {layer:SCENE,id:gamescene,type:layernode,view:{scale:[0.2,0.2,1],translate:[0.0,0,0],axisAngle:{values:[0,0,0,0]},scaleLimit:{min:[0.2],max:[2.0]}},children:
             [
                 {layer:SCENE,id:game,type:switchnode,
                 children:
@@ -35,7 +35,7 @@
                             
                   ]}
               ]},
-            {id:creditscene,type:viewnode,view:{scale:[1,1,1],translate:[0.0,0,0],axisAngle:{values:[0,0,0,0]}},children:
+            {id:creditscene,type:layernode,view:{scale:[1,1,1],translate:[0.0,0,0],axisAngle:{values:[0,0,0,0]}},children:
             [
                 {layer:OVERLAY,id:ui,type:switchnode,
                 children:

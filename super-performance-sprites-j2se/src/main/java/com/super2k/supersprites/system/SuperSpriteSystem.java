@@ -8,7 +8,7 @@ import com.nucleus.geometry.AttributeUpdater.PropertyMapper;
 import com.nucleus.renderer.NucleusRenderer.Layer;
 import com.nucleus.scene.Node;
 import com.nucleus.scene.RootNode;
-import com.nucleus.scene.ViewNode;
+import com.nucleus.scene.LayerNode;
 import com.nucleus.shader.ShaderProgram;
 import com.nucleus.system.System;
 import com.nucleus.vecmath.VecMath;
@@ -28,7 +28,7 @@ public class SuperSpriteSystem extends System {
     public final static float GRAVITY = -5;
 
     RootNode root;
-    private ViewNode viewNode;
+    private LayerNode viewNode;
     public static float[] worldLimit = new float[4];
     private float orthoLeft;
     private float orthoTop;
