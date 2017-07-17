@@ -23,10 +23,11 @@ import com.nucleus.renderer.NucleusRenderer;
 import com.nucleus.renderer.NucleusRenderer.Layer;
 import com.nucleus.renderer.NucleusRenderer.RenderContextListener;
 import com.nucleus.renderer.Window;
+import com.nucleus.scene.LayerNode;
 import com.nucleus.scene.Node;
+import com.nucleus.scene.Node.MeshType;
 import com.nucleus.scene.NodeException;
 import com.nucleus.scene.RootNode;
-import com.nucleus.scene.LayerNode;
 import com.nucleus.system.ComponentHandler;
 import com.nucleus.texturing.Texture2D;
 import com.nucleus.texturing.TiledTexture2D;
@@ -197,7 +198,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                 throw new IllegalArgumentException("Could not find component");
             }
             spriteData = c.getSpriteData();
-            Mesh mesh = component.getMeshes().get(0);
+            Mesh mesh = component.getMesh(MeshType.MAIN);
             // TODO A method to query the mesh how many frames it supports?
             // Maybe a way to fetch the texture from the resources?
             TiledTexture2D tiledTexture = (TiledTexture2D) mesh.getTexture(Texture2D.TEXTURE_0);
@@ -246,7 +247,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
             try {
                 SimpleLogger.d(getClass(), "Loading scene");
                 SceneSerializer sf = new GSONGraphicsEngineFactory(renderer, GSONGraphicsEngineFactory.getNodeFactory(),
-                        GSONGraphicsEngineFactory.getMeshFactory(),
+                        GSONGraphicsEngineFactory.getMeshFactory(renderer),
                         Arrays.asList((Type<?>[]) SuperSpritesClasses.values()));
                 root = sf.importScene("assets/scene.json");
                 coreApp.setRootNode(root);
