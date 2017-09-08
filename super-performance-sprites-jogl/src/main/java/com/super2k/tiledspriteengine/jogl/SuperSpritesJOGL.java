@@ -1,10 +1,10 @@
 package com.super2k.tiledspriteengine.jogl;
 
-import com.nucleus.jogl.NucleusApplication;
+import com.nucleus.jogl.JOGLApplication;
 import com.nucleus.opengl.GLESWrapper.Renderers;
 import com.super2k.supersprites.SuperSprites;
 
-public class SuperSpritesJOGL extends NucleusApplication {
+public class SuperSpritesJOGL extends JOGLApplication {
 
     public SuperSpritesJOGL(String[] args) {
         super(args, Renderers.GLES20, SuperSprites.class);
