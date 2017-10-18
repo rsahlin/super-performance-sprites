@@ -1,14 +1,16 @@
 package com.super2k.supersprites.system;
 
+import java.util.Random;
+
 import com.graphicsengine.component.SpriteComponent;
 import com.graphicsengine.component.SpriteComponent.SpriteData;
 import com.nucleus.camera.ViewFrustum;
 import com.nucleus.component.Component;
 import com.nucleus.geometry.AttributeUpdater.PropertyMapper;
 import com.nucleus.renderer.NucleusRenderer.Layer;
+import com.nucleus.scene.LayerNode;
 import com.nucleus.scene.Node;
 import com.nucleus.scene.RootNode;
-import com.nucleus.scene.LayerNode;
 import com.nucleus.shader.ShaderProgram;
 import com.nucleus.system.System;
 import com.nucleus.vecmath.VecMath;
@@ -96,16 +98,46 @@ public class SuperSpriteSystem extends System {
     }
 
     @Override
-    public void initSystem(RootNode root) {
+    public void initSystem(RootNode root, Component component) {
         initialized = true;
         this.root = root;
 
-        Node scene = root.getScene();
+        Node scene = root.getNodeById("root");
         ViewFrustum vf = scene.getViewFrustum();
         float[] values = vf.getValues();
         orthoLeft = values[ViewFrustum.LEFT_INDEX];
         orthoTop = values[ViewFrustum.TOP_INDEX];
         viewNode = root.getViewNode(Layer.SCENE);
+        initSprites((SpriteComponent) component);
+    }
+
+    private void initSprites(SpriteComponent sprites) {
+        int spriteFrames = sprites.getFrameCount();
+        int frame = 0;
+        Random random = new Random();
+        float[] spriteData = sprites.getSpriteData();
+        for (int currentSprite = 0; currentSprite < sprites.getCount(); currentSprite++) {
+            int index = currentSprite * SpriteComponent.SpriteData.getSize();
+            float[] scale = root.getViewNode(Layer.SCENE).getTransform().getScale();
+            float x = (((random.nextFloat() * 1.67f) - 0.8889f) / scale[VecMath.X]);
+            float y = ((random.nextFloat() - 0.5f) / scale[VecMath.Y]);
+            sprites.setPosition(currentSprite, x, y, 0);
+            sprites.setRotation(currentSprite, 0);
+            sprites.setScale(currentSprite, 1 + random.nextFloat(), 1 + random.nextFloat());
+            sprites.setFrame(currentSprite, frame++);
+            if (frame >= spriteFrames) {
+                frame = 0;
+            }
+            spriteData[index + SpriteData.MOVE_VECTOR_X.index] = 0;
+            spriteData[index + SpriteData.MOVE_VECTOR_Y.index] = 0;
+            spriteData[index + SpriteData.ELASTICITY.index] = 0.5f + random.nextFloat() * 0.5f;
+            spriteData[index + SpriteData.RESISTANCE.index] = random.nextFloat() * 0.03f;
+            currentSprite++;
+            // if (currentSprite > spritecount - 1) {
+            // currentSprite = 0;
+            // }
+
+        }
     }
 
     private void updateNodeScale() {
