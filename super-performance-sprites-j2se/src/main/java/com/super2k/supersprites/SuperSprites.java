@@ -18,7 +18,6 @@ import com.nucleus.geometry.Mesh;
 import com.nucleus.io.SceneSerializer;
 import com.nucleus.mmi.MMIEventListener;
 import com.nucleus.mmi.MMIPointerEvent;
-import com.nucleus.opengl.GLESWrapper.GLES20;
 import com.nucleus.renderer.NucleusRenderer;
 import com.nucleus.renderer.NucleusRenderer.Layer;
 import com.nucleus.renderer.NucleusRenderer.RenderContextListener;
@@ -69,7 +68,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     private int spritecount;
     private int currentSprite = 0;
     private Random random = new Random(System.currentTimeMillis());
-    
+
     Window window;
     CoreApp coreApp;
     RootNode root;
@@ -107,28 +106,28 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     public void onInputEvent(MMIPointerEvent event) {
 
         switch (event.getAction()) {
-        case INACTIVE:
-            process = false;
-            break;
-        case MOVE:
-            float[] move = event.getPointerData().getDelta(1);
-            if (move != null && component != null) {
-//                component.getTransform().translate(move[0], move[1]);
-            }
-            releaseSprite(event.getPointerData().getCurrentPosition(), move);
-            break;
-        case ACTIVE:
-            fetchSprites();
-            releaseSprite(event.getPointerData().getCurrentPosition(), null);
-            process = true;
-            break;
-        case ZOOM:
-            Vector2D zoom = event.getZoom();
-            float z = ((zoom.vector[Vector2D.MAGNITUDE] * zoom.vector[VecMath.X]))
-                    * pointerScale[1];
-            updateNodeScale(z);
-            break;
-        default:
+            case INACTIVE:
+                process = false;
+                break;
+            case MOVE:
+                float[] move = event.getPointerData().getDelta(1);
+                if (move != null && component != null) {
+                    // component.getTransform().translate(move[0], move[1]);
+                }
+                releaseSprite(event.getPointerData().getCurrentPosition(), move);
+                break;
+            case ACTIVE:
+                fetchSprites();
+                releaseSprite(event.getPointerData().getCurrentPosition(), null);
+                process = true;
+                break;
+            case ZOOM:
+                Vector2D zoom = event.getZoom();
+                float z = ((zoom.vector[Vector2D.MAGNITUDE] * zoom.vector[VecMath.X]))
+                        * pointerScale[1];
+                updateNodeScale(z);
+                break;
+            default:
 
         }
     }
@@ -145,37 +144,35 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         }
     }
 
-    
     private void releaseSprite(float[] pos, float[] delta) {
-    	if (spriteData == null) {
-    		return;
-    	}
+        if (spriteData == null) {
+            return;
+        }
         float[] scale = root.getViewNode(Layer.SCENE).getTransform().getScale();
-	    float x = (pos[0] / scale[VecMath.X]);
-	    float y = (pos[1] / scale[VecMath.Y]);
-	    // s.setPosition(x, y, 0);
-	    int index = currentSprite * SpriteComponent.SpriteData.getSize();
-	    spriteData[index + SpriteData.TRANSLATE_X.index] = x;
-	    spriteData[index + SpriteData.TRANSLATE_Y.index] = y;
-	    spriteData[index + SpriteData.MOVE_VECTOR_X.index] = 0;
-	    spriteData[index + SpriteData.MOVE_VECTOR_Y.index] = 0;
-	    spriteData[index + SpriteData.ELASTICITY.index] = 0.5f + random.nextFloat() * 0.5f;
-//	    if (delta != null) {
-//	    	s.moveVector.setNormalized((delta[0] * 30) / scale[0], 0);
-//	    } else {
-//	    	s.moveVector.setNormalized(0, 0);
-//	    }
-	    if (delta != null) {
-		    spriteData[index + SpriteData.ROTATE_SPEED.index] = delta[0];
-	    }
-	    spriteData[index + SpriteData.FRAME.index] = random.nextInt(spriteFrames);
-//	    s.setScale(0.8f + random.nextFloat() * 0.5f, 0.8f + random.nextFloat() * 0.5f);
-	    currentSprite++;
-	    if (currentSprite > spritecount - 1) {
-	    	currentSprite = 0;
-    	}
+        float x = (pos[0] / scale[VecMath.X]);
+        float y = (pos[1] / scale[VecMath.Y]);
+        // s.setPosition(x, y, 0);
+        int index = currentSprite * SpriteComponent.SpriteData.getSize();
+        spriteData[index + SpriteData.TRANSLATE_X.index] = x;
+        spriteData[index + SpriteData.TRANSLATE_Y.index] = y;
+        spriteData[index + SpriteData.MOVE_VECTOR_X.index] = 0;
+        spriteData[index + SpriteData.MOVE_VECTOR_Y.index] = 0;
+        spriteData[index + SpriteData.ELASTICITY.index] = 0.5f + random.nextFloat() * 0.5f;
+        // if (delta != null) {
+        // s.moveVector.setNormalized((delta[0] * 30) / scale[0], 0);
+        // } else {
+        // s.moveVector.setNormalized(0, 0);
+        // }
+        if (delta != null) {
+            spriteData[index + SpriteData.ROTATE_SPEED.index] = delta[0];
+        }
+        spriteData[index + SpriteData.FRAME.index] = random.nextInt(spriteFrames);
+        // s.setScale(0.8f + random.nextFloat() * 0.5f, 0.8f + random.nextFloat() * 0.5f);
+        currentSprite++;
+        if (currentSprite > spritecount - 1) {
+            currentSprite = 0;
+        }
     }
-    
 
     /**
      * Fetches the framecount and number of sprites
@@ -188,7 +185,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
             viewNode = root.getViewNode(Layer.SCENE);
             updateNodeScale(0);
         }
-        component = (ComponentNode) root.getScene()
+        component = (ComponentNode) root.getNodeById("root")
                 .getNodeByType(GraphicsEngineNodeType.spriteComponentNode.name());
         float xpos = worldLimit[0];
         float ypos = worldLimit[1];
@@ -210,10 +207,20 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
             int width = (height);
             float deltay = ((worldLimit[1] - worldLimit[3]) / height) * 1f;
             float deltax = ((worldLimit[2] - worldLimit[0]) / width) * 1f;
-            initSprites(c, xpos, ypos, deltax, deltay, width);
         }
     }
 
+    /**
+     * Setup of sprites is done in the System
+     * 
+     * @param spriteComponent
+     * @param xpos
+     * @param ypos
+     * @param deltax
+     * @param deltay
+     * @param width
+     */
+    @Deprecated
     private void initSprites(SpriteComponent spriteComponent, float xpos, float ypos, float deltax, float deltay,
             int width) {
         int x = 0;
@@ -225,7 +232,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
             spriteComponent.setScale(i, 1, 1);
             spriteComponent.setFrame(i, frame++);
             spriteComponent.setRotateSpeed(i, 0.5f);
-//            spriteComponent.setElasticity(i, 0.5 + );
+            // spriteComponent.setElasticity(i, 0.5 + );
             if (frame > spriteFrames) {
                 frame = 0;
             }
@@ -255,7 +262,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                 /**
                  * TODO - this should be handled in a more generic way.
                  */
-                Node scene = root.getScene();
+                Node scene = root.getNodeById("root");
                 ViewFrustum vf = scene.getViewFrustum();
                 if (vf != null) {
                     float[] values = vf.getValues();
@@ -274,9 +281,9 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                             0.5f);
                     throw new IllegalArgumentException();
                 }
-                renderer.getRenderSettings().setClearFunction(GLES20.GL_COLOR_BUFFER_BIT);
-                renderer.getRenderSettings().setDepthFunc(GLES20.GL_NONE);
-                renderer.getRenderSettings().setCullFace(GLES20.GL_NONE);
+                // renderer.getRenderSettings().setClearFunction(GLES20.GL_COLOR_BUFFER_BIT);
+                // renderer.getRenderSettings().setDepthFunc(GLES20.GL_NONE);
+                // renderer.getRenderSettings().setCullFace(GLES20.GL_NONE);
                 ComponentHandler.getInstance().initSystems(root, renderer);
                 fetchSprites();
                 try {
