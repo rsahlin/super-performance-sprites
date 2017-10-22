@@ -1,4 +1,4 @@
-package com.super2k.tiledspriteengine.android;
+package com.super2k.supersprites.android;
 
 import com.nucleus.android.NucleusActivity;
 import com.nucleus.opengl.GLESWrapper.Renderers;
