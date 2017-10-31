@@ -19,4 +19,9 @@ public class SuperSpritesActivity extends NucleusActivity {
         return Renderers.GLES20;
     }
 
+    @Override
+    public int getSamples() {
+        return 0;
+    }
+
 }
