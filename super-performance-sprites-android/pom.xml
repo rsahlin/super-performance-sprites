@@ -1,92 +1,105 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
         <artifactId>super-performance-sprites</artifactId>
         <groupId>com.super2k.super-performance-sprites</groupId>
         <version>0.0.1-SNAPSHOT</version>
     </parent>
-	<artifactId>super-performance-sprites-android</artifactId>
-	<packaging>apk</packaging>
-	<name>android-super-performance-sprites</name>
+    <artifactId>super-performance-sprites-android</artifactId>
+    <packaging>apk</packaging>
+    <name>android-super-performance-sprites</name>
     <dependencies>
-	<dependency>
-        <groupId>com.google.android</groupId>
-        <artifactId>android</artifactId>
-        <scope>provided</scope>
-    </dependency>
-    <dependency>
-    	<groupId>com.super2k.graphics-by-opengl</groupId>
-    	<artifactId>graphics-by-opengl-android</artifactId>
-    	<version>0.0.1-SNAPSHOT</version>
-    	<type>apklib</type>
-    </dependency>
-    <dependency>
-    	<groupId>com.super2k.super-performance-sprites</groupId>
-    	<artifactId>super-performance-sprites-j2se</artifactId>
-    	<version>0.0.1-SNAPSHOT</version>
-    </dependency>
+        <dependency>
+            <groupId>com.google.android</groupId>
+            <artifactId>android</artifactId>
+            <version>4.1.1.4</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.super2k.graphics-by-opengl</groupId>
+            <artifactId>graphics-by-opengl-android</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <type>apklib</type>
+        </dependency>
+        <dependency>
+            <groupId>com.super2k.super-performance-sprites</groupId>
+            <artifactId>super-performance-sprites-j2se</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
-	<build>
+    <build>
         <sourceDirectory>src/main/java</sourceDirectory>
-	    <plugins>
-	    <plugin>
-        <groupId>com.simpligility.maven.plugins</groupId>
-        <artifactId>android-maven-plugin</artifactId>
-        <extensions>true</extensions>
-        <configuration>
-    		<resourceDirectory>./res</resourceDirectory>
-    		<sourceDirectories>
-    		  <sourceDirectory>src/main/java</sourceDirectory>
-    		</sourceDirectories>
-		    <androidManifestFile>AndroidManifest.xml</androidManifestFile>
-            <sdk>
-               <platform>25</platform>
-            </sdk>
-         </configuration>
-     </plugin>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.7</source>
-          <target>1.7</target>
-        </configuration>
-      </plugin>
-    </plugins>
-    <pluginManagement>
-    	<plugins>
-            <!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+        <plugins>
             <plugin>
-                <groupId>org.eclipse.m2e</groupId>
-                <artifactId>lifecycle-mapping</artifactId>
-                <version>1.0.0</version>
+                <groupId>com.simpligility.maven.plugins</groupId>
+                <artifactId>android-maven-plugin</artifactId>
+                <extensions>true</extensions>
                 <configuration>
-                    <lifecycleMappingMetadata>
-                        <pluginExecutions>
-                            <pluginExecution>
-                                <pluginExecutionFilter>
-                                    <groupId>
-                                        com.simpligility.maven.plugins
-                                    </groupId>
-                                    <artifactId>
-                                        android-maven-plugin
-                                    </artifactId>
-                                    <versionRange>
-                                        [4.4.1,)
-                                    </versionRange>
-                                    <goals>
-                                        <goal>emma</goal>
-                                    </goals>
-                                </pluginExecutionFilter>
-                                <action>
-                                    <ignore></ignore>
-                                </action>
-                            </pluginExecution>
-                        </pluginExecutions>
-                    </lifecycleMappingMetadata>
+                    <resourceDirectory>./res</resourceDirectory>
+                    <sourceDirectories>
+                        <sourceDirectory>src/main/java</sourceDirectory>
+                    </sourceDirectories>
+                    <androidManifestFile>AndroidManifest.xml</androidManifestFile>
+                    <sdk>
+                        <platform>25</platform>
+                    </sdk>
                 </configuration>
             </plugin>
-    	</plugins>
-    </pluginManagement>
-	</build>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                </configuration>
+            </plugin>
+        </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.simpligility.maven.plugins</groupId>
+                    <artifactId>android-maven-plugin</artifactId>
+                    <version>${it-plugin.version}</version>
+                    <configuration>
+                        <sdk>
+                            <platform>15</platform>
+                        </sdk>
+                    </configuration>
+                </plugin>
+                <!--This plugin's configuration is used to store Eclipse 
+                    m2e settings only. It has no influence on the Maven build itself. -->
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>
+                                            com.simpligility.maven.plugins
+                                        </groupId>
+                                        <artifactId>
+                                            android-maven-plugin
+                                        </artifactId>
+                                        <versionRange>
+                                            [4.4.1,)
+                                        </versionRange>
+                                        <goals>
+                                            <goal>emma</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore></ignore>
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>
