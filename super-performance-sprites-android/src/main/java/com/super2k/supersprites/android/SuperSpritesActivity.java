@@ -1,4 +1,4 @@
-package com.super2k.tiledspriteengine.android;
+package com.super2k.supersprites.android;
 
 import com.nucleus.android.NucleusActivity;
 import com.nucleus.opengl.GLESWrapper.Renderers;
@@ -17,6 +17,11 @@ public class SuperSpritesActivity extends NucleusActivity {
     @Override
     public Renderers getRenderVersion() {
         return Renderers.GLES20;
+    }
+
+    @Override
+    public int getSamples() {
+        return 0;
     }
 
 }
