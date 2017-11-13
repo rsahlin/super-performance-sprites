@@ -13,19 +13,24 @@ apply plugin: 'maven-publish'
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            from components.java
+            artifact (sourcesAndClasses)
         }
     }
 }
 
+task sourcesAndClasses(type: Jar) {
+    from sourceSets.main.output
+    from sourceSets.main.allJava
+}
+
 repositories {
     mavenLocal()
-    jcenter() 
+    jcenter()
 }
 dependencies {
     compile 'com.super2k.graphics-by-opengl:graphics-by-opengl-j2se:0.0.1-SNAPSHOT'
     compile 'com.super2k.vecmath:vecmath:0.0.1-SNAPSHOT'
     compile 'com.super2k.graphics-engine:graphics-engine:0.0.1-SNAPSHOT'
     compile 'com.google.code.gson:gson:2.5'
-    testCompile 'junit:junit:4.12'  
+    testCompile 'junit:junit:4.12'
 }

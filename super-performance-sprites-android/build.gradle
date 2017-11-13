@@ -1,9 +1,11 @@
 buildscript {
     repositories {
+        mavenCentral()
         jcenter()
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.android.tools.build:gradle:3.0.0'
     }
 }
 
@@ -13,17 +15,29 @@ tasks.withType(JavaCompile) {
     targetCompatibility = JavaVersion.VERSION_1_7
 }
 
-
 apply plugin: 'com.android.application'
+apply plugin: 'maven-publish'
+
+publishing {
+    publications {
+        android(MavenPublication) {
+            groupId 'com.super2k.super-performance-sprites'
+            artifactId 'super-performance-sprites-j2se'
+            version '0.0.1-SNAPSHOT'
+        }
+    }
+}
+
 
 repositories {
     mavenLocal()
+    mavenCentral()
     jcenter()
+    google()
 }
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.0'
     lintOptions {
         disable 'MissingTranslation'
     }
@@ -35,11 +49,11 @@ android {
             res.srcDirs = ['res']
             assets.srcDirs = ['res']
         }
-    }    
-    
+    }
+
     defaultConfig {
         applicationId "com.super2k.superperformancesprites"
-        minSdkVersion 15
+        minSdkVersion 19
         targetSdkVersion 21
         versionCode 1
         versionName "1"
@@ -69,15 +83,19 @@ android {
 }
 
 dependencies {
-    compile 'com.super2k.graphics-by-opengl:graphics-by-opengl-android:0.0.1-SNAPSHOT'
-    compile 'com.google.android.gms:play-services:10.0.1'
-    compile 'com.android.support:multidex:1.0.0'
-    compile project (':super-performance-sprites-j2se')
-    testCompile 'junit:junit:4.12'
-    testCompile "org.mockito:mockito-core:2.+"
+    implementation 'com.super2k.super-performance-sprites:super-performance-sprites-j2se:0.0.1-SNAPSHOT'
+    implementation 'com.super2k.graphics-by-opengl:graphics-by-opengl-android:0.0.1-SNAPSHOT'
+//    implementation 'com.super2k.graphics-by-opengl:graphics-by-opengl-j2se:0.0.1-SNAPSHOT'
+    implementation 'com.google.android.gms:play-services:10.0.1'
+    implementation 'com.android.support:multidex:1.0.2'
+//    implementation project ('com.super2k.graphics-by-opengl:graphics-by-opengl-android')
+//    implementation project (':super-performance-sprites-j2se')
+    testImplementation 'junit:junit:4.12'
+    testImplementation "org.mockito:mockito-core:2.+"
 }
 
 //apply plugin: 'com.google.gms.google-services'
+
 
 
 
