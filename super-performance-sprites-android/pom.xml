@@ -5,10 +5,9 @@
     <parent>
         <artifactId>super-performance-sprites</artifactId>
         <groupId>com.super2k.super-performance-sprites</groupId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>${super-sprites-version}</version>
     </parent>
     <artifactId>super-performance-sprites-android</artifactId>
-    <packaging>apk</packaging>
     <name>android-super-performance-sprites</name>
     <dependencies>
         <dependency>
@@ -20,13 +19,11 @@
         <dependency>
             <groupId>com.super2k.graphics-by-opengl</groupId>
             <artifactId>graphics-by-opengl-android</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
             <type>apklib</type>
         </dependency>
         <dependency>
             <groupId>com.super2k.super-performance-sprites</groupId>
             <artifactId>super-performance-sprites-j2se</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <build>
@@ -102,4 +99,5 @@
             </plugins>
         </pluginManagement>
     </build>
+    <packaging>apklib</packaging>
 </project>
