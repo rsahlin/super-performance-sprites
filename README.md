@@ -9,7 +9,21 @@ graphics-by-opengl
 vecmath
 graphics-engine
 
+Using gradle:
+I do not have a full solution for how to include in Android Studio.
+To build, first publish dependent projects to maven local by executing task 'publishToMavenLocal' for each module.
 
+vecmath>gradle publishToMavenLocal
+>graphics-by-opengl/graphics-by-opengl-j2se>gradle publishToMavenLocal
+>graphics-by-opengl/graphics-by-opengl-android>gradle publishToMavenLocal
+>graphics-engine>gradle publishToMavenLocal
+>super-performance-sprites/super-performance-sprites-j2se>gradle publishToMavenLocal
+>super-performance-sprites/super-performance-sprites-android>gradle assemble
+
+
+
+----------------------------------------------------------------------------
+Old instructions for Eclipse NEON - not valid anymore 
 - To use as Gradle project in Eclipse (Neon) - import Super-performance-sprites as gradle project.
 On Eclipse Neon there is no support for Android Gradle projects so you need to do the following:
 - Delete the Super-performance-sprites-android sub-project (do NOT delete contents from disk)
