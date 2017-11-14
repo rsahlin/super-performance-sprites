@@ -13,7 +13,7 @@ apply plugin: 'maven-publish'
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            artifact (sourcesAndClasses)
+            artifact(sourcesAndClasses)
         }
     }
 }
