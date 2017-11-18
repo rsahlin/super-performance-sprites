@@ -8,6 +8,7 @@
         <version>${super-sprites-version}</version>
     </parent>
     <artifactId>super-performance-sprites-android</artifactId>
+    <packaging>apk</packaging>
     <name>android-super-performance-sprites</name>
     <dependencies>
         <dependency>
@@ -60,7 +61,7 @@
                     <version>${it-plugin.version}</version>
                     <configuration>
                         <sdk>
-                            <platform>15</platform>
+                            <platform>25</platform>
                         </sdk>
                     </configuration>
                 </plugin>
@@ -99,5 +100,4 @@
             </plugins>
         </pluginManagement>
     </build>
-    <packaging>apklib</packaging>
 </project>
