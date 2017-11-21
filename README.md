@@ -1,9 +1,11 @@
 # super-performance-sprites
 1000 sprites on a low/medium end mobile phone using one draw call in OpenGL ES - this is a multi platform project that supports running on J2SE using JOGAMP.
-Tested with Eclipse Android Neon, since this is a multi platform projec - import as Maven project.
-Make sure that you are using Android Andmore and m2e plugins (not the old DDMS/ADT from 'The Android Open Source Project')
-Check by opening 'Help' - 'Install new software' - 'What is already installed?' 
-Uninstall software from 'The Android Opensource Project' and fetch Andmore from Eclipse marketplace.
+
+This project depends on:
+vecmath (develop)
+graphics-by-opengl (develop)
+graphics-engine (develop)
+
 
 
 ----------------------------------------------------------------------
@@ -11,16 +13,16 @@ ECLIPSE
 ----------------------------------------------------------------------
 Prerequisites:
 - Maven
-- Eclipse
+- Eclipse Oxygen
+Make sure that you are using Android Andmore and m2e plugins (not the old DDMS/ADT from 'The Android Open Source Project')
+Check by opening 'Help' - 'Install new software' - 'What is already installed?' 
+Uninstall software from 'The Android Opensource Project' and fetch Andmore from Eclipse marketplace.
+
 - JDK 1.7 or 1.8 (Not 1.9)
 Check with 'javac -version' 
 
-- Import as Existing Maven project into Eclipse
 - Import dependencies as Maven projects or install to local maven repo:
-This project depends on:
-vecmath
-graphics-by-opengl
-graphics-engine
+- Import as Existing Maven project into Eclipse
 
 - Android modules may complain that compiler level is below 1.7 - to fix open 'properties' - 'java compiler' and make sure project uses compiler level (at least) 1.7
 - Error similar to: Dex Loader] Failed to load .....\build-tools\27.0.1\lib\dx.jar although the jar is present
@@ -38,7 +40,7 @@ Android Studio / gradle
 -----------------------------------------------------------------------
 Prerequisites:
 - Gradle
-- Eclipse
+- Android Studio 3.0
 - JDK 1.7 or 1.8 (Not 1.9)
 Check with 'javac -version' 
 
@@ -51,6 +53,8 @@ vecmath>gradle publishToMavenLocal
 >graphics-engine>gradle publishToMavenLocal
 >super-performance-sprites/super-performance-sprites-j2se>gradle publishToMavenLocal
 >super-performance-sprites/super-performance-sprites-android>gradle assemble
+
+Import as existing Android Studio / gradle project.
 
 ----------------------------------------------------------------------------
 
