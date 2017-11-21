@@ -6,6 +6,16 @@ vecmath (develop)
 graphics-by-opengl (develop)
 graphics-engine (develop)
 
+Code style and formatting:
+Follow the Google Java guidelines:
+https://google.github.io/styleguide/javaguide.html
+
+Eclipse:
+Use customformatter.xml
+Open preferences-general-workspace
+
+Make sure Text file encoding is UTF-8
+New text file delimiter - Unix
 
 
 ----------------------------------------------------------------------
