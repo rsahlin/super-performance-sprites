@@ -6,7 +6,16 @@ Check by opening 'Help' - 'Install new software' - 'What is already installed?'
 Uninstall software from 'The Android Opensource Project' and fetch Andmore from Eclipse marketplace.
 
 
-- To use as Maven project in Eclipse, import as Existing Maven project.
+----------------------------------------------------------------------
+ECLIPSE 
+----------------------------------------------------------------------
+Prerequisites:
+- Maven
+- Eclipse
+- JDK 1.7 or 1.8 (Not 1.9)
+Check with 'javac -version' 
+
+- Import as Existing Maven project into Eclipse
 - Import dependencies as Maven projects or install to local maven repo:
 This project depends on:
 vecmath
@@ -24,8 +33,16 @@ It probably means you are using Java 9 jre/sdk.
 Download Java 8 then go to 'preferences' - 'Java' - 'Compiler' press 'Configure' att the bottom and add the downloaded java 8 jre/jdk and select as default.
 Restart Eclipse to make sure changes take effect. 
 
-Using gradle:
-I do not have a full solution for how to include in Android Studio.
+-----------------------------------------------------------------------
+Android Studio / gradle
+-----------------------------------------------------------------------
+Prerequisites:
+- Gradle
+- Eclipse
+- JDK 1.7 or 1.8 (Not 1.9)
+Check with 'javac -version' 
+
+I do not have a full solution for how to include in Android Studio, dependend projects needs to be installed as local maven.
 To build, first publish dependent projects to maven local by executing task 'publishToMavenLocal' for each module.
 
 vecmath>gradle publishToMavenLocal
@@ -35,37 +52,7 @@ vecmath>gradle publishToMavenLocal
 >super-performance-sprites/super-performance-sprites-j2se>gradle publishToMavenLocal
 >super-performance-sprites/super-performance-sprites-android>gradle assemble
 
-
-
 ----------------------------------------------------------------------------
-Old instructions for Eclipse NEON - not valid anymore 
-- To use as Gradle project in Eclipse (Neon) - import Super-performance-sprites as gradle project.
-On Eclipse Neon there is no support for Android Gradle projects so you need to do the following:
-- Delete the Super-performance-sprites-android sub-project (do NOT delete contents from disk)
-- Import Android code from 'super-performance-sprites-android' and make sure Java compiler is set to 1.7
-- Open 'properties-java build path', delete 'super-performance-sprites-android/src'
-- Click 'Add folder' and select the subfolder 'src/main/java'
-- Reference graphics-by-opengl-android and super-performance-sprites-j2se
-- When running Android app if you see this error 'Dx unsupported class file version 52.0' it means that the referenced class is compiled with a Java compiler > 1.7 and Android is not compatible with that. 
-To resolve make sure referenced libraries vecmath, graphics-engine, graphics-by-opengl are built using compiler version 1.7. This should not happen if libraries are built using gradle, but if libraries are also imported to Eclipse the default compiler level may differ.
-
-
-ADT needs to be installed.
-
-pom file may display error similar to:
-
-Plugin execution not covered by lifecycle configuration: com.simpligility.maven.plugins:android-maven-plugin:4.4.1:emma (execution: default-emma, phase: process-classes)
-
-- To resolve this, choose quick fix 'Permanently mark goal emma in pom.xml as ignored in Eclipse build'
-
-You may experience problem with non-existing project.properties file 
-
-- I solved by adding an empty project.properties file in the Android project root, chosing 'Properties-Android' and selecting a valid SDK.
-
-Maven - update project, or clean build to get rid of any trailing errors.
-
-Gradle - make sure you have run 'gradle publishToMavenLocal' for dependent libraries 'vecmath', 'graphics-engine' and 'graphics-by-opengl'
-
 
 
 
