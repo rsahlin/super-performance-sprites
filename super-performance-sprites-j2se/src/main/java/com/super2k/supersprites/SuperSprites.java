@@ -296,4 +296,16 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
             }
         }
     }
+
+    @Override
+    public void drawFrame() {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void surfaceLost() {
+        // TODO Auto-generated method stub
+
+    }
 }
