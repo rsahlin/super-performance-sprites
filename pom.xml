@@ -7,7 +7,7 @@
         <graphics-engine-version>0.0.1-SNAPSHOT</graphics-engine-version>
         <super-sprites-version>0.0.1-SNAPSHOT</super-sprites-version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <android.maven.version>4.4.3</android.maven.version>
+        <android.maven.version>4.5</android.maven.version>
         <it-plugin.version>4.4.1</it-plugin.version>
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
@@ -38,7 +38,7 @@
                 <groupId>com.super2k.graphics-by-opengl</groupId>
                 <artifactId>graphics-by-opengl-android</artifactId>
                 <version>${graphics-by-gl-version}</version>
-                <type>apklib</type>
+                <type>aar</type>
             </dependency>
             <dependency>
                 <groupId>com.super2k.graphics-by-opengl</groupId>
