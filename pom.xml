@@ -38,7 +38,6 @@
                 <groupId>com.super2k.graphics-by-opengl</groupId>
                 <artifactId>graphics-by-opengl-android</artifactId>
                 <version>${graphics-by-gl-version}</version>
-                <type>aar</type>
             </dependency>
             <dependency>
                 <groupId>com.super2k.graphics-by-opengl</groupId>
