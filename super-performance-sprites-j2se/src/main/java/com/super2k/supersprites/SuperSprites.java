@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Random;
 
 import com.graphicsengine.component.SpriteComponent;
+import com.graphicsengine.component.SpriteComponent.MeshData;
 import com.graphicsengine.component.SpriteComponent.SpriteData;
 import com.graphicsengine.io.GSONGraphicsEngineFactory;
 import com.graphicsengine.scene.GraphicsEngineNodeType;
@@ -153,8 +154,8 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         float y = (pos[1] / scale[VecMath.Y]);
         // s.setPosition(x, y, 0);
         int index = currentSprite * SpriteComponent.SpriteData.getSize();
-        spriteData[index + SpriteData.TRANSLATE_X.index] = x;
-        spriteData[index + SpriteData.TRANSLATE_Y.index] = y;
+        spriteData[index + MeshData.TRANSLATE_X.index] = x;
+        spriteData[index + MeshData.TRANSLATE_Y.index] = y;
         spriteData[index + SpriteData.MOVE_VECTOR_X.index] = 0;
         spriteData[index + SpriteData.MOVE_VECTOR_Y.index] = 0;
         spriteData[index + SpriteData.ELASTICITY.index] = 0.5f + random.nextFloat() * 0.5f;
@@ -166,7 +167,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         if (delta != null) {
             spriteData[index + SpriteData.ROTATE_SPEED.index] = delta[0];
         }
-        spriteData[index + SpriteData.FRAME.index] = random.nextInt(spriteFrames);
+        spriteData[index + MeshData.FRAME.index] = random.nextInt(spriteFrames);
         // s.setScale(0.8f + random.nextFloat() * 0.5f, 0.8f + random.nextFloat() * 0.5f);
         currentSprite++;
         if (currentSprite > spritecount - 1) {
