@@ -3,7 +3,7 @@ package com.super2k.supersprites.system;
 import java.util.Random;
 
 import com.graphicsengine.component.SpriteComponent;
-import com.graphicsengine.component.SpriteComponent.MeshData;
+import com.graphicsengine.component.SpriteComponent.EntityData;
 import com.graphicsengine.component.SpriteComponent.SpriteData;
 import com.nucleus.camera.ViewFrustum;
 import com.nucleus.component.Component;
@@ -52,50 +52,50 @@ public class SuperSpriteSystem extends System {
         float[] spriteData = spriteComponent.getSpriteData();
         PropertyMapper mapper = spriteComponent.getMapper();
         int readIndex = 0;
-        int readLength = SpriteComponent.SpriteData.getSize();
+        int readLength = SpriteComponent.EntityData.getSize();
         for (int sprite = 0; sprite < spriteCount; sprite++) {
             spriteComponent.getMoveVector(sprite, moveVector);
-            spriteData[MeshData.ROTATE.index + readIndex] += deltaTime
-                    * spriteData[SpriteData.ROTATE_SPEED.index + readIndex];
-            if (spriteData[MeshData.ROTATE.index + readIndex] > TWOPI) {
-                spriteData[MeshData.ROTATE.index + readIndex] -= TWOPI;
+            spriteData[SpriteData.ROTATE.index + readIndex] += deltaTime
+                    * spriteData[EntityData.ROTATE_SPEED.index + readIndex];
+            if (spriteData[SpriteData.ROTATE.index + readIndex] > TWOPI) {
+                spriteData[SpriteData.ROTATE.index + readIndex] -= TWOPI;
             }
             // Update gravity
-            spriteData[SpriteData.MOVE_VECTOR_Y.index
+            spriteData[EntityData.MOVE_VECTOR_Y.index
                     + readIndex] += GRAVITY * deltaTime;
 
-            float xpos = spriteData[MeshData.TRANSLATE_X.index + readIndex];
-            float ypos = spriteData[MeshData.TRANSLATE_Y.index + readIndex];
+            float xpos = spriteData[SpriteData.TRANSLATE_X.index + readIndex];
+            float ypos = spriteData[SpriteData.TRANSLATE_Y.index + readIndex];
 
             xpos += deltaTime * moveVector.vector[VecMath.X] * moveVector.vector[Vector2D.MAGNITUDE]
-                    + spriteData[SpriteData.MOVE_VECTOR_X.index + readIndex] * deltaTime;
+                    + spriteData[EntityData.MOVE_VECTOR_X.index + readIndex] * deltaTime;
             ypos += deltaTime * moveVector.vector[VecMath.Y] * moveVector.vector[Vector2D.MAGNITUDE]
-                    + spriteData[SpriteData.MOVE_VECTOR_Y.index + readIndex] * deltaTime;
+                    + spriteData[EntityData.MOVE_VECTOR_Y.index + readIndex] * deltaTime;
             if (ypos < worldLimit[3]) {
-                spriteData[SpriteData.MOVE_VECTOR_Y.index
-                        + readIndex] = -spriteData[SpriteData.MOVE_VECTOR_Y.index + readIndex]
-                                * spriteData[SpriteData.ELASTICITY.index + readIndex];
+                spriteData[EntityData.MOVE_VECTOR_Y.index
+                        + readIndex] = -spriteData[EntityData.MOVE_VECTOR_Y.index + readIndex]
+                                * spriteData[EntityData.ELASTICITY.index + readIndex];
                 ypos = worldLimit[3] - (ypos - worldLimit[3]);
             }
             if (xpos > worldLimit[2]) {
                 xpos = worldLimit[2] - (xpos - worldLimit[2]);
                 moveVector.vector[VecMath.X] = -moveVector.vector[VecMath.X]
-                        * spriteData[SpriteData.ELASTICITY.index + readIndex];
-                spriteData[SpriteData.ROTATE_SPEED.index
-                        + readIndex] = -spriteData[SpriteData.ROTATE_SPEED.index + readIndex]
-                                * spriteData[SpriteData.ELASTICITY.index];
+                        * spriteData[EntityData.ELASTICITY.index + readIndex];
+                spriteData[EntityData.ROTATE_SPEED.index
+                        + readIndex] = -spriteData[EntityData.ROTATE_SPEED.index + readIndex]
+                                * spriteData[EntityData.ELASTICITY.index];
             } else if (xpos < worldLimit[0]) {
                 xpos = worldLimit[0] - (xpos - worldLimit[0]);
                 moveVector.vector[VecMath.X] = -moveVector.vector[VecMath.X]
-                        * spriteData[SpriteData.ELASTICITY.index + readIndex];
-                spriteData[SpriteData.ROTATE_SPEED.index
-                        + readIndex] = -spriteData[SpriteData.ROTATE_SPEED.index + readIndex]
-                                * spriteData[SpriteData.ELASTICITY.index + readIndex];
+                        * spriteData[EntityData.ELASTICITY.index + readIndex];
+                spriteData[EntityData.ROTATE_SPEED.index
+                        + readIndex] = -spriteData[EntityData.ROTATE_SPEED.index + readIndex]
+                                * spriteData[EntityData.ELASTICITY.index + readIndex];
             }
 
-            float rotate = spriteData[MeshData.ROTATE.index + readIndex];
-            spriteData[MeshData.TRANSLATE_X.index + readIndex] = xpos;
-            spriteData[MeshData.TRANSLATE_Y.index + readIndex] = ypos;
+            float rotate = spriteData[SpriteData.ROTATE.index + readIndex];
+            spriteData[SpriteData.TRANSLATE_X.index + readIndex] = xpos;
+            spriteData[SpriteData.TRANSLATE_Y.index + readIndex] = ypos;
             readIndex += readLength;
         }
     }
@@ -120,21 +120,21 @@ public class SuperSpriteSystem extends System {
         Random random = new Random();
         float[] spriteData = sprites.getSpriteData();
         for (int currentSprite = 0; currentSprite < sprites.getCount(); currentSprite++) {
-            int index = currentSprite * SpriteComponent.SpriteData.getSize();
+            int index = currentSprite * SpriteComponent.EntityData.getSize();
             float[] scale = root.getViewNode(Layer.SCENE).getTransform().getScale();
             float x = (((random.nextFloat() * 1.67f) - 0.8889f) / scale[VecMath.X]);
             float y = ((random.nextFloat() - 0.5f) / scale[VecMath.Y]);
-            sprites.setPosition(currentSprite, x, y, 0);
+            sprites.setPosition(currentSprite, x, y, 1);
             sprites.setRotation(currentSprite, 0);
             sprites.setScale(currentSprite, 1 + random.nextFloat(), 1 + random.nextFloat());
             sprites.setFrame(currentSprite, frame++);
             if (frame >= spriteFrames) {
                 frame = 0;
             }
-            spriteData[index + SpriteData.MOVE_VECTOR_X.index] = 0;
-            spriteData[index + SpriteData.MOVE_VECTOR_Y.index] = 0;
-            spriteData[index + SpriteData.ELASTICITY.index] = 0.5f + random.nextFloat() * 0.5f;
-            spriteData[index + SpriteData.RESISTANCE.index] = random.nextFloat() * 0.03f;
+            spriteData[index + EntityData.MOVE_VECTOR_X.index] = 0;
+            spriteData[index + EntityData.MOVE_VECTOR_Y.index] = 0;
+            spriteData[index + EntityData.ELASTICITY.index] = 0.5f + random.nextFloat() * 0.5f;
+            spriteData[index + EntityData.RESISTANCE.index] = random.nextFloat() * 0.03f;
             currentSprite++;
             // if (currentSprite > spritecount - 1) {
             // currentSprite = 0;
