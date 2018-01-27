@@ -119,15 +119,17 @@ public class SuperSpriteSystem extends System {
         int frame = 0;
         Random random = new Random();
         float[] spriteData = sprites.getSpriteData();
+        float rotation = 0;
         for (int currentSprite = 0; currentSprite < sprites.getCount(); currentSprite++) {
             int index = currentSprite * SpriteComponent.EntityData.getSize();
             float[] scale = root.getViewNode(Layer.SCENE).getTransform().getScale();
             float x = (((random.nextFloat() * 1.67f) - 0.8889f) / scale[VecMath.X]);
             float y = ((random.nextFloat() - 0.5f) / scale[VecMath.Y]);
             sprites.setPosition(currentSprite, x, y, 1);
-            sprites.setRotation(currentSprite, 0);
+            sprites.setRotationZ(currentSprite, rotation);
             sprites.setScale(currentSprite, 1 + random.nextFloat(), 1 + random.nextFloat());
             sprites.setFrame(currentSprite, frame++);
+            rotation += 0.01f;
             if (frame >= spriteFrames) {
                 frame = 0;
             }
