@@ -4,7 +4,6 @@ import java.util.Random;
 
 import com.graphicsengine.component.SpriteComponent;
 import com.graphicsengine.component.SpriteComponent.EntityData;
-import com.graphicsengine.component.SpriteComponent.SpriteData;
 import com.nucleus.camera.ViewFrustum;
 import com.nucleus.component.Component;
 import com.nucleus.geometry.AttributeUpdater.PropertyMapper;
@@ -55,17 +54,17 @@ public class SuperSpriteSystem extends System {
         int readLength = SpriteComponent.EntityData.getSize();
         for (int sprite = 0; sprite < spriteCount; sprite++) {
             spriteComponent.getMoveVector(sprite, moveVector);
-            spriteData[SpriteData.ROTATE.index + readIndex] += deltaTime
+            spriteData[mapper.rotateOffset + readIndex] += deltaTime
                     * spriteData[EntityData.ROTATE_SPEED.index + readIndex];
-            if (spriteData[SpriteData.ROTATE.index + readIndex] > TWOPI) {
-                spriteData[SpriteData.ROTATE.index + readIndex] -= TWOPI;
+            if (spriteData[mapper.rotateOffset + readIndex] > TWOPI) {
+                spriteData[mapper.rotateOffset + readIndex] -= TWOPI;
             }
             // Update gravity
             spriteData[EntityData.MOVE_VECTOR_Y.index
                     + readIndex] += GRAVITY * deltaTime;
 
-            float xpos = spriteData[SpriteData.TRANSLATE_X.index + readIndex];
-            float ypos = spriteData[SpriteData.TRANSLATE_Y.index + readIndex];
+            float xpos = spriteData[mapper.translateOffset + readIndex];
+            float ypos = spriteData[mapper.translateOffset + 1 + readIndex];
 
             xpos += deltaTime * moveVector.vector[VecMath.X] * moveVector.vector[Vector2D.MAGNITUDE]
                     + spriteData[EntityData.MOVE_VECTOR_X.index + readIndex] * deltaTime;
@@ -93,9 +92,8 @@ public class SuperSpriteSystem extends System {
                                 * spriteData[EntityData.ELASTICITY.index + readIndex];
             }
 
-            float rotate = spriteData[SpriteData.ROTATE.index + readIndex];
-            spriteData[SpriteData.TRANSLATE_X.index + readIndex] = xpos;
-            spriteData[SpriteData.TRANSLATE_Y.index + readIndex] = ypos;
+            spriteData[mapper.translateOffset + readIndex] = xpos;
+            spriteData[mapper.translateOffset + 1 + readIndex] = ypos;
             readIndex += readLength;
         }
     }
@@ -125,10 +123,8 @@ public class SuperSpriteSystem extends System {
             float[] scale = root.getViewNode(Layer.SCENE).getTransform().getScale();
             float x = (((random.nextFloat() * 1.67f) - 0.8889f) / scale[VecMath.X]);
             float y = ((random.nextFloat() - 0.5f) / scale[VecMath.Y]);
-            sprites.setPosition(currentSprite, x, y, 1);
-            sprites.setRotationZ(currentSprite, rotation);
-            sprites.setScale(currentSprite, 1 + random.nextFloat(), 1 + random.nextFloat());
-            sprites.setFrame(currentSprite, frame++);
+            sprites.setSprite(currentSprite, x, y, 1f, 1 + random.nextFloat(), 1 + random.nextFloat(),
+                    1f, rotation, frame++);
             rotation += 0.01f;
             if (frame >= spriteFrames) {
                 frame = 0;

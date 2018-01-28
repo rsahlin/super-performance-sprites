@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Random;
 
 import com.graphicsengine.component.SpriteComponent;
-import com.graphicsengine.component.SpriteComponent.SpriteData;
 import com.graphicsengine.component.SpriteComponent.EntityData;
 import com.graphicsengine.io.GSONGraphicsEngineFactory;
 import com.graphicsengine.scene.GraphicsEngineNodeType;
@@ -152,22 +151,14 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         float[] scale = root.getViewNode(Layer.SCENE).getTransform().getScale();
         float x = (pos[0] / scale[VecMath.X]);
         float y = (pos[1] / scale[VecMath.Y]);
-        // s.setPosition(x, y, 0);
+        spriteComponent.setSprite(currentSprite, x, y, 1, 1, 1, 1, 0, random.nextInt(spriteFrames));
         int index = currentSprite * SpriteComponent.EntityData.getSize();
-        spriteData[index + SpriteData.TRANSLATE_X.index] = x;
-        spriteData[index + SpriteData.TRANSLATE_Y.index] = y;
         spriteData[index + EntityData.MOVE_VECTOR_X.index] = 0;
         spriteData[index + EntityData.MOVE_VECTOR_Y.index] = 0;
         spriteData[index + EntityData.ELASTICITY.index] = 0.5f + random.nextFloat() * 0.5f;
-        // if (delta != null) {
-        // s.moveVector.setNormalized((delta[0] * 30) / scale[0], 0);
-        // } else {
-        // s.moveVector.setNormalized(0, 0);
-        // }
         if (delta != null) {
             spriteData[index + EntityData.ROTATE_SPEED.index] = delta[0];
         }
-        spriteData[index + SpriteData.FRAME.index] = random.nextInt(spriteFrames);
         // s.setScale(0.8f + random.nextFloat() * 0.5f, 0.8f + random.nextFloat() * 0.5f);
         currentSprite++;
         if (currentSprite > spritecount - 1) {
@@ -191,59 +182,23 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         float xpos = worldLimit[0];
         float ypos = worldLimit[1];
         if (component != null) {
-            SpriteComponent c = (SpriteComponent) component.getComponentById("spritecomponent");
-            if (c == null) {
+            spriteComponent = (SpriteComponent) component.getComponentById("spritecomponent");
+            if (spriteComponent == null) {
                 throw new IllegalArgumentException("Could not find component");
             }
-            spriteData = c.getSpriteData();
+            spriteData = spriteComponent.getSpriteData();
             Mesh mesh = component.getMesh(MeshType.MAIN);
             // TODO A method to query the mesh how many frames it supports?
             // Maybe a way to fetch the texture from the resources?
             TiledTexture2D tiledTexture = (TiledTexture2D) mesh.getTexture(Texture2D.TEXTURE_0);
             spriteFrames = tiledTexture.getTileWidth() * tiledTexture.getTileHeight();
-            spritecount = c.getCount();
+            spritecount = spriteComponent.getCount();
             System.out.println("Spritecount: " + spritecount + ", Spriteframes: " + spriteFrames);
-            int spriteCount = c.getCount();
+            int spriteCount = spriteComponent.getCount();
             int height = (int) Math.sqrt(spriteCount);
             int width = (height);
             float deltay = ((worldLimit[1] - worldLimit[3]) / height) * 1f;
             float deltax = ((worldLimit[2] - worldLimit[0]) / width) * 1f;
-        }
-    }
-
-    /**
-     * Setup of sprites is done in the System
-     * 
-     * @param spriteComponent
-     * @param xpos
-     * @param ypos
-     * @param deltax
-     * @param deltay
-     * @param width
-     */
-    @Deprecated
-    private void initSprites(SpriteComponent spriteComponent, float xpos, float ypos, float deltax, float deltay,
-            int width) {
-        int x = 0;
-        float startX = xpos;
-        int frame = 0;
-        int spriteCount = spriteComponent.getCount();
-        for (int i = 0; i < spriteCount; i++) {
-            spriteComponent.setPosition(i, xpos, ypos, 0);
-            spriteComponent.setScale(i, 1, 1);
-            spriteComponent.setFrame(i, frame++);
-            spriteComponent.setRotateSpeed(i, 0.5f);
-            // spriteComponent.setElasticity(i, 0.5 + );
-            if (frame > spriteFrames) {
-                frame = 0;
-            }
-            xpos += deltax;
-            x++;
-            if (x >= width) {
-                x = 0;
-                xpos = startX;
-                ypos -= deltay;
-            }
         }
     }
 
