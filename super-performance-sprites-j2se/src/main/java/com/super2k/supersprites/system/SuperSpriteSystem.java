@@ -3,7 +3,6 @@ package com.super2k.supersprites.system;
 import java.util.Random;
 
 import com.graphicsengine.component.SpriteComponent;
-import com.graphicsengine.component.SpriteComponent.EntityData;
 import com.nucleus.camera.ViewFrustum;
 import com.nucleus.component.Component;
 import com.nucleus.geometry.AttributeUpdater.PropertyMapper;
@@ -25,6 +24,36 @@ import com.nucleus.vecmath.Vector2D;
  *
  */
 public class SuperSpriteSystem extends System {
+
+    /**
+     * This is the data defined for each sprite
+     * 
+     * @author Richard Sahlin
+     *
+     */
+    public enum EntityData {
+        MOVE_VECTOR_X(0),
+        MOVE_VECTOR_Y(1),
+        MOVE_VECTOR_Z(2),
+        ELASTICITY(3),
+        ROTATE_SPEED(4),
+        RESISTANCE(5);
+        public final int index;
+
+        EntityData(int index) {
+            this.index = index;
+        }
+
+        /**
+         * Returns the size in floats of the data store for each sprite
+         * 
+         * @return The size in float for each sprite datastore.
+         */
+        public static int getSize() {
+            EntityData[] values = values();
+            return values[values.length - 1].index + 1;
+        }
+    }
 
     private final static float TWOPI = 3.1415926f * 2;
     public final static float GRAVITY = -5;
@@ -50,51 +79,44 @@ public class SuperSpriteSystem extends System {
         int spriteCount = spriteComponent.getCount();
         float[] spriteData = spriteComponent.getSpriteData();
         PropertyMapper mapper = spriteComponent.getMapper();
-        int readIndex = 0;
-        int readLength = SpriteComponent.EntityData.getSize();
+        int spriteIndex = 0;
+        int readLength = spriteComponent.getSpritedataSize();
+        float[] entityData = new float[EntityData.getSize()];
+        float[] v = moveVector.vector;
         for (int sprite = 0; sprite < spriteCount; sprite++) {
-            spriteComponent.getMoveVector(sprite, moveVector);
-            spriteData[mapper.rotateOffset + readIndex] += deltaTime
-                    * spriteData[EntityData.ROTATE_SPEED.index + readIndex];
-            if (spriteData[mapper.rotateOffset + readIndex] > TWOPI) {
-                spriteData[mapper.rotateOffset + readIndex] -= TWOPI;
+            spriteIndex = sprite * readLength;
+            spriteComponent.get(sprite, 1, entityData);
+            spriteData[mapper.rotateOffset + spriteIndex] += deltaTime
+                    * entityData[EntityData.ROTATE_SPEED.index];
+            if (spriteData[mapper.rotateOffset + spriteIndex] > TWOPI) {
+                spriteData[mapper.rotateOffset + spriteIndex] -= TWOPI;
             }
             // Update gravity
-            spriteData[EntityData.MOVE_VECTOR_Y.index
-                    + readIndex] += GRAVITY * deltaTime;
+            entityData[EntityData.MOVE_VECTOR_Y.index] += GRAVITY * deltaTime;
 
-            float xpos = spriteData[mapper.translateOffset + readIndex];
-            float ypos = spriteData[mapper.translateOffset + 1 + readIndex];
+            float xpos = spriteData[mapper.translateOffset + spriteIndex];
+            float ypos = spriteData[mapper.translateOffset + 1 + spriteIndex];
 
-            xpos += deltaTime * moveVector.vector[VecMath.X] * moveVector.vector[Vector2D.MAGNITUDE]
-                    + spriteData[EntityData.MOVE_VECTOR_X.index + readIndex] * deltaTime;
-            ypos += deltaTime * moveVector.vector[VecMath.Y] * moveVector.vector[Vector2D.MAGNITUDE]
-                    + spriteData[EntityData.MOVE_VECTOR_Y.index + readIndex] * deltaTime;
+            xpos += deltaTime * entityData[EntityData.MOVE_VECTOR_X.index];
+            ypos += deltaTime * entityData[EntityData.MOVE_VECTOR_Y.index];
             if (ypos < worldLimit[3]) {
-                spriteData[EntityData.MOVE_VECTOR_Y.index
-                        + readIndex] = -spriteData[EntityData.MOVE_VECTOR_Y.index + readIndex]
-                                * spriteData[EntityData.ELASTICITY.index + readIndex];
+                spriteData[EntityData.MOVE_VECTOR_Y.index] = -spriteData[EntityData.MOVE_VECTOR_Y.index]
+                        * spriteData[EntityData.ELASTICITY.index];
                 ypos = worldLimit[3] - (ypos - worldLimit[3]);
             }
             if (xpos > worldLimit[2]) {
                 xpos = worldLimit[2] - (xpos - worldLimit[2]);
-                moveVector.vector[VecMath.X] = -moveVector.vector[VecMath.X]
-                        * spriteData[EntityData.ELASTICITY.index + readIndex];
-                spriteData[EntityData.ROTATE_SPEED.index
-                        + readIndex] = -spriteData[EntityData.ROTATE_SPEED.index + readIndex]
-                                * spriteData[EntityData.ELASTICITY.index];
+                entityData[EntityData.MOVE_VECTOR_X.index] = -entityData[EntityData.MOVE_VECTOR_X.index]
+                        * entityData[EntityData.ELASTICITY.index];
+                entityData[EntityData.ROTATE_SPEED.index] = -entityData[EntityData.ROTATE_SPEED.index]
+                        * entityData[EntityData.ELASTICITY.index];
             } else if (xpos < worldLimit[0]) {
                 xpos = worldLimit[0] - (xpos - worldLimit[0]);
-                moveVector.vector[VecMath.X] = -moveVector.vector[VecMath.X]
-                        * spriteData[EntityData.ELASTICITY.index + readIndex];
-                spriteData[EntityData.ROTATE_SPEED.index
-                        + readIndex] = -spriteData[EntityData.ROTATE_SPEED.index + readIndex]
-                                * spriteData[EntityData.ELASTICITY.index + readIndex];
+                entityData[EntityData.MOVE_VECTOR_Y.index] = -entityData[EntityData.MOVE_VECTOR_Y.index]
+                        * entityData[EntityData.ELASTICITY.index];
             }
-
-            spriteData[mapper.translateOffset + readIndex] = xpos;
-            spriteData[mapper.translateOffset + 1 + readIndex] = ypos;
-            readIndex += readLength;
+            spriteData[mapper.translateOffset + spriteIndex] = xpos;
+            spriteData[mapper.translateOffset + 1 + spriteIndex] = ypos;
         }
     }
 
@@ -119,7 +141,7 @@ public class SuperSpriteSystem extends System {
         float[] spriteData = sprites.getSpriteData();
         float rotation = 0;
         for (int currentSprite = 0; currentSprite < sprites.getCount(); currentSprite++) {
-            int index = currentSprite * SpriteComponent.EntityData.getSize();
+            int index = currentSprite * sprites.getSpritedataSize() + sprites.getMapper().attributesPerVertex;
             float[] scale = root.getViewNode(Layer.SCENE).getTransform().getScale();
             float x = (((random.nextFloat() * 1.67f) - 0.8889f) / scale[VecMath.X]);
             float y = ((random.nextFloat() - 0.5f) / scale[VecMath.Y]);
@@ -153,8 +175,7 @@ public class SuperSpriteSystem extends System {
 
     @Override
     public int getEntityDataSize() {
-        // TODO Auto-generated method stub
-        return 0;
+        return EntityData.getSize();
     }
 
 }

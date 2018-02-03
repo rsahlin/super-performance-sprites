@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.Random;
 
 import com.graphicsengine.component.SpriteComponent;
-import com.graphicsengine.component.SpriteComponent.EntityData;
 import com.graphicsengine.io.GSONGraphicsEngineFactory;
 import com.graphicsengine.scene.GraphicsEngineNodeType;
 import com.nucleus.CoreApp;
@@ -33,6 +32,7 @@ import com.nucleus.texturing.TiledTexture2D;
 import com.nucleus.vecmath.VecMath;
 import com.nucleus.vecmath.Vector2D;
 import com.super2k.supersprites.system.SuperSpriteSystem;
+import com.super2k.supersprites.system.SuperSpriteSystem.EntityData;
 
 public class SuperSprites implements MMIEventListener, RenderContextListener, ClientApplication {
 
@@ -76,7 +76,6 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     private int spriteFrames;
     private ComponentNode component;
     private SpriteComponent spriteComponent;
-    private float[] spriteData;
     private float[] pointerScale = new float[2];
     private LayerNode viewNode;
 
@@ -145,14 +144,13 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     }
 
     private void releaseSprite(float[] pos, float[] delta) {
-        if (spriteData == null) {
-            return;
-        }
         float[] scale = root.getViewNode(Layer.SCENE).getTransform().getScale();
         float x = (pos[0] / scale[VecMath.X]);
         float y = (pos[1] / scale[VecMath.Y]);
         spriteComponent.setSprite(currentSprite, x, y, 1, 1, 1, 1, 0, random.nextInt(spriteFrames));
-        int index = currentSprite * SpriteComponent.EntityData.getSize();
+        int index = currentSprite * spriteComponent.getSpritedataSize()
+                + spriteComponent.getMapper().attributesPerVertex;
+
         spriteData[index + EntityData.MOVE_VECTOR_X.index] = 0;
         spriteData[index + EntityData.MOVE_VECTOR_Y.index] = 0;
         spriteData[index + EntityData.ELASTICITY.index] = 0.5f + random.nextFloat() * 0.5f;
@@ -186,7 +184,6 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
             if (spriteComponent == null) {
                 throw new IllegalArgumentException("Could not find component");
             }
-            spriteData = spriteComponent.getSpriteData();
             Mesh mesh = component.getMesh(MeshType.MAIN);
             // TODO A method to query the mesh how many frames it supports?
             // Maybe a way to fetch the texture from the resources?
