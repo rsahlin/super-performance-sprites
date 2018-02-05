@@ -4,6 +4,7 @@ import java.util.Random;
 
 import com.graphicsengine.component.SpriteComponent;
 import com.nucleus.camera.ViewFrustum;
+import com.nucleus.common.Constants;
 import com.nucleus.component.Component;
 import com.nucleus.geometry.AttributeUpdater.PropertyMapper;
 import com.nucleus.renderer.NucleusRenderer;
@@ -54,7 +55,6 @@ public class SuperSpriteSystem extends System {
         }
     }
 
-    private final static float TWOPI = 3.1415926f * 2;
     public final static float GRAVITY = -5;
 
     private int spritecount;
@@ -91,8 +91,8 @@ public class SuperSpriteSystem extends System {
             // Do processing
             spriteData[mapper.rotateOffset + spriteIndex] += deltaTime
                     * entityData[EntityData.ROTATE_SPEED.index];
-            if (spriteData[mapper.rotateOffset + spriteIndex] > TWOPI) {
-                spriteData[mapper.rotateOffset + spriteIndex] -= TWOPI;
+            if (spriteData[mapper.rotateOffset + spriteIndex] > Constants.TWOPI) {
+                spriteData[mapper.rotateOffset + spriteIndex] -= Constants.TWOPI;
             }
             // Update gravity
             entityData[EntityData.MOVE_VECTOR_Y.index] += GRAVITY * deltaTime;
