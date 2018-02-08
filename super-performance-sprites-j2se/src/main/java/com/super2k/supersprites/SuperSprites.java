@@ -15,6 +15,7 @@ import com.nucleus.component.ComponentNode;
 import com.nucleus.io.SceneSerializer;
 import com.nucleus.mmi.MMIEventListener;
 import com.nucleus.mmi.MMIPointerEvent;
+import com.nucleus.opengl.GLESWrapper.Renderers;
 import com.nucleus.renderer.NucleusRenderer;
 import com.nucleus.renderer.NucleusRenderer.Layer;
 import com.nucleus.renderer.NucleusRenderer.RenderContextListener;
@@ -29,6 +30,8 @@ import com.nucleus.vecmath.Vector2D;
 import com.super2k.supersprites.system.SuperSpriteSystem;
 
 public class SuperSprites implements MMIEventListener, RenderContextListener, ClientApplication {
+
+    public static final Renderers version = Renderers.GLES31;
 
     /**
      * The types that can be used to represent classes when importing/exporting
