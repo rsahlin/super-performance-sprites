@@ -21,6 +21,7 @@
         <module>super-performance-sprites-android</module>
         <module>super-performance-sprites-jogl</module>
         <module>super-performance-sprites-j2se</module>
+        <module>super-performance-sprites-lwjgl</module>
     </modules>
     <dependencyManagement>
         <dependencies>
@@ -42,6 +43,12 @@
             <dependency>
                 <groupId>com.super2k.graphics-by-opengl</groupId>
                 <artifactId>graphics-by-opengl-jogl</artifactId>
+                <version>${graphics-by-gl-version}</version>
+                <type>jar</type>
+            </dependency>
+            <dependency>
+                <groupId>com.super2k.graphics-by-opengl</groupId>
+                <artifactId>graphics-by-opengl-lwjgl3</artifactId>
                 <version>${graphics-by-gl-version}</version>
                 <type>jar</type>
             </dependency>
