@@ -7,8 +7,74 @@
         <artifactId>super-performance-sprites</artifactId>
         <version>${super-sprites-version}</version>
     </parent>
+    <properties>
+        <lwjgl.version>3.1.6</lwjgl.version>
+    </properties>
     <artifactId>super-performance-sprites-lwjgl3</artifactId>
     <dependencies>
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl</artifactId>
+            <version>${lwjgl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-egl</artifactId>
+            <version>${lwjgl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-jawt</artifactId>
+            <version>${lwjgl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-glfw</artifactId>
+            <version>${lwjgl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-opencl</artifactId>
+            <version>${lwjgl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-opengl</artifactId>
+            <version>${lwjgl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-opengles</artifactId>
+            <version>${lwjgl.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-glfw</artifactId>
+            <version>${lwjgl.version}</version>
+            <classifier>${lwjgl.natives}</classifier>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl</artifactId>
+            <version>${lwjgl.version}</version>
+            <classifier>${lwjgl.natives}</classifier>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-opengl</artifactId>
+            <version>${lwjgl.version}</version>
+            <classifier>${lwjgl.natives}</classifier>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.lwjgl</groupId>
+            <artifactId>lwjgl-opengles</artifactId>
+            <version>${lwjgl.version}</version>
+            <classifier>${lwjgl.natives}</classifier>
+            <scope>runtime</scope>
+        </dependency>
         <dependency>
             <groupId>com.super2k.graphics-by-opengl</groupId>
             <artifactId>graphics-by-opengl-lwjgl3</artifactId>
@@ -18,6 +84,45 @@
             <artifactId>super-performance-sprites-j2se</artifactId>
         </dependency>
     </dependencies>
+    <profiles>
+        <profile>
+            <id>lwjgl-natives-windows</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+                <property>
+                    <name>target.platform</name>
+                    <value>windows</value>
+                </property>
+            </activation>
+            <properties>
+                <lwjgl.natives>natives-windows</lwjgl.natives>
+            </properties>
+        </profile>
+        <profile>
+            <id>lwjgl-natives-linux</id>
+            <activation>
+                <property>
+                    <name>target.platform</name>
+                    <value>linux</value>
+                </property>
+            </activation>
+            <properties>
+                <lwjgl.natives>natives-linux</lwjgl.natives>
+            </properties>
+        </profile>
+        <profile>
+            <id>lwjgl-natives-macos</id>
+            <activation>
+                <property>
+                    <name>target.platform</name>
+                    <value>macos</value>
+                </property>
+            </activation>
+            <properties>
+                <lwjgl.natives>natives-macos</lwjgl.natives>
+            </properties>
+        </profile>
+    </profiles>
     <build>
         <sourceDirectory>src/main/java</sourceDirectory>
         <testSourceDirectory>test/java</testSourceDirectory>
