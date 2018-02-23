@@ -30,7 +30,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>com.super2k.tiledspriteengine.lwjgl.SuperPerformanceSpritesWJGL3</mainClass>
+                            <mainClass>com.super2k.tiledspriteengine.lwjgl3.SuperSpritesLWJGL3</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
