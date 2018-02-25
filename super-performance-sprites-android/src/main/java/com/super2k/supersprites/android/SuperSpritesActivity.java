@@ -16,7 +16,7 @@ public class SuperSpritesActivity extends NucleusActivity {
 
     @Override
     public Renderers getRenderVersion() {
-        return SuperSprites.version;
+        return SuperSprites.GL_VERSION;
     }
 
     @Override

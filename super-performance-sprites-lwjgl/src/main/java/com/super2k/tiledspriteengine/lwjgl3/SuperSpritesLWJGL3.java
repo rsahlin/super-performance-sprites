@@ -6,7 +6,7 @@ import com.super2k.supersprites.SuperSprites;
 public class SuperSpritesLWJGL3 extends LWJGL3Application {
 
     public SuperSpritesLWJGL3(String[] args) {
-        super(args, SuperSprites.version, SuperSprites.class);
+        super(args, SuperSprites.GL_VERSION, SuperSprites.class);
     }
 
     public static void main(String[] args) {

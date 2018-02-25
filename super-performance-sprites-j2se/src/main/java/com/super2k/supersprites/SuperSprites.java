@@ -31,7 +31,7 @@ import com.super2k.supersprites.system.SuperSpriteSystem;
 
 public class SuperSprites implements MMIEventListener, RenderContextListener, ClientApplication {
 
-    public static final Renderers version = Renderers.GLES31;
+    public static final Renderers GL_VERSION = Renderers.GLES20;
 
     /**
      * The types that can be used to represent classes when importing/exporting
