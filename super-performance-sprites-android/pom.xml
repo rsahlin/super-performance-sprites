@@ -5,8 +5,11 @@
     <parent>
         <artifactId>super-performance-sprites</artifactId>
         <groupId>com.super2k.super-performance-sprites</groupId>
-        <version>0.0.1-SNAPSHOT</version>
+        <version>${super-sprites-version}</version>
     </parent>
+    <properties>
+        <android.sdk>25</android.sdk>
+    </properties>
     <artifactId>super-performance-sprites-android</artifactId>
     <packaging>apk</packaging>
     <name>android-super-performance-sprites</name>
@@ -14,19 +17,18 @@
         <dependency>
             <groupId>com.google.android</groupId>
             <artifactId>android</artifactId>
-            <version>4.1.1.4</version>
+            <version>${android.sdk}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.super2k.graphics-by-opengl</groupId>
             <artifactId>graphics-by-opengl-android</artifactId>
             <version>0.0.1-SNAPSHOT</version>
-            <type>apklib</type>
+            <type>aar</type>
         </dependency>
         <dependency>
             <groupId>com.super2k.super-performance-sprites</groupId>
             <artifactId>super-performance-sprites-j2se</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
     <build>
@@ -43,7 +45,7 @@
                     </sourceDirectories>
                     <androidManifestFile>AndroidManifest.xml</androidManifestFile>
                     <sdk>
-                        <platform>25</platform>
+                        <platform>${android.sdk}</platform>
                     </sdk>
                 </configuration>
             </plugin>
@@ -57,16 +59,6 @@
         </plugins>
         <pluginManagement>
             <plugins>
-                <plugin>
-                    <groupId>com.simpligility.maven.plugins</groupId>
-                    <artifactId>android-maven-plugin</artifactId>
-                    <version>${it-plugin.version}</version>
-                    <configuration>
-                        <sdk>
-                            <platform>15</platform>
-                        </sdk>
-                    </configuration>
-                </plugin>
                 <!--This plugin's configuration is used to store Eclipse 
                     m2e settings only. It has no influence on the Maven build itself. -->
                 <plugin>
@@ -78,15 +70,9 @@
                             <pluginExecutions>
                                 <pluginExecution>
                                     <pluginExecutionFilter>
-                                        <groupId>
-                                            com.simpligility.maven.plugins
-                                        </groupId>
-                                        <artifactId>
-                                            android-maven-plugin
-                                        </artifactId>
-                                        <versionRange>
-                                            [4.4.1,)
-                                        </versionRange>
+                                        <groupId>com.simpligility.maven.plugins</groupId>
+                                        <artifactId>android-maven-plugin</artifactId>
+                                        <versionRange>[4.5.0,)</versionRange>
                                         <goals>
                                             <goal>emma</goal>
                                         </goals>

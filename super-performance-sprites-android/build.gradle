@@ -1,9 +1,11 @@
 buildscript {
     repositories {
+        mavenCentral()
         jcenter()
+        google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.2.2'
+        classpath 'com.android.tools.build:gradle:3.0.0'
     }
 }
 
@@ -13,17 +15,17 @@ tasks.withType(JavaCompile) {
     targetCompatibility = JavaVersion.VERSION_1_7
 }
 
-
 apply plugin: 'com.android.application'
 
 repositories {
     mavenLocal()
+    mavenCentral()
     jcenter()
+    google()
 }
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '25.0.0'
     lintOptions {
         disable 'MissingTranslation'
     }
@@ -35,11 +37,11 @@ android {
             res.srcDirs = ['res']
             assets.srcDirs = ['res']
         }
-    }    
-    
+    }
+
     defaultConfig {
-        applicationId "com.super2k.superperformancesprites"
-        minSdkVersion 15
+        applicationId "com.super2k.supersprites.android"
+        minSdkVersion 19
         targetSdkVersion 21
         versionCode 1
         versionName "1"
@@ -69,15 +71,22 @@ android {
 }
 
 dependencies {
-    compile 'com.super2k.graphics-by-opengl:graphics-by-opengl-android:0.0.1-SNAPSHOT'
-    compile 'com.google.android.gms:play-services:10.0.1'
-    compile 'com.android.support:multidex:1.0.0'
-    compile project (':super-performance-sprites-j2se')
-    testCompile 'junit:junit:4.12'
-    testCompile "org.mockito:mockito-core:2.+"
+    implementation 'com.super2k.graphics-by-opengl:graphics-by-opengl-android:0.0.1-SNAPSHOT'
+    implementation 'com.super2k.super-performance-sprites:super-performance-sprites-j2se:0.0.1-SNAPSHOT'
+    implementation 'com.google.android.gms:play-services:10.0.1'
+    implementation 'com.android.support:multidex:1.0.2'
+    testImplementation 'junit:junit:4.12'
+    testImplementation "org.mockito:mockito-core:2.+"
+
+    //Transitive dependencies - find a way to include from direct dependencies
+    implementation 'com.super2k.graphics-by-opengl:graphics-by-opengl-j2se:0.0.1-SNAPSHOT'
+    implementation 'com.super2k.graphics-engine:graphics-engine:0.0.1-SNAPSHOT'
+    implementation 'com.super2k.vecmath:vecmath:0.0.1-SNAPSHOT'
+    implementation 'com.google.code.gson:gson:2.8.1'
 }
 
 //apply plugin: 'com.google.gms.google-services'
+
 
 
 

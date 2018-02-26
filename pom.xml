@@ -1,33 +1,87 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <properties>
+        <vecmath-version>0.0.1-SNAPSHOT</vecmath-version>
+        <graphics-by-gl-version>0.0.1-SNAPSHOT</graphics-by-gl-version>
+        <graphics-engine-version>0.0.1-SNAPSHOT</graphics-engine-version>
+        <super-sprites-version>0.0.1-SNAPSHOT</super-sprites-version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <android.maven.version>4.5</android.maven.version>
+        <it-plugin.version>4.4.1</it-plugin.version>
+        <maven.compiler.source>1.7</maven.compiler.source>
+        <maven.compiler.target>1.7</maven.compiler.target>
+    </properties>
     <groupId>com.super2k.super-performance-sprites</groupId>
     <artifactId>super-performance-sprites</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>${super-sprites-version}</version>
     <packaging>pom</packaging>
-    <name>Super Performance Sprites - Parent</name>
+    <name>super-performance-sprites</name>
     <modules>
         <module>super-performance-sprites-android</module>
         <module>super-performance-sprites-jogl</module>
         <module>super-performance-sprites-j2se</module>
+        <module>super-performance-sprites-lwjgl</module>
     </modules>
-    
-    <properties>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <it-plugin.version>4.4.1</it-plugin.version>        
-    </properties>
-    
-  <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-            <artifactId>maven-compiler-plugin</artifactId>
-            <version>3.5.1</version>
-            <configuration>
-                <source>1.7</source>
-                <target>1.7</target>
-            </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
-  </build>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.super2k.vecmath</groupId>
+                <artifactId>vecmath</artifactId>
+                <version>${vecmath-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.super2k.graphics-by-opengl</groupId>
+                <artifactId>graphics-by-opengl-j2se</artifactId>
+                <version>${graphics-by-gl-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.super2k.graphics-by-opengl</groupId>
+                <artifactId>graphics-by-opengl-android</artifactId>
+                <version>${graphics-by-gl-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.super2k.graphics-by-opengl</groupId>
+                <artifactId>graphics-by-opengl-jogl</artifactId>
+                <version>${graphics-by-gl-version}</version>
+                <type>jar</type>
+            </dependency>
+            <dependency>
+                <groupId>com.super2k.graphics-by-opengl</groupId>
+                <artifactId>graphics-by-opengl-lwjgl3</artifactId>
+                <version>${graphics-by-gl-version}</version>
+                <type>jar</type>
+            </dependency>
+            <dependency>
+                <groupId>com.super2k.graphicsengine</groupId>
+                <artifactId>graphics-engine</artifactId>
+                <version>${graphics-engine-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.super2k.super-performance-sprites</groupId>
+                <artifactId>super-performance-sprites-j2se</artifactId>
+                <version>${super-sprites-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>4.12</version>
+                <scope>test</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>3.5.1</version>
+                    <configuration>
+                        <source>1.7</source>
+                        <target>1.7</target>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
 </project>
