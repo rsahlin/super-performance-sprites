@@ -73,10 +73,6 @@ public class SuperSpriteSystem extends System {
      * Source
      */
     private CPUComponentBuffer entityBuffer;
-    /**
-     * Destination
-     */
-    private CPUComponentBuffer spriteBuffer;
     private CPUQuadExpander quadExpander;
 
     public SuperSpriteSystem() {
@@ -129,8 +125,6 @@ public class SuperSpriteSystem extends System {
                         + entityIndex] = -entityData[EntityData.MOVE_VECTOR_Y.index + entityIndex]
                                 * entityData[EntityData.ELASTICITY.index + entityIndex];
             }
-            entityData[mapper.translateOffset + quadIndex] = xpos;
-            entityData[mapper.translateOffset + 1 + quadIndex] = ypos;
             quadExpander.setPosition(sprite, xpos, ypos);
             quadIndex += entityBuffer.getSizePerEntity();
             entityIndex += entityBuffer.getSizePerEntity();
@@ -154,7 +148,6 @@ public class SuperSpriteSystem extends System {
     private void initSprites(SpriteComponent sprites) {
         this.sprites = sprites;
         this.entityBuffer = (CPUComponentBuffer) sprites.getEntityBuffer();
-        this.spriteBuffer = (CPUComponentBuffer) sprites.getSpriteBuffer();
         this.quadExpander = sprites.getQuadExpander();
         int spriteFrames = sprites.getFrameCount();
         spritecount = sprites.getCount();
@@ -186,12 +179,11 @@ public class SuperSpriteSystem extends System {
             if (frame >= spriteFrames) {
                 frame = 0;
             }
-            entityData[entityIndex + EntityData.MOVE_VECTOR_X.index] = 0;
-            entityData[entityIndex + EntityData.MOVE_VECTOR_Y.index] = 0;
-            entityData[entityIndex + EntityData.ELASTICITY.index] = 0.5f + random.nextFloat() * 0.5f;
-            entityData[entityIndex + EntityData.RESISTANCE.index] = random.nextFloat() * 0.03f;
+            entityData[EntityData.MOVE_VECTOR_X.index + entityIndex] = 0;
+            entityData[EntityData.MOVE_VECTOR_Y.index + entityIndex] = 0;
+            entityData[EntityData.ELASTICITY.index + entityIndex] = 0.5f + random.nextFloat() * 0.5f;
+            entityData[EntityData.RESISTANCE.index + entityIndex] = random.nextFloat() * 0.03f;
             quadExpander.expandQuadData(currentSprite);
-
             index += entityBuffer.getSizePerEntity();
             entityIndex += entityBuffer.getSizePerEntity();
         }
