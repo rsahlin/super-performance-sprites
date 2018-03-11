@@ -17,10 +17,8 @@ import com.nucleus.mmi.MMIEventListener;
 import com.nucleus.mmi.MMIPointerEvent;
 import com.nucleus.opengl.GLESWrapper.Renderers;
 import com.nucleus.renderer.NucleusRenderer;
-import com.nucleus.renderer.NucleusRenderer.Layer;
 import com.nucleus.renderer.NucleusRenderer.RenderContextListener;
 import com.nucleus.renderer.Window;
-import com.nucleus.scene.LayerNode;
 import com.nucleus.scene.Node;
 import com.nucleus.scene.NodeException;
 import com.nucleus.scene.RootNode;
@@ -64,16 +62,10 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     CoreApp coreApp;
     RootNode root;
     NucleusRenderer renderer;
-    private int spriteFrames;
     private ComponentNode componentNode;
     private SpriteComponent spriteComponent;
     private SuperSpriteSystem system;
     private float[] pointerScale = new float[2];
-    private LayerNode viewNode;
-
-    public static float[] worldLimit;
-    private float orthoLeft;
-    private float orthoTop;
 
     public SuperSprites() {
         super();
@@ -110,22 +102,9 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                 Vector2D zoom = event.getZoom();
                 float z = ((zoom.vector[Vector2D.MAGNITUDE] * zoom.vector[VecMath.X]))
                         * pointerScale[1];
-                updateNodeScale(z);
                 break;
             default:
 
-        }
-    }
-
-    private void updateNodeScale(float zoom) {
-        if (viewNode != null) {
-            viewNode.getTransform().scale(zoom);
-            float[] scale = viewNode.getTransform().getScale();
-            SimpleLogger.d(SuperSprites.class, "Scale: " + scale[VecMath.X] + " zoom " + zoom);
-            worldLimit[0] = (orthoLeft) / scale[VecMath.X];
-            worldLimit[1] = (orthoTop) / scale[VecMath.Y];
-            worldLimit[2] = (-orthoLeft) / scale[VecMath.X];
-            worldLimit[3] = (-orthoTop) / scale[VecMath.Y];
         }
     }
 
@@ -144,11 +123,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         if (componentNode != null) {
             return;
         }
-        if (viewNode == null) {
-            viewNode = root.getViewNode(Layer.SCENE);
-            updateNodeScale(0);
-        }
-        componentNode = (ComponentNode) root.getNodeById("root")
+        componentNode = (ComponentNode) root.getNodeById("scene")
                 .getNodeByType(GraphicsEngineNodeType.spriteComponentNode.name());
         if (componentNode != null) {
             spriteComponent = (SpriteComponent) componentNode.getComponentById("spritecomponent");
@@ -175,29 +150,15 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                 /**
                  * TODO - this should be handled in a more generic way.
                  */
-                Node scene = root.getNodeById("root");
+                Node scene = root.getNodeById("scene");
                 ViewFrustum vf = scene.getViewFrustum();
-                if (vf != null) {
-                    float[] values = vf.getValues();
-                    float w = Math.abs(values[ViewFrustum.LEFT_INDEX] - values[ViewFrustum.RIGHT_INDEX]);
-                    float h = Math.abs(values[ViewFrustum.TOP_INDEX] - values[ViewFrustum.BOTTOM_INDEX]);
-                    // If y is going down then reverse y so that 0 is at bottom which is the same as OpenGL
-                    coreApp.getInputProcessor().setPointerTransform(w / width, h / -height,
-                            values[ViewFrustum.LEFT_INDEX],
-                            values[ViewFrustum.TOP_INDEX]);
-                    orthoLeft = values[ViewFrustum.LEFT_INDEX];
-                    orthoTop = values[ViewFrustum.TOP_INDEX];
-                    worldLimit = new float[] { orthoLeft, orthoTop, -orthoLeft, -orthoTop };
-                } else {
-                    // If y is going down then reverse y so that 0 is at bottom which is the same as OpenGL
-                    coreApp.getInputProcessor().setPointerTransform((float) 1 / width, (float) 1 / -height, -0.5f,
-                            0.5f);
-                    throw new IllegalArgumentException();
-                }
-                // renderer.getRenderSettings().setClearFunction(GLES20.GL_COLOR_BUFFER_BIT);
-                // renderer.getRenderSettings().setDepthFunc(GLES20.GL_NONE);
-                // renderer.getRenderSettings().setCullFace(GLES20.GL_NONE);
-                ComponentHandler.getInstance().initSystems(root, renderer);
+                float[] values = vf.getValues();
+                float w = Math.abs(values[ViewFrustum.LEFT_INDEX] - values[ViewFrustum.RIGHT_INDEX]);
+                float h = Math.abs(values[ViewFrustum.TOP_INDEX] - values[ViewFrustum.BOTTOM_INDEX]);
+                // If y is going down then reverse y so that 0 is at bottom which is the same as OpenGL
+                coreApp.getInputProcessor().setPointerTransform(w / width, h / -height,
+                        values[ViewFrustum.LEFT_INDEX],
+                        values[ViewFrustum.TOP_INDEX]);
                 fetchSprites();
                 try {
                     sf.exportScene(System.out, root);

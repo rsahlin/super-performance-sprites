@@ -10,12 +10,9 @@ import com.nucleus.component.CPUQuadExpander;
 import com.nucleus.component.Component;
 import com.nucleus.geometry.AttributeUpdater.PropertyMapper;
 import com.nucleus.renderer.NucleusRenderer;
-import com.nucleus.renderer.NucleusRenderer.Layer;
-import com.nucleus.scene.LayerNode;
 import com.nucleus.scene.Node;
 import com.nucleus.scene.RootNode;
 import com.nucleus.system.System;
-import com.nucleus.vecmath.VecMath;
 
 /**
  * The system for controlling the sprites defined by {@linkplain SpriteComponent}
@@ -61,10 +58,10 @@ public class SuperSpriteSystem extends System {
 
     private int spritecount;
     RootNode root;
-    private LayerNode viewNode;
-    public static float[] worldLimit = new float[4];
-    private float orthoLeft;
-    private float orthoTop;
+    private Node scene;
+    public float[] scaledLimit = new float[ViewFrustum.PROJECTION_SIZE];
+    public float[] viewport = new float[ViewFrustum.PROJECTION_SIZE];
+    protected ViewFrustum viewFrustum;
     private boolean initialized = false;
     private SpriteComponent sprites;
     private int currentSprite = 0;
@@ -105,22 +102,22 @@ public class SuperSpriteSystem extends System {
 
             xpos += deltaTime * entityData[EntityData.MOVE_VECTOR_X.index + entityIndex];
             ypos += deltaTime * entityData[EntityData.MOVE_VECTOR_Y.index + entityIndex];
-            if (ypos < worldLimit[3]) {
-                entityData[entityIndex
-                        + EntityData.MOVE_VECTOR_Y.index] = -entityData[EntityData.MOVE_VECTOR_Y.index + entityIndex]
+            if (ypos < scaledLimit[ViewFrustum.BOTTOM_INDEX]) {
+                entityData[EntityData.MOVE_VECTOR_Y.index
+                        + entityIndex] = -entityData[EntityData.MOVE_VECTOR_Y.index + entityIndex]
                                 * entityData[EntityData.ELASTICITY.index + entityIndex];
-                ypos = worldLimit[3] - (ypos - worldLimit[3]);
+                ypos = scaledLimit[ViewFrustum.BOTTOM_INDEX] - (ypos - scaledLimit[ViewFrustum.BOTTOM_INDEX]);
             }
-            if (xpos > worldLimit[2]) {
-                xpos = worldLimit[2] - (xpos - worldLimit[2]);
+            if (xpos > scaledLimit[ViewFrustum.RIGHT_INDEX]) {
+                xpos = scaledLimit[ViewFrustum.RIGHT_INDEX] - (xpos - scaledLimit[ViewFrustum.RIGHT_INDEX]);
                 entityData[EntityData.MOVE_VECTOR_X.index
                         + entityIndex] = -entityData[EntityData.MOVE_VECTOR_X.index + entityIndex]
                                 * entityData[EntityData.ELASTICITY.index];
                 entityData[EntityData.ROTATE_SPEED.index
                         + entityIndex] = -entityData[EntityData.ROTATE_SPEED.index + entityIndex]
                                 * entityData[EntityData.ELASTICITY.index + entityIndex];
-            } else if (xpos < worldLimit[0]) {
-                xpos = worldLimit[0] - (xpos - worldLimit[0]);
+            } else if (xpos < scaledLimit[ViewFrustum.LEFT_INDEX]) {
+                xpos = scaledLimit[ViewFrustum.LEFT_INDEX] - (xpos - scaledLimit[ViewFrustum.LEFT_INDEX]);
                 entityData[EntityData.MOVE_VECTOR_Y.index
                         + entityIndex] = -entityData[EntityData.MOVE_VECTOR_Y.index + entityIndex]
                                 * entityData[EntityData.ELASTICITY.index + entityIndex];
@@ -135,13 +132,10 @@ public class SuperSpriteSystem extends System {
     public void initSystem(NucleusRenderer renderer, RootNode root, Component component) {
         initialized = true;
         this.root = root;
-
-        Node scene = root.getNodeById("root");
-        ViewFrustum vf = scene.getViewFrustum();
-        float[] values = vf.getValues();
-        orthoLeft = values[ViewFrustum.LEFT_INDEX];
-        orthoTop = values[ViewFrustum.TOP_INDEX];
-        viewNode = root.getViewNode(Layer.SCENE);
+        scene = root.getNodeById("scene");
+        // Get the view frustum and create rectangle bounds
+        viewFrustum = scene.getViewFrustum();
+        viewFrustum.getValues(viewport);
         initSprites((SpriteComponent) component);
     }
 
@@ -159,17 +153,19 @@ public class SuperSpriteSystem extends System {
         int index = 0;
         int entityIndex = mapper.attributesPerVertex;
         float[] transform = new float[9];
-        float[] worldscale = root.getViewNode(Layer.SCENE).getTransform().getScale();
+        float sceneWidth = scene.getViewFrustum().getWidth();
+        float sceneHeight = scene.getViewFrustum().getHeight();
         for (int currentSprite = 0; currentSprite < sprites.getCount(); currentSprite++) {
-            transform[0] = (((random.nextFloat() * 1.67f) - 0.8889f)
-                    / worldscale[VecMath.X]);
-            transform[1] = ((random.nextFloat() - 0.5f) / worldscale[VecMath.Y]);
+            transform[0] = ((random.nextFloat() * sceneWidth) - sceneWidth / 2);
+            transform[1] = ((random.nextFloat() * sceneHeight) - sceneHeight / 2);
             transform[2] = 1;
             transform[3] = 0;
             transform[4] = 0;
             transform[5] = rotation;
-            transform[6] = random.nextFloat() + 1;
-            transform[7] = random.nextFloat() + 1;
+            // transform[6] = random.nextFloat() + 1;
+            // transform[7] = random.nextFloat() + 1;
+            transform[6] = 1;
+            transform[7] = 1;
             transform[8] = 1;
             sprites.setTransform(currentSprite, transform);
 
@@ -181,7 +177,7 @@ public class SuperSpriteSystem extends System {
             }
             entityData[EntityData.MOVE_VECTOR_X.index + entityIndex] = 0;
             entityData[EntityData.MOVE_VECTOR_Y.index + entityIndex] = 0;
-            entityData[EntityData.ELASTICITY.index + entityIndex] = 0.5f + random.nextFloat() * 0.5f;
+            entityData[EntityData.ELASTICITY.index + entityIndex] = 0.2f + random.nextFloat() * 0.5f;
             entityData[EntityData.RESISTANCE.index + entityIndex] = random.nextFloat() * 0.03f;
             quadExpander.expandQuadData(currentSprite);
             index += entityBuffer.getSizePerEntity();
@@ -190,13 +186,12 @@ public class SuperSpriteSystem extends System {
     }
 
     private void updateNodeScale() {
-        if (viewNode != null) {
-            float[] scale = viewNode.getTransform().getScale();
-            worldLimit[0] = (orthoLeft) / scale[VecMath.X];
-            worldLimit[1] = (orthoTop) / scale[VecMath.Y];
-            worldLimit[2] = (-orthoLeft) / scale[VecMath.X];
-            worldLimit[3] = (-orthoTop) / scale[VecMath.Y];
-        }
+        // Scale the bounds according to node scale - this only works while sprites are attached
+        float[] scale = scene.getTransform().getScale();
+        scaledLimit[ViewFrustum.LEFT_INDEX] = viewport[ViewFrustum.LEFT_INDEX] / scale[0];
+        scaledLimit[ViewFrustum.RIGHT_INDEX] = viewport[ViewFrustum.RIGHT_INDEX] / scale[0];
+        scaledLimit[ViewFrustum.TOP_INDEX] = viewport[ViewFrustum.TOP_INDEX] / scale[1];
+        scaledLimit[ViewFrustum.BOTTOM_INDEX] = viewport[ViewFrustum.BOTTOM_INDEX] / scale[1];
     }
 
     @Override
@@ -209,10 +204,7 @@ public class SuperSpriteSystem extends System {
      * @param pos
      */
     public void releaseSprite(float[] pos) {
-        float[] scale = root.getViewNode(Layer.SCENE).getTransform().getScale();
-        float x = (pos[0] / scale[VecMath.X]);
-        float y = (pos[1] / scale[VecMath.Y]);
-        sprites.setTransform(currentSprite, new float[] { x, y, 0, 0, 0, 1, 1, 1 });
+        sprites.setTransform(currentSprite, new float[] { pos[0], pos[1], 0, 0, 0, 0, 1, 1, 1 });
         currentSprite++;
         if (currentSprite > spritecount - 1) {
             currentSprite = 0;

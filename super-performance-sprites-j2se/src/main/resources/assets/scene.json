@@ -1,39 +1,17 @@
 {
     children:[
-        {
-        id:root,type:switchnode,active:gamescene,viewFrustum:{projection:ORTHOGONAL,values:[-0.5,0.5,-0.50,0.50,4,-10]},
+        {layer:SCENE,id:scene,type:layernode,
         renderPass:[{id:mainpass,pass:MAIN,renderState:{clearColor:[0.3f, 0.3f, 0.5f, 1f]},target:{id:main,target:FRAMEBUFFER}}],
-        
-        children:[
-            {layer:SCENE,id:gamescene,type:layernode,transform:{scale:[0.2,0.2,0.2],translate:[0.0,0,0],scaleLimit:{min:[0.05],max:[3.0]}},children:
-            [
-                {layer:SCENE,id:game,type:switchnode,
-                children:
-                  [
-                    {id:sprites2,type:spriteComponentNode,transform:{translate:[0.0,0.0,0.0]},textureRef:{source:"assets/spritetexture.tex"},
-                        material:{blendEquation:[DISABLED]}, 
-                        components:[{id:spritecomponent,type:spritecomponent,system:superspritesystem,count:2000,rect:{values:[-0.025,0.025,0.05,0.05]}}]}
-                  ]}
-              ]},
-            {id:creditscene,type:layernode,transform:{scale:[1,1,1],translate:[0.0,0,0]},children:
-            [
-                {layer:OVERLAY,id:overlay_ui,type:switchnode,
-                children:
-                  [
-                    {id:ui,type:quadNode,textureRef:{source:"assets/uvtexture.tex"},
+        transform:{scale:[0.2,0.2,1],translate:[0,0,0],scaleLimit:{min:[0.05],max:[3.0]}},viewFrustum:{projection:ORTHOGONAL,values:[-0.8889,0.8889,-0.5,0.5,0,10]},
+        children:
+        [
+            {layer:SCENE,id:game,type:switchnode,
+            children:
+              [
+                {id:sprites2,type:spriteComponentNode,transform:{translate:[0.5,0.0,0.0]},textureRef:{source:"assets/spritetexture.tex"},
                     material:{blendEquation:[DISABLED]}, 
-                    maxQuads:100,
-                    children:[{
-                        id:button1,type:sharedMeshNode,rect:{values:[-0.05,0.05,0.1,0.1]},bounds:{bounds:[-0.05,0.05,0.1,0.1],type:RECTANGULAR},
-                        transform:{scale:[1,1,1],translate:[0.3,0.0,0.0]},
-                            properties:{POINTERINPUT:true,onclick:"view:MOVE:0.01,0,0"}},
-                        {id:button2,type:sharedMeshNode,rect:{values:[-0.05,0.05,0.1,0.1]},bounds:{bounds:[-0.05,0.05,0.1,0.1],type:RECTANGULAR},
-                        transform:{scale:[1,1,1],translate:[0,-0.3,0]},
-                            properties:{POINTERINPUT:true,onclick:"node:SWITCH:switch:gamescene"}}
-                            
-                        ]}
-                  ]}
-            ]}
-          ]
-      }]
+                    components:[{id:spritecomponent,type:spritecomponent,system:superspritesystem,count:2000,rect:{values:[-0.025,0.025,0.05,0.05]}}]}
+              ]}
+          ]}
+      ]
 }
