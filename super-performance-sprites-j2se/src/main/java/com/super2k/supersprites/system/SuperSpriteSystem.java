@@ -3,6 +3,7 @@ package com.super2k.supersprites.system;
 import java.util.Random;
 
 import com.graphicsengine.component.SpriteComponent;
+import com.nucleus.bounds.RectangularBounds;
 import com.nucleus.camera.ViewFrustum;
 import com.nucleus.common.Constants;
 import com.nucleus.component.CPUComponentBuffer;
@@ -13,6 +14,7 @@ import com.nucleus.renderer.NucleusRenderer;
 import com.nucleus.scene.Node;
 import com.nucleus.scene.RootNode;
 import com.nucleus.system.System;
+import com.nucleus.vecmath.Rectangle;
 
 /**
  * The system for controlling the sprites defined by {@linkplain SpriteComponent}
@@ -56,14 +58,18 @@ public class SuperSpriteSystem extends System {
 
     public final static float GRAVITY = -5;
 
-    private int spritecount;
     RootNode root;
     private Node scene;
-    public float[] scaledLimit = new float[ViewFrustum.PROJECTION_SIZE];
+    private RectangularBounds screenBounds = new RectangularBounds(new Rectangle(0, 0, 0, 0));
+    public float[] scaledRect = new float[4];
     public float[] viewport = new float[ViewFrustum.PROJECTION_SIZE];
     protected ViewFrustum viewFrustum;
     private boolean initialized = false;
     private SpriteComponent sprites;
+    float[] entityData;
+    float[] spriteData;
+    PropertyMapper mapper;
+    private int spriteCount;
     private int currentSprite = 0;
     private Random random = new Random(java.lang.System.currentTimeMillis());
     /**
@@ -82,11 +88,13 @@ public class SuperSpriteSystem extends System {
         }
         updateNodeScale();
         SpriteComponent spriteComponent = (SpriteComponent) component;
-        int spriteCount = spriteComponent.getCount();
         PropertyMapper mapper = spriteComponent.getMapper();
         int quadIndex = 0;
         int entityIndex = mapper.attributesPerVertex;
         float[] entityData = entityBuffer.getData();
+        float yMin = scaledRect[1] - scaledRect[3];
+        float xMin = scaledRect[0] - scaledRect[2];
+        float xMax = scaledRect[0] + scaledRect[2];
         for (int sprite = 0; sprite < spriteCount; sprite++) {
             // Do processing
             entityData[mapper.rotateOffset + quadIndex] += deltaTime
@@ -102,22 +110,22 @@ public class SuperSpriteSystem extends System {
 
             xpos += deltaTime * entityData[EntityData.MOVE_VECTOR_X.index + entityIndex];
             ypos += deltaTime * entityData[EntityData.MOVE_VECTOR_Y.index + entityIndex];
-            if (ypos < scaledLimit[ViewFrustum.BOTTOM_INDEX]) {
+            if (ypos < yMin) {
                 entityData[EntityData.MOVE_VECTOR_Y.index
                         + entityIndex] = -entityData[EntityData.MOVE_VECTOR_Y.index + entityIndex]
                                 * entityData[EntityData.ELASTICITY.index + entityIndex];
-                ypos = scaledLimit[ViewFrustum.BOTTOM_INDEX] - (ypos - scaledLimit[ViewFrustum.BOTTOM_INDEX]);
+                ypos = yMin - (ypos - yMin);
             }
-            if (xpos > scaledLimit[ViewFrustum.RIGHT_INDEX]) {
-                xpos = scaledLimit[ViewFrustum.RIGHT_INDEX] - (xpos - scaledLimit[ViewFrustum.RIGHT_INDEX]);
+            if (xpos > xMax) {
+                xpos = xMax - (xpos - xMax);
                 entityData[EntityData.MOVE_VECTOR_X.index
                         + entityIndex] = -entityData[EntityData.MOVE_VECTOR_X.index + entityIndex]
                                 * entityData[EntityData.ELASTICITY.index];
                 entityData[EntityData.ROTATE_SPEED.index
                         + entityIndex] = -entityData[EntityData.ROTATE_SPEED.index + entityIndex]
                                 * entityData[EntityData.ELASTICITY.index + entityIndex];
-            } else if (xpos < scaledLimit[ViewFrustum.LEFT_INDEX]) {
-                xpos = scaledLimit[ViewFrustum.LEFT_INDEX] - (xpos - scaledLimit[ViewFrustum.LEFT_INDEX]);
+            } else if (xpos < xMin) {
+                xpos = xMin - (xpos - xMin);
                 entityData[EntityData.MOVE_VECTOR_Y.index
                         + entityIndex] = -entityData[EntityData.MOVE_VECTOR_Y.index + entityIndex]
                                 * entityData[EntityData.ELASTICITY.index + entityIndex];
@@ -144,54 +152,57 @@ public class SuperSpriteSystem extends System {
         this.entityBuffer = (CPUComponentBuffer) sprites.getEntityBuffer();
         this.quadExpander = sprites.getQuadExpander();
         int spriteFrames = sprites.getFrameCount();
-        spritecount = sprites.getCount();
+        spriteCount = sprites.getCount();
         int frame = 0;
-        Random random = new Random();
         float rotation = 0;
-        PropertyMapper mapper = sprites.getMapper();
-        float[] entityData = entityBuffer.getData();
-        int index = 0;
-        int entityIndex = mapper.attributesPerVertex;
-        float[] transform = new float[9];
-        float sceneWidth = scene.getViewFrustum().getWidth();
-        float sceneHeight = scene.getViewFrustum().getHeight();
+        mapper = sprites.getMapper();
+        entityData = new float[entityBuffer.getSizePerEntity() - mapper.attributesPerVertex];
+        spriteData = new float[mapper.attributesPerVertex];
+        float[] scale = scene.getTransform().getScale();
+        float sceneWidth = viewFrustum.getWidth() / scale[0];
+        float sceneHeight = viewFrustum.getHeight() / scale[1];
         for (int currentSprite = 0; currentSprite < sprites.getCount(); currentSprite++) {
-            transform[0] = ((random.nextFloat() * sceneWidth) - sceneWidth / 2);
-            transform[1] = ((random.nextFloat() * sceneHeight) - sceneHeight / 2);
-            transform[2] = 1;
-            transform[3] = 0;
-            transform[4] = 0;
-            transform[5] = rotation;
-            // transform[6] = random.nextFloat() + 1;
-            // transform[7] = random.nextFloat() + 1;
-            transform[6] = 1;
-            transform[7] = 1;
-            transform[8] = 1;
-            sprites.setTransform(currentSprite, transform);
-
-            entityData[index + mapper.frameOffset] = frame++;
-
+            getRandomSprite(spriteData, rotation, frame++, sceneWidth, sceneHeight);
+            sprites.setSprite(currentSprite, spriteData);
+            sprites.setSprite(currentSprite, spriteData);
             rotation += 0.01f;
             if (frame >= spriteFrames) {
                 frame = 0;
             }
-            entityData[EntityData.MOVE_VECTOR_X.index + entityIndex] = 0;
-            entityData[EntityData.MOVE_VECTOR_Y.index + entityIndex] = 0;
-            entityData[EntityData.ELASTICITY.index + entityIndex] = 0.2f + random.nextFloat() * 0.5f;
-            entityData[EntityData.RESISTANCE.index + entityIndex] = random.nextFloat() * 0.03f;
             quadExpander.expandQuadData(currentSprite);
-            index += entityBuffer.getSizePerEntity();
-            entityIndex += entityBuffer.getSizePerEntity();
+            getRandomEntityData(entityData);
+            sprites.setEntityData(currentSprite, mapper.attributesPerVertex, entityData);
         }
+    }
+
+    protected void getRandomSprite(float[] spriteData, float rotate, int frame, float sceneWidth, float sceneHeight) {
+        spriteData[mapper.translateOffset] = ((random.nextFloat() * sceneWidth) - sceneWidth / 2);
+        spriteData[mapper.translateOffset + 1] = ((random.nextFloat() * sceneHeight) - sceneHeight / 2);
+        spriteData[mapper.translateOffset + 2] = 1;
+        spriteData[mapper.rotateOffset] = 0;
+        spriteData[mapper.rotateOffset + 1] = 0;
+        spriteData[mapper.rotateOffset + 2] = rotate;
+        spriteData[mapper.scaleOffset] = random.nextFloat() + 1;
+        spriteData[mapper.scaleOffset + 1] = random.nextFloat() + 1;
+        spriteData[mapper.scaleOffset + 2] = 1;
+        spriteData[mapper.frameOffset] = frame;
+    }
+
+    protected void getRandomEntityData(float[] entityData) {
+        entityData[EntityData.MOVE_VECTOR_X.index] = 0;
+        entityData[EntityData.MOVE_VECTOR_Y.index] = 0;
+        entityData[EntityData.ELASTICITY.index] = 0.5f + random.nextFloat() * 0.5f;
+        entityData[EntityData.RESISTANCE.index] = random.nextFloat() * 0.03f;
     }
 
     private void updateNodeScale() {
         // Scale the bounds according to node scale - this only works while sprites are attached
         float[] scale = scene.getTransform().getScale();
-        scaledLimit[ViewFrustum.LEFT_INDEX] = viewport[ViewFrustum.LEFT_INDEX] / scale[0];
-        scaledLimit[ViewFrustum.RIGHT_INDEX] = viewport[ViewFrustum.RIGHT_INDEX] / scale[0];
-        scaledLimit[ViewFrustum.TOP_INDEX] = viewport[ViewFrustum.TOP_INDEX] / scale[1];
-        scaledLimit[ViewFrustum.BOTTOM_INDEX] = viewport[ViewFrustum.BOTTOM_INDEX] / scale[1];
+        scaledRect[0] = viewport[ViewFrustum.LEFT_INDEX] / scale[0];
+        scaledRect[1] = viewport[ViewFrustum.TOP_INDEX] / scale[1];
+        scaledRect[2] = viewFrustum.getWidth() / scale[0];
+        scaledRect[3] = viewFrustum.getHeight() / scale[1];
+        screenBounds.setBounds(scaledRect);
     }
 
     @Override
@@ -204,10 +215,16 @@ public class SuperSpriteSystem extends System {
      * @param pos
      */
     public void releaseSprite(float[] pos) {
-        sprites.setTransform(currentSprite, new float[] { pos[0], pos[1], 0, 0, 0, 0, 1, 1, 1 });
-        currentSprite++;
-        if (currentSprite > spritecount - 1) {
-            currentSprite = 0;
+        if (entityData != null) {
+            float[] scale = scene.getTransform().getScale();
+            sprites.setTransform(currentSprite,
+                    new float[] { pos[0] / scale[0], pos[1] / scale[1], 0, 0, 0, 0, 1, 1, 1 });
+            getRandomEntityData(entityData);
+            sprites.setEntityData(currentSprite, mapper.attributesPerVertex, entityData);
+            currentSprite++;
+            if (currentSprite > spriteCount - 1) {
+                currentSprite = 0;
+            }
         }
     }
 
