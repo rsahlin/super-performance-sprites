@@ -17,12 +17,6 @@
     <version>${super-sprites-version}</version>
     <packaging>pom</packaging>
     <name>super-performance-sprites</name>
-    <modules>
-        <module>super-performance-sprites-android</module>
-        <module>super-performance-sprites-jogl</module>
-        <module>super-performance-sprites-j2se</module>
-        <module>super-performance-sprites-lwjgl</module>
-    </modules>
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -39,6 +33,7 @@
                 <groupId>com.super2k.graphics-by-opengl</groupId>
                 <artifactId>graphics-by-opengl-android</artifactId>
                 <version>${graphics-by-gl-version}</version>
+                <type>aar</type>
             </dependency>
             <dependency>
                 <groupId>com.super2k.graphics-by-opengl</groupId>
@@ -74,6 +69,11 @@
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <groupId>com.simpligility.maven.plugins</groupId>
+                    <artifactId>android-maven-plugin</artifactId>
+                    <version>4.5.0</version>
+                </plugin>
+                <plugin>
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.5.1</version>
                     <configuration>
@@ -84,4 +84,10 @@
             </plugins>
         </pluginManagement>
     </build>
+    <modules>
+        <module>super-performance-sprites-android</module>
+        <module>super-performance-sprites-jogl</module>
+        <module>super-performance-sprites-j2se</module>
+        <module>super-performance-sprites-lwjgl</module>
+    </modules>
 </project>

@@ -2,28 +2,26 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <properties>
+        <android.sdk>25</android.sdk>
+    </properties>
     <parent>
         <artifactId>super-performance-sprites</artifactId>
         <groupId>com.super2k.super-performance-sprites</groupId>
         <version>${super-sprites-version}</version>
     </parent>
-    <properties>
-        <android.sdk>25</android.sdk>
-    </properties>
     <artifactId>super-performance-sprites-android</artifactId>
     <packaging>apk</packaging>
-    <name>android-super-performance-sprites</name>
     <dependencies>
         <dependency>
             <groupId>com.google.android</groupId>
             <artifactId>android</artifactId>
-            <version>${android.sdk}</version>
+            <version>25</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.super2k.graphics-by-opengl</groupId>
             <artifactId>graphics-by-opengl-android</artifactId>
-            <version>0.0.1-SNAPSHOT</version>
             <type>aar</type>
         </dependency>
         <dependency>
