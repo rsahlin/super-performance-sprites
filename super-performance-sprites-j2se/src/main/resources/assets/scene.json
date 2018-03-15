@@ -2,13 +2,13 @@
     children:[
         {layer:SCENE,id:scene,type:layernode,
         renderPass:[{id:mainpass,pass:MAIN,renderState:{clearColor:[0.3f, 0.3f, 0.5f, 1f]},target:{id:main,target:FRAMEBUFFER}}],
-        transform:{scale:[0.2,0.2,1],translate:[0,0,0],scaleLimit:{min:[0.05],max:[3.0]}},viewFrustum:{projection:ORTHOGONAL,values:[-0.8889,0.8889,-0.5,0.5,0,10]},
+        transform:{scale:[0.2,0.2,1],translate:[1.5,0,1],scaleLimit:{min:[0.05],max:[3.0]}},viewFrustum:{projection:ORTHOGONAL,values:[-0.8889,0.8889,-0.5,0.5,0,10]},
         children:
         [
             {layer:SCENE,id:game,type:switchnode,
             children:
               [
-                {id:sprites2,type:spriteComponentNode,transform:{translate:[0,0.0,0.0]},textureRef:{source:"assets/spritetexture.tex"},
+                {id:sprites2,type:spriteComponentNode,transform:{axisAngle:{values:[0,0,1,0.5]},translate:[0,0.0,0.0]},textureRef:{source:"assets/spritetexture.tex"},
                     material:{blendEquation:[DISABLED]}, 
                     components:[{id:spritecomponent,type:spritecomponent,system:superspritesystem,count:2000,rect:{values:[-0.025,0.025,0.05,0.05]}}]}
               ]}
