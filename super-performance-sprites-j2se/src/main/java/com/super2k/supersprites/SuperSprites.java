@@ -102,6 +102,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                 Vector2D zoom = event.getZoom();
                 float z = ((zoom.vector[Vector2D.MAGNITUDE] * zoom.vector[VecMath.X]))
                         * pointerScale[1];
+                root.getNodeById("scene").getTransform().scale(z);
                 break;
             default:
 
