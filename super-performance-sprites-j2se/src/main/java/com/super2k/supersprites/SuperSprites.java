@@ -19,7 +19,7 @@ import com.nucleus.opengl.GLESWrapper.Renderers;
 import com.nucleus.renderer.NucleusRenderer;
 import com.nucleus.renderer.NucleusRenderer.RenderContextListener;
 import com.nucleus.renderer.Window;
-import com.nucleus.scene.Node;
+import com.nucleus.scene.Node.NodeTypes;
 import com.nucleus.scene.NodeException;
 import com.nucleus.scene.RootNode;
 import com.nucleus.system.ComponentHandler;
@@ -61,6 +61,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     Window window;
     CoreApp coreApp;
     RootNode root;
+    ViewFrustum viewFrustum;
     NucleusRenderer renderer;
     private ComponentNode componentNode;
     private SpriteComponent spriteComponent;
@@ -148,17 +149,11 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                 root = sf.importScene("assets/scene.json");
                 coreApp.setRootNode(root);
                 coreApp.addPointerInput(root);
-                /**
-                 * TODO - this should be handled in a more generic way.
-                 */
-                Node scene = root.getNodeById("scene");
-                ViewFrustum vf = scene.getViewFrustum();
-                float[] values = vf.getValues();
-                float w = Math.abs(values[ViewFrustum.LEFT_INDEX] - values[ViewFrustum.RIGHT_INDEX]);
-                float h = Math.abs(values[ViewFrustum.TOP_INDEX] - values[ViewFrustum.BOTTOM_INDEX]);
+                viewFrustum = root.getNodeByType(NodeTypes.layernode.name()).getViewFrustum();
+                float[] values = viewFrustum.getValues();
                 // If y is going down then reverse y so that 0 is at bottom which is the same as OpenGL
-                coreApp.getInputProcessor().setPointerTransform(w / width, h / -height,
-                        values[ViewFrustum.LEFT_INDEX],
+                coreApp.getInputProcessor().setPointerTransform(viewFrustum.getWidth() / width,
+                        viewFrustum.getHeight() / height, values[ViewFrustum.LEFT_INDEX],
                         values[ViewFrustum.TOP_INDEX]);
                 fetchSprites();
                 try {

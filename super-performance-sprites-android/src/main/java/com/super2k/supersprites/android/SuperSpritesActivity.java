@@ -11,6 +11,7 @@ public class SuperSpritesActivity extends NucleusActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         clientClass = SuperSprites.class;
+        useChoreographer = true;
         super.onCreate(savedInstanceState);
     }
 

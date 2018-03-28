@@ -12,6 +12,7 @@ import com.nucleus.component.Component;
 import com.nucleus.geometry.AttributeUpdater.PropertyMapper;
 import com.nucleus.renderer.NucleusRenderer;
 import com.nucleus.scene.Node;
+import com.nucleus.scene.Node.NodeTypes;
 import com.nucleus.scene.RootNode;
 import com.nucleus.system.System;
 import com.nucleus.vecmath.Rectangle;
@@ -142,7 +143,7 @@ public class SuperSpriteSystem extends System {
         this.root = root;
         scene = root.getNodeById("scene");
         // Get the view frustum and create rectangle bounds
-        viewFrustum = scene.getViewFrustum();
+        viewFrustum = root.getNodeByType(NodeTypes.layernode.name()).getViewFrustum();
         viewFrustum.getValues(viewport);
         initSprites((SpriteComponent) component);
     }
