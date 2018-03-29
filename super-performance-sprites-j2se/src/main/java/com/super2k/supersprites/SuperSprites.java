@@ -153,8 +153,9 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                 float[] values = viewFrustum.getValues();
                 // If y is going down then reverse y so that 0 is at bottom which is the same as OpenGL
                 coreApp.getInputProcessor().setPointerTransform(viewFrustum.getWidth() / width,
-                        viewFrustum.getHeight() / height, values[ViewFrustum.LEFT_INDEX],
+                        -viewFrustum.getHeight() / height, values[ViewFrustum.LEFT_INDEX],
                         values[ViewFrustum.TOP_INDEX]);
+
                 fetchSprites();
                 try {
                     sf.exportScene(System.out, root);
