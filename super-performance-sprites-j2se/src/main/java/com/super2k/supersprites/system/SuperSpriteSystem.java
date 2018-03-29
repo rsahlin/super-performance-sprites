@@ -183,8 +183,8 @@ public class SuperSpriteSystem extends System {
         spriteData[mapper.rotateOffset] = 0;
         spriteData[mapper.rotateOffset + 1] = 0;
         spriteData[mapper.rotateOffset + 2] = rotate;
-        spriteData[mapper.scaleOffset] = random.nextFloat() + 1;
-        spriteData[mapper.scaleOffset + 1] = random.nextFloat() + 1;
+        spriteData[mapper.scaleOffset] = 1;
+        spriteData[mapper.scaleOffset + 1] = 1;
         spriteData[mapper.scaleOffset + 2] = 1;
         spriteData[mapper.frameOffset] = frame;
     }
