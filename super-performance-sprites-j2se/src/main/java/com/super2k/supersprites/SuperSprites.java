@@ -36,12 +36,16 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
      * This is used as a means to decouple serialized name from implementing class.
      * 
      */
-    public enum SuperSpritesClasses implements Type<Object> {
+    public enum ClientClasses implements Type<Object> {
+        /**
+         * This is the main class implementing the ClientApplication
+         */
+        clientclass(SuperSprites.class),
         superspritesystem(SuperSpriteSystem.class);
 
         private final Class<?> theClass;
 
-        private SuperSpritesClasses(Class<?> theClass) {
+        private ClientClasses(Class<?> theClass) {
             this.theClass = theClass;
         }
 
@@ -145,7 +149,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                 SimpleLogger.d(getClass(), "Loading scene");
                 SceneSerializer sf = new GSONGraphicsEngineFactory(renderer, GSONGraphicsEngineFactory.getNodeFactory(),
                         GSONGraphicsEngineFactory.getMeshFactory(renderer),
-                        Arrays.asList((Type<?>[]) SuperSpritesClasses.values()));
+                        Arrays.asList((Type<?>[]) ClientClasses.values()));
                 root = sf.importScene("assets/scene.json");
                 coreApp.setRootNode(root);
                 coreApp.addPointerInput(root);
