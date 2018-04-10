@@ -77,18 +77,6 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     }
 
     @Override
-    public void init(CoreApp coreApp) {
-        if (!coreApp.getRenderer().isInitialized()) {
-            throw new IllegalArgumentException("Renderer is not initialized!");
-        }
-        this.coreApp = coreApp;
-        renderer = coreApp.getRenderer();
-        coreApp.getInputProcessor().addMMIListener(this);
-        coreApp.getRenderer().addContextListener(this);
-        coreApp.getInputProcessor().getPointerScale(pointerScale);
-    }
-
-    @Override
     public void onInputEvent(MMIPointerEvent event) {
 
         switch (event.getAction()) {
@@ -173,14 +161,33 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     }
 
     @Override
-    public void drawFrame() {
+    public void surfaceLost() {
         // TODO Auto-generated method stub
 
     }
 
     @Override
-    public void surfaceLost() {
+    public void init(CoreApp coreApp) {
+        if (!coreApp.getRenderer().isInitialized()) {
+            throw new IllegalArgumentException("Renderer is not initialized!");
+        }
+        this.coreApp = coreApp;
+        renderer = coreApp.getRenderer();
+        coreApp.getInputProcessor().addMMIListener(this);
+        coreApp.getRenderer().addContextListener(this);
+        coreApp.getInputProcessor().getPointerScale(pointerScale);
+    }
+
+    @Override
+    public void beginFrame(float deltaTime) {
         // TODO Auto-generated method stub
 
     }
+
+    @Override
+    public void endFrame(float deltaTime) {
+        // TODO Auto-generated method stub
+
+    }
+
 }
