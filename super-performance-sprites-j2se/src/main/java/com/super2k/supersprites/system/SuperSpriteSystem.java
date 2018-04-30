@@ -57,7 +57,7 @@ public class SuperSpriteSystem extends System {
         }
     }
 
-    public final static float GRAVITY = -5;
+    public final static float GRAVITY = -5000;
 
     RootNode root;
     private Node scene;

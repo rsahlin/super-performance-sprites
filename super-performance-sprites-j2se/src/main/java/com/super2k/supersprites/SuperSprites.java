@@ -23,7 +23,6 @@ import com.nucleus.scene.Node.NodeTypes;
 import com.nucleus.scene.NodeException;
 import com.nucleus.scene.RootNode;
 import com.nucleus.system.ComponentHandler;
-import com.nucleus.vecmath.VecMath;
 import com.nucleus.vecmath.Vector2D;
 import com.super2k.supersprites.system.SuperSpriteSystem;
 
@@ -93,8 +92,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                 break;
             case ZOOM:
                 Vector2D zoom = event.getZoom();
-                float z = ((zoom.vector[Vector2D.MAGNITUDE] * zoom.vector[VecMath.X]))
-                        * pointerScale[1];
+                float z = (zoom.vector[Vector2D.MAGNITUDE] * zoom.vector[Vector2D.X]) / viewFrustum.getHeight();
                 root.getNodeById("scene").getTransform().scale(z);
                 break;
             default:
@@ -147,7 +145,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                 coreApp.getInputProcessor().setPointerTransform(viewFrustum.getWidth() / width,
                         -viewFrustum.getHeight() / height, values[ViewFrustum.LEFT_INDEX],
                         values[ViewFrustum.TOP_INDEX]);
-
+                coreApp.getInputProcessor().setMaxPointers(20);
                 fetchSprites();
                 try {
                     sf.exportScene(System.out, root);
