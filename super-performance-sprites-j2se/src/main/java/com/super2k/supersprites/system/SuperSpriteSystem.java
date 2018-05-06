@@ -2,12 +2,11 @@ package com.super2k.supersprites.system;
 
 import java.util.Random;
 
-import com.graphicsengine.component.SpriteComponent;
+import com.graphicsengine.component.SpriteAttributeComponent;
 import com.nucleus.bounds.RectangularBounds;
 import com.nucleus.camera.ViewFrustum;
 import com.nucleus.common.Constants;
 import com.nucleus.component.CPUComponentBuffer;
-import com.nucleus.component.CPUQuadExpander;
 import com.nucleus.component.Component;
 import com.nucleus.geometry.AttributeUpdater.PropertyMapper;
 import com.nucleus.renderer.NucleusRenderer;
@@ -18,7 +17,7 @@ import com.nucleus.system.System;
 import com.nucleus.vecmath.Rectangle;
 
 /**
- * The system for controlling the sprites defined by {@linkplain SpriteComponent}
+ * The system for controlling the sprites defined by {@linkplain SpriteAttributeComponent}
  * This is the collected functionality for the sprites, use this setup so that data is shared in such a way
  * that the logic can be accelerated by APIs such as OpenCL.
  * 
@@ -66,7 +65,7 @@ public class SuperSpriteSystem extends System {
     public float[] viewport = new float[ViewFrustum.PROJECTION_SIZE];
     protected ViewFrustum viewFrustum;
     private boolean initialized = false;
-    private SpriteComponent sprites;
+    private SpriteAttributeComponent sprites;
     float[] entityData;
     float[] spriteData;
     PropertyMapper mapper;
@@ -77,7 +76,6 @@ public class SuperSpriteSystem extends System {
      * Source
      */
     private CPUComponentBuffer entityBuffer;
-    private CPUQuadExpander quadExpander;
 
     public SuperSpriteSystem() {
     }
@@ -88,7 +86,7 @@ public class SuperSpriteSystem extends System {
             throw new IllegalStateException("initSystem() must be called before calling process()");
         }
         updateNodeScale();
-        SpriteComponent spriteComponent = (SpriteComponent) component;
+        SpriteAttributeComponent spriteComponent = (SpriteAttributeComponent) component;
         PropertyMapper mapper = spriteComponent.getMapper();
         int quadIndex = 0;
         int entityIndex = mapper.attributesPerVertex;
@@ -131,7 +129,7 @@ public class SuperSpriteSystem extends System {
                         + entityIndex] = -entityData[EntityData.MOVE_VECTOR_Y.index + entityIndex]
                                 * entityData[EntityData.ELASTICITY.index + entityIndex];
             }
-            quadExpander.setPosition(sprite, xpos, ypos);
+            spriteComponent.setPosition(sprite, xpos, ypos);
             quadIndex += entityBuffer.getSizePerEntity();
             entityIndex += entityBuffer.getSizePerEntity();
         }
@@ -145,13 +143,12 @@ public class SuperSpriteSystem extends System {
         // Get the view frustum and create rectangle bounds
         viewFrustum = root.getNodeByType(NodeTypes.layernode.name()).getViewFrustum();
         viewFrustum.getValues(viewport);
-        initSprites((SpriteComponent) component);
+        initSprites((SpriteAttributeComponent) component);
     }
 
-    private void initSprites(SpriteComponent sprites) {
+    private void initSprites(SpriteAttributeComponent sprites) {
         this.sprites = sprites;
         this.entityBuffer = (CPUComponentBuffer) sprites.getEntityBuffer();
-        this.quadExpander = sprites.getQuadExpander();
         int spriteFrames = sprites.getFrameCount();
         spriteCount = sprites.getCount();
         int frame = 0;
@@ -165,12 +162,10 @@ public class SuperSpriteSystem extends System {
         for (int currentSprite = 0; currentSprite < sprites.getCount(); currentSprite++) {
             getRandomSprite(spriteData, rotation, frame++, sceneWidth, sceneHeight);
             sprites.setSprite(currentSprite, spriteData);
-            sprites.setSprite(currentSprite, spriteData);
             rotation += 0.01f;
             if (frame >= spriteFrames) {
                 frame = 0;
             }
-            quadExpander.expandQuadData(currentSprite);
             getRandomEntityData(entityData);
             sprites.setEntityData(currentSprite, mapper.attributesPerVertex, entityData);
         }

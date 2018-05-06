@@ -3,7 +3,7 @@ package com.super2k.supersprites;
 import java.io.IOException;
 import java.util.Arrays;
 
-import com.graphicsengine.component.SpriteComponent;
+import com.graphicsengine.component.SpriteAttributeComponent;
 import com.graphicsengine.io.GSONGraphicsEngineFactory;
 import com.graphicsengine.scene.GraphicsEngineNodeType;
 import com.nucleus.CoreApp;
@@ -67,7 +67,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     ViewFrustum viewFrustum;
     NucleusRenderer renderer;
     private ComponentNode componentNode;
-    private SpriteComponent spriteComponent;
+    private SpriteAttributeComponent spriteComponent;
     private SuperSpriteSystem system;
     private float[] pointerScale = new float[2];
 
@@ -118,7 +118,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         componentNode = (ComponentNode) root.getNodeById("scene")
                 .getNodeByType(GraphicsEngineNodeType.spriteComponentNode.name());
         if (componentNode != null) {
-            spriteComponent = (SpriteComponent) componentNode.getComponentById("spritecomponent");
+            spriteComponent = (SpriteAttributeComponent) componentNode.getComponentById("spritecomponent");
             if (spriteComponent == null) {
                 throw new IllegalArgumentException("Could not find component");
             }

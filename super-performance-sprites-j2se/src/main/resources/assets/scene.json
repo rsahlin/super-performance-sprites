@@ -10,7 +10,7 @@
               [
                 {id:sprites2,type:spriteComponentNode,transform:{axisAngle:{values:[0,0,1,0]},translate:[0,0.0,0]},textureRef:{source:"assets/spritetexture.tex"},
                     material:{blendEquation:[DISABLED]}, 
-                    components:[{id:spritecomponent,type:spritecomponent,system:superspritesystem,count:5000,rect:{values:[25,25,50,50]}}]}
+                    components:[{id:spritecomponent,type:spriteattributecomponent,system:superspritesystem,count:5000,rect:{values:[25,25,50,50]}}]}
               ]}
           ]}
       ]
