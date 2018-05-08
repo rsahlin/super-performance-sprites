@@ -161,7 +161,7 @@ public class SuperSpriteSystem extends System {
         float sceneHeight = viewFrustum.getHeight() / scale[1];
         for (int currentSprite = 0; currentSprite < sprites.getCount(); currentSprite++) {
             getRandomSprite(spriteData, rotation, frame++, sceneWidth, sceneHeight);
-            sprites.setSprite(currentSprite, spriteData);
+            sprites.setActor(currentSprite, spriteData);
             rotation += 0.01f;
             if (frame >= spriteFrames) {
                 frame = 0;
