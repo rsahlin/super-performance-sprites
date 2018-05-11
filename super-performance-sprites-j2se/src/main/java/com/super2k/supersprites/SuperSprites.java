@@ -1,8 +1,5 @@
 package com.super2k.supersprites;
 
-import java.io.IOException;
-import java.util.Arrays;
-
 import com.graphicsengine.component.SpriteAttributeComponent;
 import com.graphicsengine.io.GSONGraphicsEngineFactory;
 import com.graphicsengine.scene.GraphicsEngineNodeType;
@@ -18,8 +15,8 @@ import com.nucleus.opengl.GLESWrapper.Renderers;
 import com.nucleus.renderer.NucleusRenderer;
 import com.nucleus.renderer.NucleusRenderer.RenderContextListener;
 import com.nucleus.renderer.Window;
-import com.nucleus.scene.Node.NodeTypes;
 import com.nucleus.scene.ComponentNode;
+import com.nucleus.scene.Node.NodeTypes;
 import com.nucleus.scene.NodeException;
 import com.nucleus.scene.RootNode;
 import com.nucleus.system.ComponentHandler;
@@ -133,10 +130,12 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         if (root == null) {
             try {
                 SimpleLogger.d(getClass(), "Loading scene");
-                SceneSerializer sf = new GSONGraphicsEngineFactory(renderer, GSONGraphicsEngineFactory.getNodeFactory(),
-                        GSONGraphicsEngineFactory.getMeshFactory(renderer),
-                        Arrays.asList((Type<?>[]) ClientClasses.values()));
-                root = sf.importScene("assets/scene.json");
+                SceneSerializer serializer = GSONGraphicsEngineFactory.getInstance();
+                if (!serializer.isInitialized()) {
+                    serializer.init(renderer, GSONGraphicsEngineFactory.getNodeFactory(),
+                            GSONGraphicsEngineFactory.getMeshFactory(renderer), ClientClasses.values());
+                }
+                root = serializer.importScene("assets/scene.json");
                 coreApp.setRootNode(root);
                 coreApp.addPointerInput(root);
                 viewFrustum = root.getNodeByType(NodeTypes.layernode.name()).getViewFrustum();
@@ -147,11 +146,6 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                         values[ViewFrustum.TOP_INDEX]);
                 coreApp.getInputProcessor().setMaxPointers(20);
                 fetchSprites();
-                try {
-                    sf.exportScene(System.out, root);
-                } catch (IOException e) {
-                    throw new RuntimeException(e);
-                }
             } catch (NodeException e) {
                 throw new RuntimeException(e);
             }

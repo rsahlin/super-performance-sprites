@@ -94,6 +94,7 @@ public class SuperSpriteSystem extends System {
         float yMin = scaledRect[1] - scaledRect[3];
         float xMin = scaledRect[0] - scaledRect[2];
         float xMax = scaledRect[0] + scaledRect[2];
+        float[] pos = new float[3];
         for (int sprite = 0; sprite < spriteCount; sprite++) {
             // Do processing
             entityData[mapper.rotateOffset + quadIndex] += deltaTime
@@ -129,7 +130,10 @@ public class SuperSpriteSystem extends System {
                         + entityIndex] = -entityData[EntityData.MOVE_VECTOR_Y.index + entityIndex]
                                 * entityData[EntityData.ELASTICITY.index + entityIndex];
             }
-            spriteComponent.setPosition(sprite, xpos, ypos);
+            pos[0] = xpos;
+            pos[1] = ypos;
+            pos[2] = entityData[mapper.translateOffset + 2 + quadIndex];
+            spriteComponent.setPosition(sprite, pos, 0);
             quadIndex += entityBuffer.getSizePerEntity();
             entityIndex += entityBuffer.getSizePerEntity();
         }
@@ -161,7 +165,7 @@ public class SuperSpriteSystem extends System {
         float sceneHeight = viewFrustum.getHeight() / scale[1];
         for (int currentSprite = 0; currentSprite < sprites.getCount(); currentSprite++) {
             getRandomSprite(spriteData, rotation, frame++, sceneWidth, sceneHeight);
-            sprites.setActor(currentSprite, spriteData);
+            sprites.setActor(currentSprite, spriteData, 0);
             rotation += 0.01f;
             if (frame >= spriteFrames) {
                 frame = 0;
