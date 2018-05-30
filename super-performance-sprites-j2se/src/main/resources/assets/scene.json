@@ -2,7 +2,7 @@
     children:[
         {layer:SCENE,id:scene,type:layernode,
         renderPass:[{id:mainpass,pass:MAIN,renderState:{clearColor:[0.3f, 0.3f, 0.5f, 1f]},target:{id:main,target:FRAMEBUFFER}}],
-        transform:{scale:[0.2,0.2,1],translate:[0,0,5],scaleLimit:{min:[0.05],max:[3.0]}},viewFrustum:{projection:ORTHOGONAL,values:[-1920,1920,-1080,1008,0,10]},
+        transform:{scale:[0.2,0.2,1],translate:[0,0,5],scaleLimit:{min:[0.05],max:[3.0]}},viewFrustum:{projection:ORTHOGONAL,values:[-1920,1920,-1080,1080,0,10]},
         children:
         [
             {layer:SCENE,id:game,type:switchnode,

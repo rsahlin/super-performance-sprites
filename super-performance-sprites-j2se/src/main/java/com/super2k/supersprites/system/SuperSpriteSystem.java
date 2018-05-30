@@ -55,7 +55,6 @@ public class SuperSpriteSystem extends System<SpriteAttributeComponent> {
             throw new IllegalStateException("initSystem() must be called before calling process()");
         }
         updateNodeScale();
-        SpriteAttributeComponent spriteComponent = component;
         int quadIndex = 0;
         float[] entityData = entityBuffer.getData();
         float yMin = scaledRect[1] - scaledRect[3];
@@ -65,12 +64,12 @@ public class SuperSpriteSystem extends System<SpriteAttributeComponent> {
         for (int sprite = 0; sprite < spriteCount; sprite++) {
             // Update gravity
             entityData[mapper.moveVectorOffset + 1 + quadIndex] += GRAVITY * deltaTime;
-            entityData[mapper.rotateOffset + quadIndex] += deltaTime * entityData[mapper.rotateSpeedOffset + quadIndex];
-            if (entityData[mapper.rotateOffset + quadIndex] > Constants.TWOPI) {
-                entityData[mapper.rotateOffset + quadIndex] -= Constants.TWOPI;
+            entityData[mapper.rotate + quadIndex] += deltaTime * entityData[mapper.rotateSpeedOffset + quadIndex];
+            if (entityData[mapper.rotate + quadIndex] > Constants.TWOPI) {
+                entityData[mapper.rotate + quadIndex] -= Constants.TWOPI;
             }
-            float xpos = entityData[mapper.translateOffset + quadIndex];
-            float ypos = entityData[mapper.translateOffset + 1 + quadIndex];
+            float xpos = entityData[mapper.translate + quadIndex];
+            float ypos = entityData[mapper.translate + 1 + quadIndex];
 
             xpos += deltaTime * entityData[mapper.moveVectorOffset + quadIndex];
             ypos += deltaTime * entityData[mapper.moveVectorOffset + 1 + quadIndex];
@@ -94,8 +93,7 @@ public class SuperSpriteSystem extends System<SpriteAttributeComponent> {
             }
             pos[0] = xpos;
             pos[1] = ypos;
-            pos[2] = entityData[mapper.translateOffset + 2 + quadIndex];
-            spriteComponent.setPosition(sprite, pos, 0);
+            sprites.setEntity(sprite, 0, pos, 0, 2);
             quadIndex += entityBuffer.getSizePerEntity();
         }
     }
@@ -126,7 +124,7 @@ public class SuperSpriteSystem extends System<SpriteAttributeComponent> {
         for (int currentSprite = 0; currentSprite < sprites.getCount(); currentSprite++) {
             ActorComponent.getRandomSprite(entityData, rotation, frame++, sceneWidth, sceneHeight, mapper, random);
             ActorComponent.getRandomEntityData(entityData, mapper, random);
-            sprites.setEntityData(currentSprite, 0, entityData);
+            sprites.setEntity(currentSprite, 0, entityData, 0, entityData.length);
             rotation += 0.01f;
             if (frame >= spriteFrames) {
                 frame = 0;
@@ -151,10 +149,14 @@ public class SuperSpriteSystem extends System<SpriteAttributeComponent> {
     public void releaseSprite(float[] pos) {
         if (entityData != null) {
             float[] scale = scene.getTransform().getScale();
-            sprites.setTransform(currentSprite,
-                    new float[] { pos[0] / scale[0], pos[1] / scale[1], 0, 0, 0, 0, 1, 1, 1 });
+            entityData[mapper.translate] = pos[0] / scale[0];
+            entityData[mapper.translate + 1] = pos[1] / scale[1];
+            // Only update position
+            sprites.setEntity(currentSprite, 0, entityData, 0, 2);
+            // Reset / new entity data.
             ActorComponent.getRandomEntityData(entityData, mapper, random);
-            sprites.setEntityData(currentSprite, mapper.attributesPerVertex, entityData);
+            sprites.setEntity(currentSprite, mapper.attributesPerVertex, entityData, mapper.attributesPerVertex,
+                    mapper.attributesPerEntity - mapper.attributesPerVertex);
             currentSprite++;
             if (currentSprite > spriteCount - 1) {
                 currentSprite = 0;
