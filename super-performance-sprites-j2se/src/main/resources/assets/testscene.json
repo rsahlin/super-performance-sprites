@@ -1,5 +1,5 @@
 {
-    properties:{gravity:-5000},
+    properties:{gravity:-900},
     children:[
         {layer:SCENE,id:scene,type:layernode,
         renderPass:[{id:mainpass,pass:MAIN,renderState:{clearColor:[0.3f, 0.3f, 0.5f, 1f]},target:{id:main,target:FRAMEBUFFER}}],
@@ -8,7 +8,11 @@
         [
             {id:sprites2,type:spriteComponentNode,transform:{axisAngle:{values:[0,0,1,0]},translate:[0,0.0,0]},textureRef:{source:"assets/spritetexture.tex"},
                 material:{blendEquation:[DISABLED]}, 
-                components:[{id:spritecomponent,type:spriteattributecomponent,system:superspritesystem,count:5000,shape:{type:rect,values:[25,25,50,50]}}]}
-        ]}
-   ] // end children
+                components:[{id:spritecomponent,type:spriteattributecomponent,system:superspritesystem,count:5000,shape:{type:rect,values:[-25,25,50,50]}}]}, 
+            {id:spritesuv,type:spriteComponentNode,transform:{axisAngle:{values:[0,0,1,0]},translate:[0,0.0,0]},textureRef:{source:"assets/uvtexture.tex"},
+                material:{blendEquation:[DISABLED]}, 
+                components:[{id:spriteuvcomponent,type:spriteattributecomponent,system:superspritesystem,count:100,shape:{type:rect,values:[-75,75,150,150]}}]}
+                
+          ]}
+      ]
 }

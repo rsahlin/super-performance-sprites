@@ -102,7 +102,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
      * @param pos
      */
     private void releaseSprite(float[] pos, float[] delta) {
-        system.releaseSprite(pos);
+        system.releaseSprite(spriteComponent, pos);
     }
 
     /**
@@ -135,6 +135,8 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                     serializer.init(renderer, GSONGraphicsEngineFactory.getNodeFactory(),
                             GSONGraphicsEngineFactory.getMeshFactory(renderer), ClientClasses.values());
                 }
+                // root = serializer.importScene("assets/testscene.json");
+                // TODO Make a hook so that the name of the scene to load can be changed.
                 root = serializer.importScene("assets/scene.json");
                 coreApp.setRootNode(root);
                 coreApp.addPointerInput(root);
