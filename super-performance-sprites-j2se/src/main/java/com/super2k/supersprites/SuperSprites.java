@@ -16,16 +16,21 @@ import com.nucleus.renderer.NucleusRenderer;
 import com.nucleus.renderer.NucleusRenderer.RenderContextListener;
 import com.nucleus.renderer.Window;
 import com.nucleus.scene.ComponentNode;
+import com.nucleus.scene.Node;
 import com.nucleus.scene.Node.NodeTypes;
 import com.nucleus.scene.NodeException;
 import com.nucleus.scene.RootNode;
 import com.nucleus.system.ComponentHandler;
+import com.nucleus.vecmath.Matrix;
 import com.nucleus.vecmath.Vector2D;
 import com.super2k.supersprites.system.SuperSpriteSystem;
+import com.super2k.supersprites.system.SuperSpriteTestSystem;
 
 public class SuperSprites implements MMIEventListener, RenderContextListener, ClientApplication {
 
     public static final Renderers GL_VERSION = Renderers.GLES20;
+
+    private float[] matrix = Matrix.createMatrix();
 
     /**
      * The types that can be used to represent classes when importing/exporting
@@ -37,7 +42,8 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
          * This is the main class implementing the ClientApplication
          */
         clientclass(SuperSprites.class),
-        superspritesystem(SuperSpriteSystem.class);
+        superspritesystem(SuperSpriteSystem.class),
+        superspritetestsystem(SuperSpriteTestSystem.class);
 
         private final Class<?> theClass;
 
@@ -75,17 +81,20 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     @Override
     public void onInputEvent(MMIPointerEvent event) {
 
+        float[] pos = event.getPointerData().getCurrentPosition();
         switch (event.getAction()) {
             case MOVE:
                 float[] move = event.getPointerData().getDelta(1);
                 if (move != null && componentNode != null) {
                     // component.getTransform().translate(move[0], move[1]);
                 }
-                releaseSprite(event.getPointerData().getCurrentPosition(), move);
+                releaseSprite(pos, move);
+                // For testscene
+                rotateTo(pos, "rotateobjects");
                 break;
             case ACTIVE:
                 fetchSprites();
-                releaseSprite(event.getPointerData().getCurrentPosition(), null);
+                releaseSprite(pos, null);
                 break;
             case ZOOM:
                 Vector2D zoom = event.getZoom();
@@ -95,6 +104,16 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
             default:
 
         }
+    }
+
+    protected void rotateTo(float[] pointerPos, String nodeId) {
+        Node node = root.getNodeById(nodeId);
+        if (node != null) {
+            Matrix.setRotateTo(pointerPos, matrix);
+            Matrix.translate(matrix, node.getTransform().getTranslate());
+            node.getTransform().setMatrix(matrix);
+        }
+
     }
 
     /**
@@ -135,9 +154,9 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                     serializer.init(renderer, GSONGraphicsEngineFactory.getNodeFactory(),
                             GSONGraphicsEngineFactory.getMeshFactory(renderer), ClientClasses.values());
                 }
-                // root = serializer.importScene("assets/testscene.json");
+                root = serializer.importScene("assets/testscene.json");
                 // TODO Make a hook so that the name of the scene to load can be changed.
-                root = serializer.importScene("assets/scene.json");
+                // root = serializer.importScene("assets/scene.json");
                 coreApp.setRootNode(root);
                 coreApp.addPointerInput(root);
                 viewFrustum = root.getNodeByType(NodeTypes.layernode.name()).getViewFrustum();

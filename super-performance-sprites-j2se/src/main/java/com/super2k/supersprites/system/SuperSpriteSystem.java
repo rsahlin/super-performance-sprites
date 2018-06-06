@@ -31,14 +31,14 @@ public class SuperSpriteSystem extends System<SpriteAttributeComponent> {
     public static float GRAVITY = -500;
 
     RootNode root;
-    private Node scene;
-    private RectangularBounds screenBounds = new RectangularBounds(new Rectangle(0, 0, 0, 0));
+    protected Node scene;
+    protected RectangularBounds screenBounds = new RectangularBounds(new Rectangle(0, 0, 0, 0));
     public float[] scaledRect = new float[4];
     public float[] viewport = new float[ViewFrustum.PROJECTION_SIZE];
     protected ViewFrustum viewFrustum;
     float[] entityData;
-    private int currentSprite = 0;
-    private Random random = new Random(java.lang.System.currentTimeMillis());
+    protected int currentSprite = 0;
+    protected Random random = new Random(java.lang.System.currentTimeMillis());
 
     public SuperSpriteSystem() {
     }
@@ -110,14 +110,13 @@ public class SuperSpriteSystem extends System<SpriteAttributeComponent> {
         initSprites(component);
     }
 
-    private void initSprites(SpriteAttributeComponent component) {
+    protected void initSprites(SpriteAttributeComponent component) {
         CPUComponentBuffer entityBuffer = (CPUComponentBuffer) component.getEntityBuffer();
         EntityIndexer mapper = component.getMapper();
         int spriteFrames = component.getFrameCount();
         float[] rectBounds = new float[4];
         component.get2DBounds(rectBounds);
         int frame = 0;
-        float rotation = 0;
         if (entityData == null) {
             entityData = new float[entityBuffer.getSizePerEntity()];
         }
@@ -128,14 +127,13 @@ public class SuperSpriteSystem extends System<SpriteAttributeComponent> {
             ActorComponent.getRandomSprite(entityData, 0, frame++, 1, 1, sceneWidth, sceneHeight, mapper, random);
             ActorComponent.getRandomEntityData(entityData, rectBounds, 0.1f, mapper, random);
             component.setEntity(currentSprite, 0, entityData, 0, entityData.length);
-            rotation += 0.01f;
             if (frame >= spriteFrames) {
                 frame = 0;
             }
         }
     }
 
-    private void updateNodeScale() {
+    protected void updateNodeScale() {
         // Scale the bounds according to node scale - this only works while sprites are attached
         float[] scale = scene.getTransform().getScale();
         scaledRect[0] = viewport[ViewFrustum.LEFT_INDEX] / scale[0];

@@ -8,11 +8,33 @@
         [
             {id:sprites2,type:spriteComponentNode,transform:{axisAngle:{values:[0,0,1,0]},translate:[0,0.0,0]},textureRef:{source:"assets/spritetexture.tex"},
                 material:{blendEquation:[DISABLED]}, 
-                components:[{id:spritecomponent,type:spriteattributecomponent,system:superspritesystem,count:5000,shape:{type:rect,values:[-25,25,50,50]}}]}, 
+                components:[{id:spritecomponent,type:spriteattributecomponent,system:superspritetestsystem,count:100,shape:{type:rect,values:[-25,25,50,50]}}]}, 
             {id:spritesuv,type:spriteComponentNode,transform:{axisAngle:{values:[0,0,1,0]},translate:[0,0.0,0]},textureRef:{source:"assets/uvtexture.tex"},
                 material:{blendEquation:[DISABLED]}, 
-                components:[{id:spriteuvcomponent,type:spriteattributecomponent,system:superspritesystem,count:100,shape:{type:rect,values:[-75,75,150,150]}}]}
+                components:[{id:spriteuvcomponent,type:spriteattributecomponent,system:superspritetestsystem,count:100,shape:{type:rect,values:[-75,75,150,150]}}]},
+            {id:spritesflat,type:spriteComponentNode,transform:{axisAngle:{values:[0,0,1,0]},translate:[0,0.0,0]},textureRef:{source:"assets/untextured.tex"},
+                material:{blendEquation:[GL_FUNC_ADD,GL_FUNC_ADD]}, 
+                components:[{id:spriteflatcomponent,type:spriteattributecomponent,system:superspritetestsystem,count:100,shape:{type:rect,values:[-75,75,150,150]}}]},
+            {layer:SCENE,id:uilayer,type:layernode,
+            transform:{translate:[0,0,0]},viewFrustum:{projection:ORTHOGONAL,values:[-1920,1920,-1080,1080,0,10]},
+            children:
+            [
+                {id:flatnode,type:quadNode,transform:{scale:[0.5,0.5,1],translate:[-0.30,-0.3,0]},textureRef:{source:"assets/coolbottexture.tex"},
+                maxQuads:10,
+                children:[{
+                    id:coolbotbutton1,type:sharedMeshNode,bounds:{type:RECTANGULAR},
+                    transform:{scale:[0.5,0.5,1],translate:[0,0,0],axisAngle:{values:[0,0,1,0]}},
+                    material:{blendEquation:[DISABLED]},
+                    properties:{POINTERINPUT:true,onclick:"view:MOVE:-100,0,0"}},
+                    {id:coolbotbutton2,type:sharedMeshNode,bounds:{type:RECTANGULAR},
+                    transform:{scale:[1,1,1],translate:[-1000,-1000,0],axisAngle:{values:[0,0,1,0.9]}},
+                    material:{blendEquation:[DISABLED]},
+                    properties:{POINTERINPUT:true,onclick:"view:MOVE:100,0,0"}}
+                ]}, 
+                {id:rotateobjects,type:meshnode,transform:{translate:[-800, 500, 0]},textureRef:{source:"assets/uvtexture.tex"},shape:{type:rect,values:[-100,100,200,200]},
+                material:{}}
                 
-          ]}
-      ]
+            ]}
+        ]}
+    ]
 }
