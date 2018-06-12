@@ -1,5 +1,8 @@
 # super-performance-sprites
-1000 sprites on a low/medium end mobile phone using one draw call in OpenGL ES - this is a multi platform project that supports running on J2SE using JOGAMP.
+2000 sprites on a low-end mobile phone using one draw call in OpenGL ES - this is a multi platform project that supports running on J2SE using JOGAMP.
+- Demo with 5000 sprites, pinch to zoom and touch to release sprites.
+Download and install 'super-performance-sprites-android.apk'
+
 
 This project depends on:
 vecmath (develop)
