@@ -7,11 +7,11 @@ import com.nucleus.component.CPUComponentBuffer;
 
 public class SuperSpriteTestSystem extends SuperSpriteSystem {
 
+    @Override
     protected void initSprites(SpriteAttributeComponent component) {
         CPUComponentBuffer entityBuffer = (CPUComponentBuffer) component.getEntityBuffer();
         EntityIndexer mapper = component.getMapper();
         int spriteFrames = component.getFrameCount();
-        float[] rectBounds = new float[4];
         component.get2DBounds(rectBounds);
         int frame = 0;
         float rotation = 0;

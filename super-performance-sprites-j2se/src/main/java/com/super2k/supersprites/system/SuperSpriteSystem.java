@@ -39,6 +39,7 @@ public class SuperSpriteSystem extends System<SpriteAttributeComponent> {
     float[] entityData;
     protected int currentSprite = 0;
     protected Random random = new Random(java.lang.System.currentTimeMillis());
+    float[] rectBounds = new float[4];
 
     public SuperSpriteSystem() {
     }
@@ -114,7 +115,6 @@ public class SuperSpriteSystem extends System<SpriteAttributeComponent> {
         CPUComponentBuffer entityBuffer = (CPUComponentBuffer) component.getEntityBuffer();
         EntityIndexer mapper = component.getMapper();
         int spriteFrames = component.getFrameCount();
-        float[] rectBounds = new float[4];
         component.get2DBounds(rectBounds);
         int frame = 0;
         if (entityData == null) {
@@ -148,6 +148,7 @@ public class SuperSpriteSystem extends System<SpriteAttributeComponent> {
      * @param pos
      */
     public void releaseSprite(SpriteAttributeComponent component, float[] pos) {
+        component.get2DBounds(rectBounds);
         EntityIndexer mapper = component.getMapper();
         if (entityData != null) {
             float[] scale = scene.getTransform().getScale();
@@ -156,7 +157,7 @@ public class SuperSpriteSystem extends System<SpriteAttributeComponent> {
             // Only update position
             component.setEntity(currentSprite, 0, entityData, 0, 2);
             // Reset / new entity data.
-            ActorComponent.getRandomEntityData(entityData, null, 0.01f, mapper, random);
+            ActorComponent.getRandomEntityData(entityData, rectBounds, 0.01f, mapper, random);
             component.setEntity(currentSprite, mapper.attributesPerVertex, entityData, mapper.attributesPerVertex,
                     mapper.attributesPerEntity - mapper.attributesPerVertex);
             currentSprite++;
