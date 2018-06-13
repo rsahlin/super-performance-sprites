@@ -156,7 +156,8 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                 }
                 // root = serializer.importScene("assets/testscene.json");
                 // TODO Make a hook so that the name of the scene to load can be changed.
-                root = serializer.importScene("assets/scene.json");
+                root = serializer.importScene("assets/", "scene.json");
+
                 coreApp.setRootNode(root);
                 coreApp.addPointerInput(root);
                 viewFrustum = root.getNodeByType(NodeTypes.layernode.name()).getViewFrustum();
