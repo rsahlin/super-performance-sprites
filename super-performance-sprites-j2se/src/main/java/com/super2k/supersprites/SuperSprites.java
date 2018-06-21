@@ -22,7 +22,7 @@ import com.nucleus.scene.NodeException;
 import com.nucleus.scene.RootNode;
 import com.nucleus.system.ComponentHandler;
 import com.nucleus.vecmath.Matrix;
-import com.nucleus.vecmath.Vector2D;
+import com.nucleus.vecmath.Vec2;
 import com.super2k.supersprites.system.SuperSpriteSystem;
 import com.super2k.supersprites.system.SuperSpriteTestSystem;
 
@@ -30,7 +30,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
 
     public static final Renderers GL_VERSION = Renderers.GLES20;
 
-    private float[] matrix = Matrix.createMatrix();
+    private float[] matrix = Matrix.setIdentity(Matrix.createMatrix(), 0);
 
     /**
      * The types that can be used to represent classes when importing/exporting
@@ -97,8 +97,8 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                 releaseSprite(pos, null);
                 break;
             case ZOOM:
-                Vector2D zoom = event.getZoom();
-                float z = (zoom.vector[Vector2D.MAGNITUDE] * zoom.vector[Vector2D.X]) / viewFrustum.getHeight();
+                Vec2 zoom = event.getZoom();
+                float z = (zoom.vector[Vec2.MAGNITUDE] * zoom.vector[Vec2.X]) / viewFrustum.getHeight();
                 root.getNodeById("scene").getTransform().scale(z);
                 break;
             default:
@@ -109,7 +109,8 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     protected void rotateTo(float[] pointerPos, String nodeId) {
         Node node = root.getNodeById(nodeId);
         if (node != null) {
-            Matrix.setRotateTo(pointerPos, matrix);
+            Matrix.setIdentity(matrix, 0);
+            Matrix.setRotateZTo2D(pointerPos, matrix);
             Matrix.translate(matrix, node.getTransform().getTranslate());
             node.getTransform().setMatrix(matrix);
         }
@@ -154,8 +155,8 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                     serializer.init(renderer, GSONGraphicsEngineFactory.getNodeFactory(),
                             GSONGraphicsEngineFactory.getMeshFactory(renderer), ClientClasses.values());
                 }
-                // root = serializer.importScene("assets/testscene.json");
                 // TODO Make a hook so that the name of the scene to load can be changed.
+                // root = serializer.importScene("assets/", "testscene.json");
                 root = serializer.importScene("assets/", "scene.json");
 
                 coreApp.setRootNode(root);

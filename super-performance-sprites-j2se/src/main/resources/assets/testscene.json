@@ -1,4 +1,6 @@
 {
+    glTFPath:"assets/gltf/";
+    glTFUris:["Box.gltf"],
     properties:{gravity:-900},
     children:[
         {layer:SCENE,id:scene,type:layernode,
@@ -6,6 +8,7 @@
         transform:{scale:[0.2,0.2,1],translate:[0,0,5],scaleLimit:{min:[0.05],max:[3.0]}},viewFrustum:{projection:ORTHOGONAL,values:[-1920,1920,-1080,1080,0,10]},
         children:
         [
+            {id:gltf1,type:gltfnode,glTFName:"Box.gltf"},
             {id:sprites2,type:spriteComponentNode,transform:{axisAngle:{values:[0,0,1,0]},translate:[0,0.0,0]},textureRef:{source:"assets/spritetexture.tex"},
                 material:{blendEquation:[DISABLED]}, 
                 components:[{id:spritecomponent,type:spriteattributecomponent,system:superspritetestsystem,count:100,shape:{type:rect,values:[-25,25,50,50]}}]}, 
