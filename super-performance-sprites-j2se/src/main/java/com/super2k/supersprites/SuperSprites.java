@@ -11,6 +11,7 @@ import com.nucleus.common.Type;
 import com.nucleus.io.SceneSerializer;
 import com.nucleus.mmi.MMIEventListener;
 import com.nucleus.mmi.MMIPointerEvent;
+import com.nucleus.mmi.core.InputProcessor;
 import com.nucleus.opengl.GLESWrapper.Renderers;
 import com.nucleus.renderer.NucleusRenderer;
 import com.nucleus.renderer.NucleusRenderer.RenderContextListener;
@@ -156,18 +157,18 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                             GSONGraphicsEngineFactory.getMeshFactory(renderer), ClientClasses.values());
                 }
                 // TODO Make a hook so that the name of the scene to load can be changed.
-                // root = serializer.importScene("assets/", "testscene.json");
-                root = serializer.importScene("assets/", "scene.json");
+                root = serializer.importScene("assets/", "testscene.json");
+                // root = serializer.importScene("assets/", "scene.json");
 
                 coreApp.setRootNode(root);
                 coreApp.addPointerInput(root);
                 viewFrustum = root.getNodeByType(NodeTypes.layernode.name()).getViewFrustum();
                 float[] values = viewFrustum.getValues();
                 // If y is going down then reverse y so that 0 is at bottom which is the same as OpenGL
-                coreApp.getInputProcessor().setPointerTransform(viewFrustum.getWidth() / width,
+                InputProcessor.getInstance().setPointerTransform(viewFrustum.getWidth() / width,
                         -viewFrustum.getHeight() / height, values[ViewFrustum.LEFT_INDEX],
                         values[ViewFrustum.TOP_INDEX]);
-                coreApp.getInputProcessor().setMaxPointers(20);
+                InputProcessor.getInstance().setMaxPointers(20);
                 fetchSprites();
             } catch (NodeException e) {
                 throw new RuntimeException(e);
@@ -188,9 +189,9 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         }
         this.coreApp = coreApp;
         renderer = coreApp.getRenderer();
-        coreApp.getInputProcessor().addMMIListener(this);
+        InputProcessor.getInstance().addMMIListener(this);
         coreApp.getRenderer().addContextListener(this);
-        coreApp.getInputProcessor().getPointerScale(pointerScale);
+        InputProcessor.getInstance().getPointerScale(pointerScale);
     }
 
     @Override
