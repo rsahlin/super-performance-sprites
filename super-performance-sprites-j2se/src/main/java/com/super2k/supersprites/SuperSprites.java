@@ -18,7 +18,6 @@ import com.nucleus.renderer.NucleusRenderer.RenderContextListener;
 import com.nucleus.renderer.Window;
 import com.nucleus.scene.ComponentNode;
 import com.nucleus.scene.Node;
-import com.nucleus.scene.Node.NodeTypes;
 import com.nucleus.scene.NodeException;
 import com.nucleus.scene.RootNode;
 import com.nucleus.system.ComponentHandler;
@@ -110,6 +109,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     protected void rotateTo(float[] pointerPos, String nodeId) {
         Node node = root.getNodeById(nodeId);
         if (node != null) {
+            node.getTransform().setMatrixMode(true);
             Matrix.setIdentity(matrix, 0);
             Matrix.setRotateZTo2D(pointerPos, matrix);
             Matrix.translate(matrix, node.getTransform().getTranslate());
@@ -162,7 +162,8 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
 
                 coreApp.setRootNode(root);
                 coreApp.addPointerInput(root);
-                viewFrustum = root.getNodeByType(NodeTypes.layernode.name()).getViewFrustum();
+                viewFrustum = root.getNodeByType(com.nucleus.scene.AbstractNode.NodeTypes.layernode.name())
+                        .getViewFrustum();
                 float[] values = viewFrustum.getValues();
                 // If y is going down then reverse y so that 0 is at bottom which is the same as OpenGL
                 InputProcessor.getInstance().setPointerTransform(viewFrustum.getWidth() / width,

@@ -10,8 +10,8 @@ import com.nucleus.camera.ViewFrustum;
 import com.nucleus.common.Constants;
 import com.nucleus.component.CPUComponentBuffer;
 import com.nucleus.renderer.NucleusRenderer;
+import com.nucleus.scene.AbstractNode.NodeTypes;
 import com.nucleus.scene.Node;
-import com.nucleus.scene.Node.NodeTypes;
 import com.nucleus.scene.RootNode;
 import com.nucleus.system.System;
 import com.nucleus.vecmath.Rectangle;
@@ -27,8 +27,9 @@ import com.nucleus.vecmath.Rectangle;
 public class SuperSpriteSystem extends System<SpriteAttributeComponent> {
 
     public static final String GRAVITY_KEY = "gravity";
+    public static final String DEFAULT_GRAVITY = "-500";
 
-    public static float GRAVITY = -500;
+    public static float GRAVITY;
 
     RootNode root;
     protected Node scene;
@@ -169,7 +170,7 @@ public class SuperSpriteSystem extends System<SpriteAttributeComponent> {
 
     @Override
     public void initSystem(NucleusRenderer renderer, RootNode root) {
-        GRAVITY = Float.parseFloat(root.getProperty(GRAVITY_KEY));
+        GRAVITY = Float.parseFloat(root.getProperty(GRAVITY_KEY, DEFAULT_GRAVITY));
         initialized = true;
     }
 
