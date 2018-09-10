@@ -153,8 +153,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                 SimpleLogger.d(getClass(), "Loading scene");
                 SceneSerializer serializer = GSONGraphicsEngineFactory.getInstance();
                 if (!serializer.isInitialized()) {
-                    serializer.init(renderer, GSONGraphicsEngineFactory.getNodeFactory(),
-                            GSONGraphicsEngineFactory.getMeshFactory(renderer), ClientClasses.values());
+                    serializer.init(renderer, GSONGraphicsEngineFactory.getNodeFactory(), ClientClasses.values());
                 }
                 // TODO Make a hook so that the name of the scene to load can be changed.
                 root = serializer.importScene("assets/", "testscene.json");
