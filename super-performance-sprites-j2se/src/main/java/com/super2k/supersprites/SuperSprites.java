@@ -72,7 +72,6 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     private ComponentNode componentNode;
     private SpriteAttributeComponent spriteComponent;
     private SuperSpriteSystem system;
-    private float[] pointerScale = new float[2];
 
     public SuperSprites() {
         super();
@@ -98,7 +97,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                 break;
             case ZOOM:
                 Vec2 zoom = event.getZoom();
-                float z = (zoom.vector[Vec2.MAGNITUDE] * zoom.vector[Vec2.X]) / viewFrustum.getHeight();
+                float z = zoom.vector[Vec2.MAGNITUDE] * zoom.vector[Vec2.X];
                 root.getNodeById("scene").getTransform().scale(z);
                 break;
             default:
@@ -156,8 +155,8 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                     serializer.init(renderer.getGLES(), ClientClasses.values());
                 }
                 // TODO Make a hook so that the name of the scene to load can be changed.
-                root = serializer.importScene("assets/", "testscene.json");
-                // root = serializer.importScene("assets/", "scene.json");
+                // root = serializer.importScene("assets/", "testscene.json");
+                root = serializer.importScene("assets/", "scene.json");
 
                 coreApp.setRootNode(root);
                 coreApp.addPointerInput(root);
@@ -191,7 +190,6 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         renderer = coreApp.getRenderer();
         InputProcessor.getInstance().addMMIListener(this);
         coreApp.getRenderer().addContextListener(this);
-        InputProcessor.getInstance().getPointerScale(pointerScale);
     }
 
     @Override
