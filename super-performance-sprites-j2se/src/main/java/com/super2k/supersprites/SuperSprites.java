@@ -28,7 +28,7 @@ import com.super2k.supersprites.system.SuperSpriteTestSystem;
 
 public class SuperSprites implements MMIEventListener, RenderContextListener, ClientApplication {
 
-    public static final Renderers GL_VERSION = Renderers.GLES20;
+    public static final Renderers GL_VERSION = Renderers.GLES31;
 
     private float[] matrix = Matrix.setIdentity(Matrix.createMatrix(), 0);
 
@@ -155,8 +155,8 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                     serializer.init(renderer.getGLES(), ClientClasses.values());
                 }
                 // TODO Make a hook so that the name of the scene to load can be changed.
-                // root = serializer.importScene("assets/", "testscene.json");
-                root = serializer.importScene("assets/", "scene.json");
+                root = serializer.importScene("assets/", "testscene.json");
+                // root = serializer.importScene("assets/", "scene.json");
 
                 coreApp.setRootNode(root);
                 coreApp.addPointerInput(root);
