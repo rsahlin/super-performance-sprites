@@ -21,6 +21,7 @@ import com.nucleus.scene.Node;
 import com.nucleus.scene.NodeException;
 import com.nucleus.scene.RootNode;
 import com.nucleus.system.ComponentHandler;
+import com.nucleus.vecmath.AxisAngle;
 import com.nucleus.vecmath.Matrix;
 import com.nucleus.vecmath.Vec2;
 import com.super2k.supersprites.system.SuperSpriteSystem;
@@ -28,6 +29,8 @@ import com.super2k.supersprites.system.SuperSpriteTestSystem;
 
 public class SuperSprites implements MMIEventListener, RenderContextListener, ClientApplication {
 
+    public static final String NAME = "GLTF Render demo";
+    public static final String VERSION = "0.1";
     public static final Renderers GL_VERSION = Renderers.GLES31;
 
     private float[] matrix = Matrix.setIdentity(Matrix.createMatrix(), 0);
@@ -90,6 +93,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                 releaseSprite(pos, move);
                 // For testscene
                 rotateTo(pos, "rotateobjects");
+                rotate(move, "gltf1");
                 break;
             case ACTIVE:
                 fetchSprites();
@@ -97,11 +101,24 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                 break;
             case ZOOM:
                 Vec2 zoom = event.getZoom();
-                float z = zoom.vector[Vec2.MAGNITUDE] * zoom.vector[Vec2.X];
+                float z = (zoom.vector[Vec2.MAGNITUDE] * zoom.vector[Vec2.X])
+                        / InputProcessor.getInstance().getPointerScaleY();
+                ;
                 root.getNodeById("scene").getTransform().scale(z);
                 break;
             default:
 
+        }
+    }
+
+    protected void rotate(float[] move, String nodeId) {
+        Node node = root.getNodeById(nodeId);
+        if (node != null && node.getTransform() != null) {
+            AxisAngle aa = node.getTransform().getAxisAngle();
+            if (aa != null) {
+                float[] values = aa.getValues();
+                values[AxisAngle.ANGLE] += (move[1] / viewFrustum.getHeight() * 3.14);
+            }
         }
     }
 
@@ -122,7 +139,9 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
      * @param pos
      */
     private void releaseSprite(float[] pos, float[] delta) {
-        system.releaseSprite(spriteComponent, pos);
+        if (system != null) {
+            system.releaseSprite(spriteComponent, pos);
+        }
     }
 
     /**
@@ -155,7 +174,8 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                     serializer.init(renderer.getGLES(), ClientClasses.values());
                 }
                 // TODO Make a hook so that the name of the scene to load can be changed.
-                root = serializer.importScene("assets/", "testscene.json");
+                root = serializer.importScene("assets/", "gltfscene.json");
+                // root = serializer.importScene("assets/", "testscene.json");
                 // root = serializer.importScene("assets/", "scene.json");
 
                 coreApp.setRootNode(root);
@@ -202,6 +222,16 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     public void endFrame(float deltaTime) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public String getAppName() {
+        return NAME;
+    }
+
+    @Override
+    public String getVersion() {
+        return VERSION;
     }
 
 }
