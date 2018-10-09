@@ -4,7 +4,7 @@
     properties:{gravity:-900},
     children:[
         {layer:SCENE,id:scene,type:layernode,
-        renderPass:[{id:mainpass,pass:MAIN,renderState:{clearColor:[0.3f, 0.3f, 0.5f, 1f]},target:{id:main,target:FRAMEBUFFER}}],
+        renderPass:[{id:mainpass,pass:MAIN,renderState:{clearColor:[0.3f, 0.3f, 0.5f, 1f],cullFace:FRONT},target:{id:main,target:FRAMEBUFFER}}],
         transform:{scale:[0.2,0.2,1],translate:[0,0,5],scaleLimit:{min:[0.05],max:[3.0]}},viewFrustum:{projection:ORTHOGONAL,values:[-1920,1920,-1080,1080,0,10]},
         children:
         [
@@ -36,8 +36,7 @@
                 {id:rotateobjects,type:meshnode,transform:{translate:[-800, 500, 0]},textureRef:{source:"assets/uvtexture.tex"},shape:{type:rect,values:[-100,100,200,200]},
                 material:{}}
                 
-            ]},
-            {id:gltf1,type:gltfnode,glTFName:"Box.gltf",viewFrustum:{projection:PERSPECTIVE,values:[-0.8889,0.8889,-0.5,0.5,1.0,100]}}
+            ]}
         ]}
     ]
 }

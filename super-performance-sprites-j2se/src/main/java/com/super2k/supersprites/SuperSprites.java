@@ -1,13 +1,17 @@
 package com.super2k.supersprites;
 
+import java.io.File;
+
 import com.graphicsengine.component.SpriteAttributeComponent;
 import com.graphicsengine.io.GSONGraphicsEngineFactory;
 import com.graphicsengine.scene.GraphicsEngineNodeType;
 import com.nucleus.CoreApp;
 import com.nucleus.CoreApp.ClientApplication;
 import com.nucleus.SimpleLogger;
+import com.nucleus.assets.AssetManager;
 import com.nucleus.camera.ViewFrustum;
 import com.nucleus.common.Type;
+import com.nucleus.io.GSONSceneFactory;
 import com.nucleus.io.SceneSerializer;
 import com.nucleus.mmi.MMIEventListener;
 import com.nucleus.mmi.MMIPointerEvent;
@@ -30,7 +34,7 @@ import com.super2k.supersprites.system.SuperSpriteTestSystem;
 public class SuperSprites implements MMIEventListener, RenderContextListener, ClientApplication {
 
     public static final String NAME = "GLTF Render demo";
-    public static final String VERSION = "0.1";
+    public static final String VERSION = "0.2";
     public static final Renderers GL_VERSION = Renderers.GLES31;
 
     private float[] matrix = Matrix.setIdentity(Matrix.createMatrix(), 0);
@@ -93,7 +97,6 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                 releaseSprite(pos, move);
                 // For testscene
                 rotateTo(pos, "rotateobjects");
-                rotate(move, "gltf1");
                 break;
             case ACTIVE:
                 fetchSprites();
@@ -169,30 +172,40 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         if (root == null) {
             try {
                 SimpleLogger.d(getClass(), "Loading scene");
-                SceneSerializer serializer = GSONGraphicsEngineFactory.getInstance();
+                SceneSerializer<RootNode> serializer = GSONGraphicsEngineFactory.getInstance();
                 if (!serializer.isInitialized()) {
                     serializer.init(renderer.getGLES(), ClientClasses.values());
                 }
                 // TODO Make a hook so that the name of the scene to load can be changed.
-                root = serializer.importScene("assets/", "gltfscene.json");
-                // root = serializer.importScene("assets/", "testscene.json");
+                root = serializer.importScene("assets/", "testscene.json", GSONSceneFactory.NUCLEUS_SCENE);
                 // root = serializer.importScene("assets/", "scene.json");
 
-                coreApp.setRootNode(root);
-                coreApp.addPointerInput(root);
-                viewFrustum = root.getNodeByType(com.nucleus.scene.AbstractNode.NodeTypes.layernode.name())
-                        .getViewFrustum();
-                float[] values = viewFrustum.getValues();
-                // If y is going down then reverse y so that 0 is at bottom which is the same as OpenGL
-                InputProcessor.getInstance().setPointerTransform(viewFrustum.getWidth() / width,
-                        -viewFrustum.getHeight() / height, values[ViewFrustum.LEFT_INDEX],
-                        values[ViewFrustum.TOP_INDEX]);
-                InputProcessor.getInstance().setMaxPointers(20);
-                fetchSprites();
+                setup(width, height);
+
             } catch (NodeException e) {
                 throw new RuntimeException(e);
             }
         }
+    }
+
+    protected void initScene(RootNode root) {
+        this.root = root;
+        File[] folders = AssetManager.getInstance().listResourceFolders(root.getGLTFPath());
+    }
+
+    protected void setup(int width, int height) {
+
+        coreApp.setRootNode(root);
+        coreApp.addPointerInput(root);
+        viewFrustum = root.getNodeByType(com.nucleus.scene.AbstractNode.NodeTypes.layernode.name())
+                .getViewFrustum();
+        float[] values = viewFrustum.getValues();
+        // If y is going down then reverse y so that 0 is at bottom which is the same as OpenGL
+        InputProcessor.getInstance().setPointerTransform(viewFrustum.getWidth() / width,
+                -viewFrustum.getHeight() / height, values[ViewFrustum.LEFT_INDEX],
+                values[ViewFrustum.TOP_INDEX]);
+        InputProcessor.getInstance().setMaxPointers(20);
+        fetchSprites();
     }
 
     @Override
