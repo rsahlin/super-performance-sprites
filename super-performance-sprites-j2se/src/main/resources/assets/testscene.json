@@ -1,6 +1,4 @@
 {
-    glTFPath:"assets/gltf/";
-    glTFUris:["Box.gltf"],
     properties:{gravity:-900},
     children:[
         {layer:SCENE,id:scene,type:layernode,
