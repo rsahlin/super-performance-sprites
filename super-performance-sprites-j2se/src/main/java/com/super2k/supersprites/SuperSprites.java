@@ -18,8 +18,9 @@ import com.nucleus.renderer.NucleusRenderer;
 import com.nucleus.renderer.NucleusRenderer.RenderContextListener;
 import com.nucleus.renderer.Window;
 import com.nucleus.scene.ComponentNode;
-import com.nucleus.scene.Node;
+import com.nucleus.scene.LayerNode;
 import com.nucleus.scene.NodeException;
+import com.nucleus.scene.RenderableNode;
 import com.nucleus.scene.RootNode;
 import com.nucleus.system.ComponentHandler;
 import com.nucleus.vecmath.AxisAngle;
@@ -35,6 +36,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     public static final Renderers GL_VERSION = Renderers.GLES31;
 
     private float[] matrix = Matrix.setIdentity(Matrix.createMatrix(), 0);
+    protected LayerNode scene;
 
     /**
      * The types that can be used to represent classes when importing/exporting
@@ -104,7 +106,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                 float z = (zoom.vector[Vec2.MAGNITUDE] * zoom.vector[Vec2.X])
                         / InputProcessor.getInstance().getPointerScaleY();
                 ;
-                root.getNodeById("scene").getTransform().scale(z);
+                root.getNodeById("scene", RenderableNode.class).getTransform().scale(z);
                 break;
             default:
 
@@ -112,7 +114,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     }
 
     protected void rotate(float[] move, String nodeId) {
-        Node node = root.getNodeById(nodeId);
+        RenderableNode<?> node = root.getNodeById(nodeId, RenderableNode.class);
         if (node != null && node.getTransform() != null) {
             AxisAngle aa = node.getTransform().getAxisAngle();
             if (aa != null) {
@@ -123,7 +125,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     }
 
     protected void rotateTo(float[] pointerPos, String nodeId) {
-        Node node = root.getNodeById(nodeId);
+        RenderableNode<?> node = root.getNodeById(nodeId, RenderableNode.class);
         if (node != null) {
             node.getTransform().setMatrixMode(true);
             Matrix.setIdentity(matrix, 0);
@@ -151,8 +153,8 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         if (componentNode != null) {
             return;
         }
-        componentNode = (ComponentNode) root.getNodeById("scene")
-                .getNodeByType(GraphicsEngineNodeType.spriteComponentNode.name());
+        componentNode = (ComponentNode) scene.getNodeByType(GraphicsEngineNodeType.spriteComponentNode.name(),
+                GraphicsEngineNodeType.spriteComponentNode.theClass);
         if (componentNode != null) {
             spriteComponent = (SpriteAttributeComponent) componentNode.getComponentById("spritecomponent");
             if (spriteComponent == null) {
@@ -193,8 +195,8 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
 
         coreApp.setRootNode(root);
         coreApp.addPointerInput(root);
-        viewFrustum = root.getNodeByType(com.nucleus.scene.AbstractNode.NodeTypes.layernode.name())
-                .getViewFrustum();
+        scene = root.getNodeById("scene", LayerNode.class);
+        viewFrustum = scene.getViewFrustum();
         float[] values = viewFrustum.getValues();
         // If y is going down then reverse y so that 0 is at bottom which is the same as OpenGL
         InputProcessor.getInstance().setPointerTransform(viewFrustum.getWidth() / width,

@@ -10,8 +10,7 @@ import com.nucleus.camera.ViewFrustum;
 import com.nucleus.common.Constants;
 import com.nucleus.component.CPUComponentBuffer;
 import com.nucleus.renderer.NucleusRenderer;
-import com.nucleus.scene.AbstractNode.NodeTypes;
-import com.nucleus.scene.Node;
+import com.nucleus.scene.LayerNode;
 import com.nucleus.scene.RootNode;
 import com.nucleus.system.System;
 import com.nucleus.vecmath.Rectangle;
@@ -32,7 +31,7 @@ public class SuperSpriteSystem extends System<SpriteAttributeComponent> {
     public static float GRAVITY;
 
     RootNode root;
-    protected Node scene;
+    protected LayerNode scene;
     protected RectangularBounds screenBounds = new RectangularBounds(new Rectangle(0, 0, 0, 0));
     public float[] scaledRect = new float[4];
     public float[] viewport = new float[ViewFrustum.PROJECTION_SIZE];
@@ -105,9 +104,9 @@ public class SuperSpriteSystem extends System<SpriteAttributeComponent> {
     @Override
     public void initComponent(NucleusRenderer renderer, RootNode root, SpriteAttributeComponent component) {
         this.root = root;
-        scene = root.getNodeById("scene");
+        scene = root.getNodeById("scene", LayerNode.class);
         // Get the view frustum and create rectangle bounds
-        viewFrustum = root.getNodeByType(NodeTypes.layernode.name()).getViewFrustum();
+        viewFrustum = scene.getViewFrustum();
         viewFrustum.getValues(viewport);
         initSprites(component);
     }
