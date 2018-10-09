@@ -1,14 +1,11 @@
 package com.super2k.supersprites;
 
-import java.io.File;
-
 import com.graphicsengine.component.SpriteAttributeComponent;
 import com.graphicsengine.io.GSONGraphicsEngineFactory;
 import com.graphicsengine.scene.GraphicsEngineNodeType;
 import com.nucleus.CoreApp;
 import com.nucleus.CoreApp.ClientApplication;
 import com.nucleus.SimpleLogger;
-import com.nucleus.assets.AssetManager;
 import com.nucleus.camera.ViewFrustum;
 import com.nucleus.common.Type;
 import com.nucleus.io.GSONSceneFactory;
@@ -190,7 +187,6 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
 
     protected void initScene(RootNode root) {
         this.root = root;
-        File[] folders = AssetManager.getInstance().listResourceFolders(root.getGLTFPath());
     }
 
     protected void setup(int width, int height) {
