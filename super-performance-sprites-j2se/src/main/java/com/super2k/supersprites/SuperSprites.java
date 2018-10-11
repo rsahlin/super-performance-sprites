@@ -22,6 +22,7 @@ import com.nucleus.scene.LayerNode;
 import com.nucleus.scene.NodeException;
 import com.nucleus.scene.RenderableNode;
 import com.nucleus.scene.RootNode;
+import com.nucleus.scene.RootNodeImpl;
 import com.nucleus.system.ComponentHandler;
 import com.nucleus.vecmath.AxisAngle;
 import com.nucleus.vecmath.Matrix;
@@ -187,7 +188,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         }
     }
 
-    protected void initScene(RootNode root) {
+    protected void initScene(RootNodeImpl root) {
         this.root = root;
     }
 
