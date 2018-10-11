@@ -8,7 +8,6 @@ import com.nucleus.CoreApp.ClientApplication;
 import com.nucleus.SimpleLogger;
 import com.nucleus.camera.ViewFrustum;
 import com.nucleus.common.Type;
-import com.nucleus.io.GSONSceneFactory;
 import com.nucleus.io.SceneSerializer;
 import com.nucleus.mmi.MMIEventListener;
 import com.nucleus.mmi.MMIPointerEvent;
@@ -22,6 +21,7 @@ import com.nucleus.scene.LayerNode;
 import com.nucleus.scene.NodeException;
 import com.nucleus.scene.RenderableNode;
 import com.nucleus.scene.RootNode;
+import com.nucleus.scene.RootNodeBuilder;
 import com.nucleus.scene.RootNodeImpl;
 import com.nucleus.system.ComponentHandler;
 import com.nucleus.vecmath.AxisAngle;
@@ -177,7 +177,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
                     serializer.init(renderer.getGLES(), ClientClasses.values());
                 }
                 // TODO Make a hook so that the name of the scene to load can be changed.
-                root = serializer.importScene("assets/", "testscene.json", GSONSceneFactory.NUCLEUS_SCENE);
+                root = serializer.importScene("assets/", "testscene.json", RootNodeBuilder.NUCLEUS_SCENE);
                 // root = serializer.importScene("assets/", "scene.json");
 
                 setup(width, height);
