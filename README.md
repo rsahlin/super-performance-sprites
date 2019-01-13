@@ -26,7 +26,7 @@ ECLIPSE
 ----------------------------------------------------------------------
 Prerequisites:
 - Maven
-- Eclipse Oxygen
+- Eclipse photon
 Make sure that you are using Android Andmore and m2e plugins (not the old DDMS/ADT from 'The Android Open Source Project')
 Check by opening 'Help' - 'Install new software' - 'What is already installed?' 
 Uninstall software from 'The Android Opensource Project' and fetch Andmore from Eclipse marketplace.
@@ -36,10 +36,11 @@ Check with 'javac -version'
 
 - Import dependencies as Maven projects or install to local maven repo:
 - Import as Existing Maven project into Eclipse
+- To get sourcecode when debugging - add J2SE project dependencies to Java build path by opening 'Properties - Java build path'
+- In 'Projects' tab, enter the J2SE (not Android) projects that are referenced - 'graphics-by-opengl-j2se', 'graphics-engine' and 'vecmath'.
+- In 'Order and export' tab, make sure the referenced projects are added (checked)
 
 - Android modules may complain that compiler level is below 1.7 - to fix open 'properties' - 'java compiler' and make sure project uses compiler level (at least) 1.7
-- Error similar to: Dex Loader] Failed to load .....\build-tools\27.0.1\lib\dx.jar although the jar is present
-is solved by switching Android sdk build tools - uninstall the build tools version that is complaining (27.0.1) and install 25.0.3
 Restart Eclipse to make sure changes take effect.
 - If you see an error launching Android project:
 Errors running builder 'Android Package Builder'
@@ -47,6 +48,8 @@ sun/misc/BASE64Encode
 It probably means you are using Java 9 jre/sdk.
 Download Java 8 then go to 'preferences' - 'Java' - 'Compiler' press 'Configure' att the bottom and add the downloaded java 8 jre/jdk and select as default.
 Restart Eclipse to make sure changes take effect. 
+- Error similar to: Dex Loader] Failed to load .....\build-tools\27.0.1\lib\dx.jar although the jar is present
+is solved by switching Android sdk build tools - uninstall the build tools version that is complaining (27.0.1) and install 25.0.3
 
 -----------------------------------------------------------------------
 Android Studio / gradle
