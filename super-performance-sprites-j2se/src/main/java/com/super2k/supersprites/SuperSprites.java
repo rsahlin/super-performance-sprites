@@ -9,9 +9,9 @@ import com.nucleus.SimpleLogger;
 import com.nucleus.camera.ViewFrustum;
 import com.nucleus.common.Type;
 import com.nucleus.io.SceneSerializer;
-import com.nucleus.mmi.MMIEventListener;
-import com.nucleus.mmi.MMIPointerEvent;
-import com.nucleus.mmi.core.InputProcessor;
+import com.nucleus.mmi.MMIPointerInput;
+import com.nucleus.mmi.MMIPointer;
+import com.nucleus.mmi.core.CoreInput;
 import com.nucleus.opengl.GLESWrapper.Renderers;
 import com.nucleus.renderer.NucleusRenderer;
 import com.nucleus.renderer.NucleusRenderer.RenderContextListener;
@@ -30,7 +30,7 @@ import com.nucleus.vecmath.Vec2;
 import com.super2k.supersprites.system.SuperSpriteSystem;
 import com.super2k.supersprites.system.SuperSpriteTestSystem;
 
-public class SuperSprites implements MMIEventListener, RenderContextListener, ClientApplication {
+public class SuperSprites implements MMIPointerInput, RenderContextListener, ClientApplication {
 
     public static final String NAME = "GLTF Render demo";
     public static final String VERSION = "0.2";
@@ -85,7 +85,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
     }
 
     @Override
-    public void onInputEvent(MMIPointerEvent event) {
+    public void onInput(MMIPointer event) {
 
         float[] pos = event.getPointerData().getCurrentPosition();
         switch (event.getAction()) {
@@ -105,7 +105,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
             case ZOOM:
                 Vec2 zoom = event.getZoom();
                 float z = (zoom.vector[Vec2.MAGNITUDE] * zoom.vector[Vec2.X])
-                        / InputProcessor.getInstance().getPointerScaleY();
+                        / CoreInput.getInstance().getPointerScaleY();
                 root.getNodeById("scene", RenderableNode.class).getTransform().scale(z);
                 break;
             default:
@@ -199,10 +199,10 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         viewFrustum = scene.getViewFrustum();
         float[] values = viewFrustum.getValues();
         // If y is going down then reverse y so that 0 is at bottom which is the same as OpenGL
-        InputProcessor.getInstance().setPointerTransform(viewFrustum.getWidth() / width,
+        CoreInput.getInstance().setPointerTransform(viewFrustum.getWidth() / width,
                 -viewFrustum.getHeight() / height, values[ViewFrustum.LEFT_INDEX],
                 values[ViewFrustum.TOP_INDEX]);
-        InputProcessor.getInstance().setMaxPointers(20);
+        CoreInput.getInstance().setMaxPointers(20);
         fetchSprites();
     }
 
@@ -219,7 +219,7 @@ public class SuperSprites implements MMIEventListener, RenderContextListener, Cl
         }
         this.coreApp = coreApp;
         renderer = coreApp.getRenderer();
-        InputProcessor.getInstance().addMMIListener(this);
+        CoreInput.getInstance().addMMIListener(this);
         coreApp.getRenderer().addContextListener(this);
     }
 
