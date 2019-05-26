@@ -2,7 +2,6 @@ package com.super2k.supersprites.android;
 
 import com.nucleus.CoreApp;
 import com.nucleus.android.NucleusActivity;
-import com.nucleus.opengl.GLESWrapper.Renderers;
 import com.super2k.supersprites.SuperSprites;
 import com.super2k.supersprites.SuperSprites.ClientClasses;
 
@@ -18,7 +17,7 @@ public class SuperSpritesActivity extends NucleusActivity {
     }
 
     @Override
-    public Renderers getRenderVersion() {
+    public com.nucleus.renderer.NucleusRenderer.Renderers getRenderVersion() {
         return SuperSprites.GL_VERSION;
     }
 

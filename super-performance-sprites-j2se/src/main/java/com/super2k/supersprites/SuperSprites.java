@@ -9,12 +9,12 @@ import com.nucleus.SimpleLogger;
 import com.nucleus.camera.ViewFrustum;
 import com.nucleus.common.Type;
 import com.nucleus.io.SceneSerializer;
-import com.nucleus.mmi.MMIPointerInput;
 import com.nucleus.mmi.MMIPointer;
+import com.nucleus.mmi.MMIPointerInput;
 import com.nucleus.mmi.core.CoreInput;
-import com.nucleus.opengl.GLESWrapper.Renderers;
 import com.nucleus.renderer.NucleusRenderer;
 import com.nucleus.renderer.NucleusRenderer.RenderContextListener;
+import com.nucleus.renderer.NucleusRenderer.Renderers;
 import com.nucleus.renderer.Window;
 import com.nucleus.scene.ComponentNode;
 import com.nucleus.scene.LayerNode;
@@ -173,10 +173,10 @@ public class SuperSprites implements MMIPointerInput, RenderContextListener, Cli
                 SimpleLogger.d(getClass(), "Loading scene");
                 SceneSerializer<RootNode> serializer = GSONGraphicsEngineFactory.getInstance();
                 if (!serializer.isInitialized()) {
-                    serializer.init(renderer.getGLES(), ClientClasses.values());
+                    serializer.init(renderer, ClientClasses.values());
                 }
                 // TODO Make a hook so that the name of the scene to load can be changed.
-                root = serializer.importScene("assets/", "testscene.json", RootNodeBuilder.NUCLEUS_SCENE);
+                root = serializer.importScene("assets/", "testscene.json", RootNodeBuilder.NUCLEUS_SCENE, null);
                 // root = serializer.importScene("assets/", "scene.json");
 
                 setup(width, height);
