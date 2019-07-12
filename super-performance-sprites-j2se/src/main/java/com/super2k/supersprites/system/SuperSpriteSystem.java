@@ -3,15 +3,18 @@ package com.super2k.supersprites.system;
 import java.util.Random;
 
 import com.graphicsengine.component.ActorComponent;
-import com.graphicsengine.component.ActorComponent.EntityIndexer;
+import com.graphicsengine.component.ActorComponent.ActorVariables;
 import com.graphicsengine.component.SpriteAttributeComponent;
 import com.nucleus.bounds.RectangularBounds;
 import com.nucleus.camera.ViewFrustum;
 import com.nucleus.common.Constants;
 import com.nucleus.component.CPUComponentBuffer;
+import com.nucleus.geometry.AttributeUpdater.BufferIndex;
 import com.nucleus.renderer.NucleusRenderer;
 import com.nucleus.scene.LayerNode;
 import com.nucleus.scene.RootNode;
+import com.nucleus.shader.VariableIndexer;
+import com.nucleus.shader.VariableIndexer.Property;
 import com.nucleus.system.System;
 import com.nucleus.vecmath.Rectangle;
 
@@ -40,6 +43,9 @@ public class SuperSpriteSystem extends System<SpriteAttributeComponent> {
     protected int currentSprite = 0;
     protected Random random = new Random(java.lang.System.currentTimeMillis());
     float[] rectBounds = new float[4];
+    VariableIndexer mapper;
+    private int translateOffset;
+    int sizePerVertex;
 
     public SuperSpriteSystem() {
     }
@@ -50,7 +56,6 @@ public class SuperSpriteSystem extends System<SpriteAttributeComponent> {
             throw new IllegalStateException("Component " + component.getId() + " is not initialized");
         }
         CPUComponentBuffer entityBuffer = (CPUComponentBuffer) component.getEntityBuffer();
-        EntityIndexer mapper = component.getMapper();
         updateNodeScale();
         int quadIndex = 0;
         float[] entityData = entityBuffer.getData();
@@ -63,35 +68,39 @@ public class SuperSpriteSystem extends System<SpriteAttributeComponent> {
         float elasticity;
         for (int sprite = 0; sprite < spriteCount; sprite++) {
             // Update gravity
-            entityData[mapper.moveVector + 1 + quadIndex] += GRAVITY * deltaTime;
-            entityData[mapper.rotate + quadIndex] += deltaTime * entityData[mapper.rotateSpeed + quadIndex];
-            if (entityData[mapper.rotate + 2 + quadIndex] > Constants.TWOPI) {
-                entityData[mapper.rotate + 2 + quadIndex] -= Constants.TWOPI;
+            entityData[sizePerVertex + ActorVariables.MOVEVECTOR.offset + 1 + quadIndex] += GRAVITY * deltaTime;
+            entityData[sizePerVertex + ActorVariables.ROTATESPEED.offset + quadIndex] += deltaTime
+                    * entityData[sizePerVertex + ActorVariables.ROTATESPEED.offset + quadIndex];
+            if (entityData[sizePerVertex + ActorVariables.ROTATESPEED.offset + 2 + quadIndex] > Constants.TWOPI) {
+                entityData[sizePerVertex + ActorVariables.ROTATESPEED.offset + 2 + quadIndex] -= Constants.TWOPI;
             }
-            float xpos = entityData[mapper.translate + quadIndex];
-            float ypos = entityData[mapper.translate + 1 + quadIndex];
-            elasticity = entityData[mapper.elasticity + quadIndex];
+            float xpos = entityData[translateOffset + quadIndex];
+            float ypos = entityData[translateOffset + 1 + quadIndex];
+            elasticity = entityData[sizePerVertex + ActorVariables.ELASTICITY.offset + quadIndex];
 
-            xpos += deltaTime * entityData[mapper.moveVector + quadIndex];
-            ypos += deltaTime * entityData[mapper.moveVector + 1 + quadIndex];
-            boundY = ypos + entityData[mapper.boundingBox + 1 + quadIndex]
-                    - entityData[mapper.boundingBox + 3 + quadIndex];
+            xpos += deltaTime * entityData[sizePerVertex + ActorVariables.MOVEVECTOR.offset + quadIndex];
+            ypos += deltaTime * entityData[sizePerVertex + ActorVariables.MOVEVECTOR.offset + 1 + quadIndex];
+            boundY = ypos + entityData[sizePerVertex + ActorVariables.BOUNDINGBOX.offset + 1 + quadIndex]
+                    - entityData[sizePerVertex + ActorVariables.BOUNDINGBOX.offset + 3 + quadIndex];
             if (boundY < yMin) {
-                entityData[mapper.moveVector + 1
-                        + quadIndex] = -entityData[mapper.moveVector + 1 + quadIndex]
+                entityData[sizePerVertex + ActorVariables.MOVEVECTOR.offset + 1
+                        + quadIndex] = -entityData[sizePerVertex + ActorVariables.MOVEVECTOR.offset + 1 + quadIndex]
                                 * elasticity;
                 ypos = ypos + (yMin - boundY) * elasticity;
             }
             if (xpos > xMax) {
                 xpos = xMax - (xpos - xMax);
-                entityData[mapper.moveVector + quadIndex] = -entityData[mapper.moveVector + quadIndex]
-                        * entityData[mapper.elasticity + quadIndex];
-                entityData[mapper.rotateSpeed] = entityData[mapper.rotateSpeed + quadIndex]
+                entityData[sizePerVertex + ActorVariables.MOVEVECTOR.offset
+                        + quadIndex] = -entityData[sizePerVertex + ActorVariables.MOVEVECTOR.offset + quadIndex]
+                                * entityData[sizePerVertex + ActorVariables.ELASTICITY.offset + quadIndex];
+                entityData[sizePerVertex + ActorVariables.ROTATESPEED.offset] = entityData[sizePerVertex
+                        + ActorVariables.ROTATESPEED.offset
+                        + quadIndex]
                         * elasticity;
             } else if (xpos < xMin) {
                 xpos = xMin - (xpos - xMin);
-                entityData[mapper.moveVector + 1
-                        + quadIndex] = -entityData[mapper.moveVector + 1 + quadIndex]
+                entityData[sizePerVertex + ActorVariables.MOVEVECTOR.offset + 1
+                        + quadIndex] = -entityData[sizePerVertex + ActorVariables.MOVEVECTOR.offset + 1 + quadIndex]
                                 * elasticity;
             }
             pos[0] = xpos;
@@ -108,12 +117,14 @@ public class SuperSpriteSystem extends System<SpriteAttributeComponent> {
         // Get the view frustum and create rectangle bounds
         viewFrustum = scene.getViewFrustum();
         viewFrustum.getValues(viewport);
+        mapper = component.getParent().getPipeline().getLocationMapping();
+        sizePerVertex = mapper.getSizePerVertex(BufferIndex.ATTRIBUTES.index);
+        translateOffset = mapper.getOffset(Property.TRANSLATE.getLocation());
         initSprites(component);
     }
 
     protected void initSprites(SpriteAttributeComponent component) {
         CPUComponentBuffer entityBuffer = (CPUComponentBuffer) component.getEntityBuffer();
-        EntityIndexer mapper = component.getMapper();
         int spriteFrames = component.getFrameCount();
         component.get2DBounds(rectBounds);
         int frame = 0;
@@ -124,8 +135,8 @@ public class SuperSpriteSystem extends System<SpriteAttributeComponent> {
         float sceneWidth = viewFrustum.getWidth() / scale[0];
         float sceneHeight = viewFrustum.getHeight() / scale[1];
         for (int currentSprite = 0; currentSprite < component.getCount(); currentSprite++) {
-            ActorComponent.getRandomSprite(entityData, 0, frame++, 1, 1, sceneWidth, sceneHeight, mapper, random);
-            ActorComponent.getRandomEntityData(entityData, rectBounds, 0.1f, mapper, random);
+            ActorComponent.getRandomSprite(entityData, 0, frame++, 1, 1, sceneWidth, sceneHeight, random, mapper);
+            ActorComponent.getRandomEntityData(entityData, rectBounds, 0.1f, random, mapper, sizePerVertex);
             component.setEntity(currentSprite, 0, entityData, 0, entityData.length);
             if (frame >= spriteFrames) {
                 frame = 0;
@@ -149,17 +160,15 @@ public class SuperSpriteSystem extends System<SpriteAttributeComponent> {
      */
     public void releaseSprite(SpriteAttributeComponent component, float[] pos) {
         component.get2DBounds(rectBounds);
-        EntityIndexer mapper = component.getMapper();
         if (entityData != null) {
             float[] scale = scene.getTransform().getScale();
-            entityData[mapper.translate] = pos[0] / scale[0];
-            entityData[mapper.translate + 1] = pos[1] / scale[1];
+            entityData[translateOffset] = pos[0] / scale[0];
+            entityData[translateOffset + 1] = pos[1] / scale[1];
             // Only update position
             component.setEntity(currentSprite, 0, entityData, 0, 2);
             // Reset / new entity data.
-            ActorComponent.getRandomEntityData(entityData, rectBounds, 0.01f, mapper, random);
-            component.setEntity(currentSprite, mapper.attributesPerVertex, entityData, mapper.attributesPerVertex,
-                    mapper.attributesPerEntity - mapper.attributesPerVertex);
+            ActorComponent.getRandomEntityData(entityData, rectBounds, 0.01f, random, mapper, sizePerVertex);
+            component.setEntity(currentSprite, sizePerVertex, entityData, sizePerVertex, ActorVariables.SIZE.offset);
             currentSprite++;
             if (currentSprite > component.getCount() - 1) {
                 currentSprite = 0;
