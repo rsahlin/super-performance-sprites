@@ -117,7 +117,7 @@ public class SuperSpriteSystem extends System<SpriteAttributeComponent> {
         // Get the view frustum and create rectangle bounds
         viewFrustum = scene.getViewFrustum();
         viewFrustum.getValues(viewport);
-        mapper = component.getParent().getPipeline().getLocationMapping();
+        mapper = component.getParent().getProgram().getFunction().getIndexer();
         sizePerVertex = mapper.getSizePerVertex(BufferIndex.ATTRIBUTES.index);
         translateOffset = mapper.getOffset(Property.TRANSLATE.getLocation());
         initSprites(component);
