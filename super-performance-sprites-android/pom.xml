@@ -8,7 +8,7 @@
     <parent>
         <artifactId>super-performance-sprites</artifactId>
         <groupId>com.super2k.super-performance-sprites</groupId>
-        <version>${super-sprites-version}</version>
+        <version>0.0.1-SNAPSHOT</version>
     </parent>
     <artifactId>super-performance-sprites-android</artifactId>
     <packaging>apk</packaging>

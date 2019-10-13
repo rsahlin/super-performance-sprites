@@ -5,7 +5,6 @@
         <vecmath-version>0.0.1-SNAPSHOT</vecmath-version>
         <graphics-by-gl-version>0.0.1-SNAPSHOT</graphics-by-gl-version>
         <graphics-engine-version>0.0.1-SNAPSHOT</graphics-engine-version>
-        <super-sprites-version>0.0.1-SNAPSHOT</super-sprites-version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <android.maven.version>4.5</android.maven.version>
         <it-plugin.version>4.4.1</it-plugin.version>
@@ -19,7 +18,7 @@
     </parent>
     <groupId>com.super2k.super-performance-sprites</groupId>
     <artifactId>super-performance-sprites</artifactId>
-    <version>${super-sprites-version}</version>
+    <version>0.0.1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>super-performance-sprites</name>
     <dependencyManagement>
@@ -60,7 +59,7 @@
             <dependency>
                 <groupId>com.super2k.super-performance-sprites</groupId>
                 <artifactId>super-performance-sprites-j2se</artifactId>
-                <version>${super-sprites-version}</version>
+                <version>0.0.1-SNAPSHOT</version>
             </dependency>
             <dependency>
                 <groupId>junit</groupId>

@@ -34,7 +34,7 @@ public class SuperSprites implements MMIPointerInput, RenderContextListener, Cli
 
     public static final String NAME = "GLTF Render demo";
     public static final String VERSION = "0.2";
-    public static final Renderers GL_VERSION = Renderers.GLES31;
+    public static final Renderers GL_VERSION = Renderers.GLES30;
 
     private float[] matrix = Matrix.setIdentity(Matrix.createMatrix(), 0);
     protected LayerNode scene;
