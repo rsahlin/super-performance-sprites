@@ -89,7 +89,6 @@
         </pluginManagement>
     </build>
     <modules>
-        <module>super-performance-sprites-android</module>
         <module>super-performance-sprites-jogl</module>
         <module>super-performance-sprites-j2se</module>
         <module>super-performance-sprites-lwjgl</module>
