@@ -3,13 +3,8 @@ allprojects  {
     version = '0.0.1-SNAPSHOT'
     tasks.withType(JavaCompile) {
         options.encoding = 'UTF-8'
-        sourceCompatibility = JavaVersion.VERSION_1_7
-        targetCompatibility = JavaVersion.VERSION_1_7
-    }
-    repositories {
-        maven {
-            url 'https://maven.google.com'
-        }
+        sourceCompatibility = JavaVersion.VERSION_1_8
+        targetCompatibility = JavaVersion.VERSION_1_8
     }
 }
 subprojects {

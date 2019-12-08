@@ -3,8 +3,8 @@ version = '0.0.1-SNAPSHOT'
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
-    sourceCompatibility = JavaVersion.VERSION_1_7
-    targetCompatibility = JavaVersion.VERSION_1_7
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 apply plugin:'java'
@@ -23,9 +23,9 @@ repositories {
     jcenter() 
 }
 dependencies {
-    compile project(':super-performance-sprites-j2se')
-    compile 'com.super2k.graphics-by-opengl:graphics-by-opengl-jogl:0.0.1-SNAPSHOT'
-    compile 'org.jogamp.gluegen:gluegen-rt-main:2.3.2'
-    compile 'org.jogamp.jogl:jogl-all-main:2.3.2'
-    testCompile 'junit:junit:3.8.1'
+    implementation project(':super-performance-sprites-j2se')
+    implementation 'com.super2k.graphics-by-opengl:graphics-by-opengl-jogl:0.0.1-SNAPSHOT'
+    implementation 'org.jogamp.gluegen:gluegen-rt-main:2.3.2'
+    implementation 'org.jogamp.jogl:jogl-all-main:2.3.2'
+    testImplementation 'junit:junit:3.8.1'
 }

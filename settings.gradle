@@ -1,8 +1,14 @@
 rootProject.name = 'super-performance-sprites'
 include ':super-performance-sprites-android'
-include ':super-performance-sprites-jogl'
 include ':super-performance-sprites-j2se'
+include ':graphics-by-opengl-j2se'
+//include ':graphics-by-opengl-android'
+//include ':vecmath'
 
-project(':super-performance-sprites-android').projectDir = "$rootDir/super-performance-sprites-android" as File
-project(':super-performance-sprites-jogl').projectDir = "$rootDir/super-performance-sprites-jogl" as File
-project(':super-performance-sprites-j2se').projectDir = "$rootDir/super-performance-sprites-j2se" as File
+project(':super-performance-sprites-android').projectDir = new File('super-performance-sprites-android')
+project(':super-performance-sprites-j2se').projectDir = new File('super-performance-sprites-j2se')
+project(':graphics-by-opengl-j2se').projectDir = new File('../../graphics-by-opengl/graphics-by-opengl-j2se')
+//project(':graphics-by-opengl-android').projectDir = new File('../../graphics-by-opengl/graphics-by-opengl-android')
+//project(':vecmath').projectDir = new File("../../vecmath")
+// project(':super-performance-sprites-android').projectDir = "$rootDir/super-performance-sprites-android" as File
+//project(':com.super2k.graphics-by-opengl:graphics-by-opengl-j2se').projectDir = "../../.graphics-by-opengl/graphics-by-opengl-j2se" as File
