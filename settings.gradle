@@ -2,7 +2,7 @@ rootProject.name = 'super-performance-sprites'
 include ':super-performance-sprites-android', ':vecmath', ':graphics-by-opengl-j2se', ":graphics-engine"
 include ':super-performance-sprites-j2se', 'graphics-by-opengl-android'
 
-project(':super-performance-sprites-android').projectDir = new File('../super-performance-sprites-android')
+project(':super-performance-sprites-android').projectDir = new File('super-performance-sprites-android')
 project(':super-performance-sprites-j2se').projectDir = new File('super-performance-sprites-j2se')
 project(':graphics-engine').projectDir = new File('../graphics-engine')
 project(':vecmath').projectDir = new File('../vecmath')
