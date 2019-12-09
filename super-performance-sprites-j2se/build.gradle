@@ -14,7 +14,9 @@ repositories {
     jcenter()
 }
 dependencies {
-    implementation project(':graphics-by-opengl-j2se')
     implementation 'com.google.code.gson:gson:2.8.1'
     testImplementation 'junit:junit:4.12'
+    implementation project(path: ':graphics-by-opengl-j2se')
+    implementation project(path: ':graphics-engine')
+    implementation project(path: ':vecmath')
 }

@@ -20,6 +20,10 @@ repositories {
 
 android {
     compileSdkVersion 29
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
     lintOptions {
         disable 'MissingTranslation'
     }
@@ -66,11 +70,14 @@ android {
 
 dependencies {
     implementation project(':super-performance-sprites-j2se')
-    implementation 'com.google.android.gms:play-services:10.0.1'
     implementation 'com.android.support:multidex:1.0.2'
     implementation 'com.google.code.gson:gson:2.8.1'
     testImplementation 'junit:junit:4.12'
     testImplementation "org.mockito:mockito-core:2.+"
+    implementation project(path: ':graphics-by-opengl-android')
+    implementation project(path: ':graphics-by-opengl-j2se')
+    implementation project(path: ':graphics-engine')
+    implementation project(path: ':vecmath')
 }
 
 //apply plugin: 'com.google.gms.google-services'
